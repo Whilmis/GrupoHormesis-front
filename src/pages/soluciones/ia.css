@@ -1,0 +1,311 @@
+/* --- IA PAGE CSS (LIGHT MODE / PREMIUM CORPORATE THEME) --- */
+
+:root {
+  --ia-bg-light: #ffffff;
+  --ia-bg-card: #ffffff;
+  --ia-border: rgba(0, 0, 0, 0.08);
+  --ia-accent-primary: #10b981;
+  --ia-accent-secondary: #059669;
+}
+
+.ia-page {
+  background-color: var(--ia-bg-light);
+  color: var(--text-primary, #1e293b);
+  min-height: 100vh;
+}
+
+/* Typography Overrides for Light Mode */
+.ia-page .b2b-section-title {
+  color: var(--text-primary, #0f172a);
+}
+
+.ia-page .b2b-section-subtitle {
+  color: var(--text-secondary, #64748b);
+}
+
+/* Héroe IA */
+.ia-hero-section {
+  position: relative;
+  padding: 180px 0 100px;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% -20%, rgba(16, 185, 129, 0.05), transparent 60%);
+}
+
+.ia-hero-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 4rem;
+  align-items: center;
+}
+
+@media (min-width: 1024px) {
+  .ia-hero-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.ia-hero-content h1 {
+  font-size: 3.5rem;
+  line-height: 1.1;
+  font-weight: 800;
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.02em;
+  color: var(--text-primary, #0f172a);
+}
+
+.ia-text-gradient {
+  background: linear-gradient(135deg, var(--ia-accent-primary), var(--ia-accent-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.ia-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  border-radius: 100px;
+  color: var(--ia-accent-secondary);
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+.ia-hero-img-wrap {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--ia-border);
+}
+
+.ia-hero-img-wrap img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 20px;
+}
+
+/* Grid de Servicios (Bento IA) */
+.ia-services-section {
+  padding: 100px 0;
+  position: relative;
+  background-color: var(--bg-secondary, #f8fafc);
+}
+
+.ia-services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 4rem;
+}
+
+.ia-card {
+  background: var(--ia-bg-card);
+  border: 1px solid var(--ia-border);
+  border-radius: 20px;
+  padding: 2.5rem;
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+}
+
+.ia-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: radial-gradient(circle at top right, rgba(16, 185, 129, 0.05), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.ia-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(16, 185, 129, 0.3);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.ia-card:hover::before {
+  opacity: 1;
+}
+
+.ia-card-icon {
+  width: 56px; height: 56px;
+  border-radius: 14px;
+  background: rgba(16, 185, 129, 0.1);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--ia-accent-primary);
+  margin-bottom: 1.5rem;
+}
+
+.ia-card h3 {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  color: var(--text-primary, #0f172a);
+}
+
+.ia-card p {
+  color: var(--text-secondary, #64748b);
+  line-height: 1.6;
+}
+
+/* Architecture Section */
+.ia-architecture-section {
+  padding: 100px 0;
+  background-color: var(--bg-primary, #ffffff);
+  border-top: 1px solid var(--ia-border);
+  border-bottom: 1px solid var(--ia-border);
+}
+
+.ia-arch-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 4rem;
+  align-items: center;
+}
+
+@media (min-width: 1024px) {
+  .ia-arch-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.ia-arch-content h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+  color: var(--text-primary, #0f172a);
+}
+
+.ia-arch-content p {
+  font-size: 1.1rem;
+  color: var(--text-secondary, #64748b);
+  margin-bottom: 2.5rem;
+}
+
+.ia-benefit-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.ia-benefit-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.ia-benefit-icon {
+  width: 40px; height: 40px;
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--ia-accent-primary);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+
+.ia-benefit-item h4 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+  color: var(--text-primary, #0f172a);
+}
+
+.ia-benefit-item p {
+  font-size: 0.95rem;
+  color: var(--text-secondary, #64748b);
+  margin: 0;
+}
+
+.ia-arch-visual {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--ia-border);
+}
+
+.ia-arch-visual img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Timeline Process */
+.ia-process-section {
+  padding: 80px 0 120px;
+  background-color: var(--ia-bg-light);
+}
+
+.ia-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  margin-top: 4rem;
+}
+
+@media (min-width: 768px) {
+  .ia-timeline {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
+
+.ia-step {
+  flex: 1;
+  text-align: center;
+  position: relative;
+}
+
+.ia-step-number {
+  width: 48px; height: 48px;
+  background: var(--ia-accent-primary);
+  color: #fff;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700;
+  font-size: 1.25rem;
+  margin: 0 auto 1.5rem;
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.3);
+}
+
+@media (min-width: 768px) {
+  .ia-step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: 24px;
+    left: calc(50% + 24px);
+    width: calc(100% - 48px);
+    height: 2px;
+    background: linear-gradient(90deg, var(--ia-accent-primary), var(--ia-border));
+    z-index: 1;
+  }
+}
+
+.ia-step h4 {
+  color: var(--text-primary, #0f172a);
+  margin-bottom: 0.5rem;
+}
+
+.ia-step p {
+  color: var(--text-secondary, #64748b);
+  font-size: 0.9rem;
+}
+
+/* Footer CTA Override */
+.ia-page .b2b-cta-section {
+  background-color: var(--bg-secondary, #f8fafc);
+  border-top: 1px solid var(--ia-border);
+}
+
+.ia-page .b2b-cta-section h2 {
+  color: var(--text-primary, #0f172a);
+}
+
+.ia-page .b2b-cta-section p {
+  color: var(--text-secondary, #64748b);
+}

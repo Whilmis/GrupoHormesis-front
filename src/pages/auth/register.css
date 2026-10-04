@@ -1,0 +1,197 @@
+/* ==================== REGISTER PAGE ==================== */
+/* Inherits layout structure from login.css — only register-specific additions here */
+
+/* Role selector cards */
+.role-selector {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.role-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1.15rem 0.75rem;
+  border-radius: 14px;
+  border: 1.5px solid rgba(0, 0, 0, 0.08);
+  background: rgba(247, 247, 248, 0.6);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  text-align: center;
+}
+
+.role-card:hover {
+  border-color: rgba(16, 185, 129, 0.25);
+  background: rgba(16, 185, 129, 0.03);
+}
+
+.role-card.selected {
+  border-color: #10b981;
+  background: rgba(16, 185, 129, 0.06);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+.role-card input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.role-card-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+  transition: all 0.3s ease;
+}
+
+.role-card.selected .role-card-icon {
+  background: #10b981;
+  color: #ffffff;
+}
+
+.role-card-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-primary, #121212);
+}
+
+.role-card-desc {
+  font-size: 0.725rem;
+  color: var(--text-secondary, #5f6368);
+  line-height: 1.35;
+}
+
+/* Password strength bar */
+.password-strength {
+  display: flex;
+  gap: 4px;
+  margin-top: 0.4rem;
+}
+
+.strength-segment {
+  flex: 1;
+  height: 3px;
+  border-radius: 2px;
+  background: rgba(0, 0, 0, 0.08);
+  transition: background 0.3s ease;
+}
+
+.strength-segment.active.weak {
+  background: #ef4444;
+}
+
+.strength-segment.active.medium {
+  background: #f59e0b;
+}
+
+.strength-segment.active.strong {
+  background: #10b981;
+}
+
+.strength-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  margin-top: 0.2rem;
+  transition: color 0.3s ease;
+}
+
+.strength-label.weak { color: #ef4444; }
+.strength-label.medium { color: #f59e0b; }
+.strength-label.strong { color: #10b981; }
+
+/* Terms checkbox */
+.terms-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  margin-top: 0.25rem;
+}
+
+.terms-check input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #10b981;
+  cursor: pointer;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.terms-check label {
+  font-size: 0.8rem;
+  color: var(--text-secondary, #5f6368);
+  line-height: 1.45;
+  cursor: pointer;
+}
+
+.terms-check label a {
+  color: #10b981;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.terms-check label a:hover {
+  color: #059669;
+  text-decoration: underline;
+}
+
+/* Register form scrollable card override */
+.register-card {
+  max-height: calc(100vh - 6rem);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(16, 185, 129, 0.2) transparent;
+}
+
+.register-card::-webkit-scrollbar {
+  width: 4px;
+}
+
+.register-card::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.register-card::-webkit-scrollbar-thumb {
+  background: rgba(16, 185, 129, 0.2);
+  border-radius: 4px;
+}
+
+/* Step indicator dots */
+.register-steps {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.step-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.step-dot.active {
+  background: #10b981;
+  width: 24px;
+  border-radius: 4px;
+}
+
+.step-dot.completed {
+  background: rgba(16, 185, 129, 0.4);
+}
+
+@media (max-width: 480px) {
+  .role-selector {
+    grid-template-columns: 1fr;
+  }
+}
