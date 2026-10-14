@@ -4,11 +4,8 @@ import { apiClient } from '../../../api/client';
 import { Calendar as CalendarIcon, Clock, Link, Trash2, Plus, X, Settings as SettingsIcon, AlertCircle, Mail, User } from 'lucide-react';
 import { Calendar as BigCalendar, dateFnsLocalizer, Views } from 'react-big-calendar';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
-import format from 'date-fns/format';
-import parse from 'date-fns/parse';
-import startOfWeek from 'date-fns/startOfWeek';
-import getDay from 'date-fns/getDay';
-import es from 'date-fns/locale/es';
+import { format, parse, startOfWeek, getDay } from 'date-fns';
+import { es } from 'date-fns/locale';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import 'react-big-calendar/lib/addons/dragAndDrop/styles.css';
 import TimezoneSelect, { allTimezones } from 'react-timezone-select';
@@ -555,8 +552,8 @@ export default function AdminCalendars() {
               <DnDCalendar
                 localizer={localizer}
                 events={meetings}
-                startAccessor="start"
-                endAccessor="end"
+                startAccessor={(event: any) => event.start}
+                endAccessor={(event: any) => event.end}
                 style={{ height: '100%' }}
                 view={currentView}
                 onView={setCurrentView}

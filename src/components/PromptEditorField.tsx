@@ -31,12 +31,12 @@ export const PromptEditorField: React.FC<PromptEditorProps> = ({
   const [showTemplates, setShowTemplates] = useState(false);
 
   const insertVariable = (tag: string) => {
-    // Inserta la variable al final del texto (o se podría hacer en la posición del cursor)
+    // Inserta la variable al final del texto (o se podrÃ­a hacer en la posiciÃ³n del cursor)
     onChange(value ? `${value} ${tag}` : tag);
   };
 
   const useTemplate = (content: string) => {
-    if (window.confirm("¿Reemplazar el contenido actual con esta plantilla?")) {
+    if (window.confirm("Â¿Reemplazar el contenido actual con esta plantilla?")) {
       onChange(content);
       setShowTemplates(false);
     }
@@ -96,7 +96,7 @@ export const PromptEditorField: React.FC<PromptEditorProps> = ({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         rows={8}
-        placeholder="Escribe tus instrucciones para la IA aquí..."
+        placeholder="Escribe tus instrucciones para la IA aquÃ­..."
       />
     </div>
   );

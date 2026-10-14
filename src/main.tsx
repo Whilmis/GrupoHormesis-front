@@ -1,8 +1,8 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
-import App from './App.tsx'
-import './i18n.ts'
+import App from './App'
+import './i18n'
 import './index.css'
 import { AuthProvider } from './context/AuthContext'
 
