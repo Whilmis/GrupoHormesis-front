@@ -15,6 +15,42 @@ const fixEncoding = (str: string) => {
     .replace(/env\ufffda/g, 'envÃ­a');
 };
 
+const formatSchedule = (cronStr?: string) => {
+  if (!cronStr) return 'No programado';
+  switch (cronStr) {
+    case '0 8,12 * * 1-5':
+      return 'Lunes a Viernes (8:00 AM y 12:00 PM) - 2 ejecuciones/día';
+    case '0 9,13 * * 1-5':
+      return 'Lunes a Viernes (9:00 AM y 1:00 PM) - 2 ejecuciones/día';
+    case '0 10,14 * * 1-5':
+      return 'Lunes a Viernes (10:00 AM y 2:00 PM) - 2 ejecuciones/día';
+    case '0 8 * * 1-5':
+      return 'Lunes a Viernes a las 8:00 AM';
+    case '0 9 * * 1-5':
+      return 'Lunes a Viernes a las 9:00 AM';
+    case '0 10 * * 1-5':
+      return 'Lunes a Viernes a las 10:00 AM';
+    case '0 11 * * 1-5':
+      return 'Lunes a Viernes a las 11:00 AM';
+    case '0 12 * * 1-5':
+      return 'Lunes a Viernes a las 12:00 PM';
+    case '0 14 * * 1-5':
+      return 'Lunes a Viernes a las 2:00 PM (Lote de 10 correos)';
+    case '0 * * * *':
+      return 'Cada hora';
+    case '0 8 * * *':
+      return 'Todos los días a las 8:00 AM';
+    case '0 10 * * *':
+      return 'Todos los días a las 10:00 AM';
+    case '0 12 * * *':
+      return 'Todos los días a las 12:00 PM';
+    case '0 9 * * 1':
+      return 'Una vez a la semana (Lunes 9:00 AM)';
+    default:
+      return `Expresión Cron: ${cronStr}`;
+  }
+};
+
 // --- Types ---
 interface Template {
   id: string;
@@ -1120,8 +1156,8 @@ export default function AdminWorkflows() {
                             <label>Frecuencia de Búsqueda (Automatizada)</label>
                             <select 
                               value={
-                                ['0 * * * *', '0 8 * * *', '0 10 * * *', '0 12 * * *', '0 9 * * 1'].includes(newWfConfig.schedule || '0 10 * * *') 
-                                ? (newWfConfig.schedule || '0 10 * * *') 
+                                ['0 8,12 * * 1-5', '0 9,13 * * 1-5', '0 10 * * 1-5', '0 8 * * *', '0 10 * * *', '0 12 * * *', '0 * * * *', '0 9 * * 1'].includes(newWfConfig.schedule || '0 8,12 * * 1-5') 
+                                ? (newWfConfig.schedule || '0 8,12 * * 1-5') 
                                 : 'custom'
                               }
                               onChange={e => {
@@ -1134,23 +1170,29 @@ export default function AdminWorkflows() {
                               className="auth-input"
                               style={{ marginBottom: '0.5rem' }}
                             >
-                              <option value="0 * * * *">Cada hora</option>
+                              <option value="0 8,12 * * 1-5">🔥 Lunes a Viernes 2 veces al día (8:00 AM y 12:00 PM) - 10 leads/día</option>
+                              <option value="0 9,13 * * 1-5">Lunes a Viernes 2 veces al día (9:00 AM y 1:00 PM) - 10 leads/día</option>
+                              <option value="0 10 * * 1-5">Lunes a Viernes 1 vez al día (10:00 AM) - 5 leads/día</option>
                               <option value="0 8 * * *">Todos los días a las 8:00 AM</option>
                               <option value="0 10 * * *">Todos los días a las 10:00 AM</option>
                               <option value="0 12 * * *">Todos los días a las 12:00 PM</option>
+                              <option value="0 * * * *">Cada hora</option>
                               <option value="0 9 * * 1">Una vez a la semana (Lunes 9:00 AM)</option>
                               <option value="custom">Personalizado (Avanzado)</option>
                             </select>
                             
-                            {(!['0 * * * *', '0 8 * * *', '0 10 * * *', '0 12 * * *', '0 9 * * 1'].includes(newWfConfig.schedule || '0 10 * * *')) && (
+                            {(!['0 8,12 * * 1-5', '0 9,13 * * 1-5', '0 10 * * 1-5', '0 8 * * *', '0 10 * * *', '0 12 * * *', '0 * * * *', '0 9 * * 1'].includes(newWfConfig.schedule || '0 8,12 * * 1-5')) && (
                               <input 
                                 type="text" 
-                                value={newWfConfig.schedule || '0 10 * * *'} 
+                                value={newWfConfig.schedule || '0 8,12 * * 1-5'} 
                                 onChange={e => setNewWfConfig({...newWfConfig, schedule: e.target.value})} 
                                 className="auth-input" 
-                                placeholder="Ingresa tu expresión Cron (ej. 0 10 * * *)" 
+                                placeholder="Ingresa tu expresión Cron (ej. 0 8,12 * * 1-5)" 
                               />
                             )}
+                            <p style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.25rem' }}>
+                              Recolecta y audita automáticamente hasta 5 leads por ejecución con IA.
+                            </p>
                           </div>
                         </div>
                       )}
@@ -1218,8 +1260,8 @@ export default function AdminWorkflows() {
                             <label>Horario de Envío (Cron)</label>
                             <select 
                               value={
-                                ['0 8 * * 1-5', '0 10 * * 1-5', '0 12 * * 1-5', '0 9 * * 1-5'].includes(newWfConfig.schedule || '0 8 * * 1-5') 
-                                ? (newWfConfig.schedule || '0 8 * * 1-5') 
+                                ['0 10,14 * * 1-5', '0 14 * * 1-5', '0 8 * * 1-5', '0 10 * * 1-5', '0 12 * * 1-5', '0 9 * * 1-5'].includes(newWfConfig.schedule || '0 10,14 * * 1-5') 
+                                ? (newWfConfig.schedule || '0 10,14 * * 1-5') 
                                 : 'custom'
                               }
                               onChange={e => {
@@ -1232,20 +1274,22 @@ export default function AdminWorkflows() {
                               className="auth-input"
                               style={{ marginBottom: '0.5rem' }}
                             >
+                              <option value="0 10,14 * * 1-5">🔥 Lunes a Viernes 2 veces al día (10:00 AM y 2:00 PM) - 5 correos c/u</option>
+                              <option value="0 14 * * 1-5">Lunes a Viernes 1 vez al día (2:00 PM) - Lote completo de 10 correos</option>
                               <option value="0 8 * * 1-5">Lunes a Viernes a las 8:00 AM</option>
+                              <option value="0 9 * * 1-5">Lunes a Viernes a las 9:00 AM</option>
                               <option value="0 10 * * 1-5">Lunes a Viernes a las 10:00 AM</option>
                               <option value="0 12 * * 1-5">Lunes a Viernes a las 12:00 PM</option>
-                              <option value="0 9 * * 1-5">Lunes a Viernes a las 9:00 AM</option>
                               <option value="custom">Personalizado (Avanzado)</option>
                             </select>
                             
-                            {(!['0 8 * * 1-5', '0 10 * * 1-5', '0 12 * * 1-5', '0 9 * * 1-5'].includes(newWfConfig.schedule || '0 8 * * 1-5')) && (
+                            {(!['0 10,14 * * 1-5', '0 14 * * 1-5', '0 8 * * 1-5', '0 10 * * 1-5', '0 12 * * 1-5', '0 9 * * 1-5'].includes(newWfConfig.schedule || '0 10,14 * * 1-5')) && (
                               <input 
                                 type="text" 
-                                value={newWfConfig.schedule || '0 8 * * 1-5'} 
+                                value={newWfConfig.schedule || '0 10,14 * * 1-5'} 
                                 onChange={e => setNewWfConfig({...newWfConfig, schedule: e.target.value})} 
                                 className="auth-input" 
-                                placeholder="Ingresa tu expresión Cron (ej. 0 8 * * 1-5)" 
+                                placeholder="Ingresa tu expresión Cron (ej. 0 10,14 * * 1-5)" 
                               />
                             )}
                           </div>
@@ -1342,6 +1386,46 @@ export default function AdminWorkflows() {
                             />
                             <p style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.25rem' }}>
                               Cantidad máxima de leads a diseñar por cada vez que se ejecute el workflow.
+                            </p>
+                          </div>
+
+                          <div className="input-group" style={{ marginBottom: '1rem' }}>
+                            <label>Frecuencia de Maquetación (Automatizada)</label>
+                            <select 
+                              value={
+                                ['0 9,13 * * 1-5', '0 10,14 * * 1-5', '0 11 * * 1-5', '0 9 * * 1-5', '0 * * * *'].includes(newWfConfig.schedule || '0 9,13 * * 1-5') 
+                                ? (newWfConfig.schedule || '0 9,13 * * 1-5') 
+                                : 'custom'
+                              }
+                              onChange={e => {
+                                if (e.target.value === 'custom') {
+                                  setNewWfConfig({...newWfConfig, schedule: ''});
+                                } else {
+                                  setNewWfConfig({...newWfConfig, schedule: e.target.value});
+                                }
+                              }}
+                              className="auth-input"
+                              style={{ marginBottom: '0.5rem' }}
+                            >
+                              <option value="0 9,13 * * 1-5">✨ Lunes a Viernes 2 veces al día (9:00 AM y 1:00 PM) - Recomendado</option>
+                              <option value="0 10,14 * * 1-5">Lunes a Viernes 2 veces al día (10:00 AM y 2:00 PM)</option>
+                              <option value="0 11 * * 1-5">Lunes a Viernes 1 vez al día (11:00 AM)</option>
+                              <option value="0 9 * * 1-5">Lunes a Viernes 1 vez al día (9:00 AM)</option>
+                              <option value="0 * * * *">Cada hora</option>
+                              <option value="custom">Personalizado (Avanzado)</option>
+                            </select>
+                            
+                            {(!['0 9,13 * * 1-5', '0 10,14 * * 1-5', '0 11 * * 1-5', '0 9 * * 1-5', '0 * * * *'].includes(newWfConfig.schedule || '0 9,13 * * 1-5')) && (
+                              <input 
+                                type="text" 
+                                value={newWfConfig.schedule || '0 9,13 * * 1-5'} 
+                                onChange={e => setNewWfConfig({...newWfConfig, schedule: e.target.value})} 
+                                className="auth-input" 
+                                placeholder="Ingresa tu expresión Cron (ej. 0 9,13 * * 1-5)" 
+                              />
+                            )}
+                            <p style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.25rem' }}>
+                              Sincronizado 1 hora después de Maps para encontrar leads frescos listos para maquetar.
                             </p>
                           </div>
                         </div>
@@ -1447,37 +1531,18 @@ export default function AdminWorkflows() {
                       </div>
 
                       
-                        {/* PROGRAMACION PARA RECOLECTOR DE LEADS */}
-                        {wf.template.typeIdentifier === 'lead_collector' && wf.config?.schedule && (
+                        {/* PROGRAMACION DE EJECUCIONES (LEAD COLLECTOR, STITCH DESIGNER, AUTO OUTREACH) */}
+                        {['lead_collector', 'google_stitch_designer', 'auto_outreach_google_maps'].includes(wf.template.typeIdentifier) && (wf.config?.schedule || wf.template.typeIdentifier === 'auto_outreach_google_maps') && (
                           <div style={{ marginBottom: '1rem', padding: '0.75rem', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: '6px', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                             <Clock size={20} color="#16a34a" />
                             <div>
                               <div style={{ fontSize: '0.7rem', color: '#166534', textTransform: 'uppercase', fontWeight: 'bold' }}>{t('portal.scheduled_execution', 'Próxima ejecución programada')}</div>
                               <div style={{ fontSize: '0.85rem', color: '#14532d', fontWeight: '600' }}>
-                                  {wf.config?.schedule === '0 * * * *' ? 'Cada hora' : 
-                                   wf.config?.schedule === '0 8 * * *' ? 'Todos los días a las 8:00 AM' :
-                                   wf.config?.schedule === '0 10 * * *' ? 'Todos los días a las 10:00 AM' :
-                                   wf.config?.schedule === '0 12 * * *' ? 'Todos los días a las 12:00 PM' :
-                                   wf.config?.schedule === '0 9 * * 1' ? 'Una vez a la semana (Lunes 9:00 AM)' :
-                                   `Expresión Cron: ${wf.config?.schedule}`}
-                              </div>
-                            </div>
-                          </div>
-                        )}
-
-                        
-                        {/* PROGRAMACION PARA AUTO OUTREACH */}
-                        {wf.template.typeIdentifier === 'auto_outreach_google_maps' && (
-                          <div style={{ marginBottom: '1rem', padding: '0.75rem', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: '6px', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                            <Clock size={20} color="#16a34a" />
-                            <div>
-                              <div style={{ fontSize: '0.7rem', color: '#166534', textTransform: 'uppercase', fontWeight: 'bold' }}>{t('portal.scheduled_execution', 'Próxima ejecución programada')}</div>
-                              <div style={{ fontSize: '0.85rem', color: '#14532d', fontWeight: '600' }}>
-                                  {(wf.config?.schedule || '0 8 * * 1-5') === '0 8 * * 1-5' ? 'Lunes a Viernes a las 8:00 AM' : 
-                                   (wf.config?.schedule || '0 8 * * 1-5') === '0 10 * * 1-5' ? 'Lunes a Viernes a las 10:00 AM' :
-                                   (wf.config?.schedule || '0 8 * * 1-5') === '0 12 * * 1-5' ? 'Lunes a Viernes a las 12:00 PM' :
-                                   (wf.config?.schedule || '0 8 * * 1-5') === '0 9 * * 1-5' ? 'Lunes a Viernes a las 9:00 AM' :
-                                   `Expresión Cron: ${(wf.config?.schedule || '0 8 * * 1-5')}`}
+                                {formatSchedule(
+                                  wf.config?.schedule || 
+                                  (wf.template.typeIdentifier === 'auto_outreach_google_maps' ? '0 10,14 * * 1-5' : 
+                                   wf.template.typeIdentifier === 'google_stitch_designer' ? '0 9,13 * * 1-5' : '0 8,12 * * 1-5')
+                                )}
                               </div>
                             </div>
                           </div>
