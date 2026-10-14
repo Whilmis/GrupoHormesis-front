@@ -2,6 +2,7 @@ import { ArrowRight, CheckCircle, Database, GitMerge, Layout, ShieldCheck, Workf
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { BentoCard } from "../../components/BentoCard";
+import SEO from "../../components/SEO";
 import "./b2b.css";
 import "./workflows.css";
 
@@ -10,6 +11,12 @@ export default function Workflows() {
 
   return (
     <main className="workflows-page b2b-page">
+      <SEO 
+        title="Sistematización & Workflows Automatizados | Grupo Hormesis"
+        description="Conecta tus herramientas, automatiza el pipeline comercial y elimina la carga operativa manual con flujos de trabajo inteligentes."
+        canonical="/soluciones/workflows"
+        ogImage="https://grupohormesis.com/business_process_mockup.jpg"
+      />
       {/* Background elements */}
       <div className="b2b-bg-orbs">
         <div className="s-orb s-orb-1 bg-emerald"></div>
@@ -110,7 +117,12 @@ export default function Workflows() {
           </p>
           
           <div className="wf-integration-visual" data-aos="fade-up">
-            <img src="/api_integration_mockup.jpg" alt="API Integration Hub" />
+            <img 
+              src="/api_integration_mockup.jpg" 
+              alt="Hub de Integración de APIs y Conectores de Grupo Hormesis" 
+              loading="lazy" 
+              decoding="async" 
+            />
           </div>
         </div>
       </section>
@@ -156,7 +168,12 @@ export default function Workflows() {
 
           <div className="wf-use-cases-grid">
             <div className="wf-uc-visual" data-aos="fade-right">
-              <img src="/business_process_mockup.jpg" alt="Business Process Automation" />
+              <img 
+                src="/business_process_mockup.jpg" 
+                alt="Automatización y Sistematización de Procesos de Negocio Grupo Hormesis" 
+                loading="lazy" 
+                decoding="async" 
+              />
             </div>
 
             <div className="wf-uc-list" data-aos="fade-left">

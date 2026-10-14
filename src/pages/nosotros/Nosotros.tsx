@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { Users, Lightbulb, ShieldCheck, Code, MapPin, Globe, Building2, Briefcase, ArrowRight, Search, LayoutTemplate, Terminal, TrendingUp } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
+import SEO from '../../components/SEO';
 import '../soluciones/b2b.css';
 import './nosotros.css';
 
@@ -23,6 +24,12 @@ export default function NosotrosPage() {
 
   return (
     <main className="b2b-page">
+      <SEO 
+        title="Sobre Grupo Hormesis | Nuestra Visión y Equipo de Ingeniería"
+        description="Conoce al equipo de ingenieros y estrategas detrás de Grupo Hormesis. Creamos sistemas y arquitecturas de software que escalan negocios de alto impacto."
+        canonical="/nosotros"
+        ogImage="https://grupohormesis.com/hormesis_team_mockup.jpg"
+      />
       {/* Background Orbs */}
       <div className="b2b-bg-orbs">
         <div className="s-orb s-orb-1"></div>
@@ -86,7 +93,13 @@ export default function NosotrosPage() {
             </div>
 
             <div className="cultura-visual animate-fade-in-up" style={{ animationDelay: "400ms" }}>
-              <img src="/hormesis_culture_mockup.jpg" alt="Hormesis Culture" className="rounded-2xl shadow-2xl border border-gray-100" />
+              <img 
+                src="/hormesis_culture_mockup.jpg" 
+                alt="Cultura e Ingeniería de Alto Rendimiento en Grupo Hormesis" 
+                className="rounded-2xl shadow-2xl border border-gray-100" 
+                loading="lazy" 
+                decoding="async" 
+              />
             </div>
           </div>
         </div>
@@ -97,7 +110,12 @@ export default function NosotrosPage() {
         <div className="container relative z-10">
           <div className="cultura-grid">
             <div className="equipo-visual animate-fade-in-up" style={{ animationDelay: "100ms" }}>
-              <img src="/hormesis_team_mockup.jpg" alt="Hormesis Leadership Team" />
+              <img 
+                src="/hormesis_team_mockup.jpg" 
+                alt="Equipo de Liderazgo y Consultoría de Software de Grupo Hormesis" 
+                loading="lazy" 
+                decoding="async" 
+              />
             </div>
 
             <div className="equipo-content animate-fade-in-up" style={{ animationDelay: "200ms" }}>
@@ -175,7 +193,12 @@ export default function NosotrosPage() {
           </p>
 
           <div className="presencia-visual animate-fade-in-up" style={{ animationDelay: "100ms" }}>
-            <img src="/hormesis_global_presence.jpg" alt="Global Presence Map" />
+            <img 
+              src="/hormesis_global_presence.jpg" 
+              alt="Presencia Global y Clientes Internacionales de Grupo Hormesis" 
+              loading="lazy" 
+              decoding="async" 
+            />
           </div>
 
           <div className="presencia-stats-grid mt-16 animate-fade-in-up" style={{ animationDelay: "200ms" }}>

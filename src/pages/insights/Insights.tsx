@@ -2,6 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Clock, Mail } from 'lucide-react';
+import SEO from '../../components/SEO';
 import '../soluciones/b2b.css';
 import './insights.css';
 
@@ -10,13 +11,21 @@ export default function InsightsPage() {
 
   return (
     <main className="b2b-page">
+      <SEO 
+        title="Insights & Tendencias Tecnológicas | Grupo Hormesis"
+        description="Artículos, análisis y guías estratégicas sobre inteligencia artificial aplicada, optimización operativa y arquitectura de software para empresas."
+        canonical="/insights"
+        ogImage="https://grupohormesis.com/insights_hero_mockup.jpg"
+      />
       {/* Featured Hero Article */}
       <section className="hero-article-section container b2b-py-20 relative z-10">
         <div className="hero-article-card animate-fade-in">
           <img 
             src="/insights_hero_mockup.jpg" 
-            alt="Hero Tech" 
+            alt="Inteligencia Artificial y Arquitectura de Software Estratégica" 
             className="hero-article-bg" 
+            loading="lazy"
+            decoding="async"
           />
           <div className="hero-article-overlay"></div>
           
@@ -50,7 +59,13 @@ export default function InsightsPage() {
           <div className="articles-grid">
             {/* Article 1 */}
             <div className="article-card animate-fade-in-up" style={{ animationDelay: "100ms" }}>
-              <img src="/insights_article1_mockup.jpg" alt="Data Analytics" className="article-image" />
+              <img 
+                src="/insights_article1_mockup.jpg" 
+                alt="Toma de Decisiones Estratégicas Basadas en Datos y Analítica Avanzada" 
+                className="article-image" 
+                loading="lazy" 
+                decoding="async" 
+              />
               <div className="article-card-content">
                 <div className="article-meta">
                   <span className="category-tag" style={{ background: 'transparent', padding: 0, border: 'none' }}>{t('insights.article1_category')}</span>
@@ -66,7 +81,13 @@ export default function InsightsPage() {
 
             {/* Article 2 */}
             <div className="article-card animate-fade-in-up" style={{ animationDelay: "200ms" }}>
-              <img src="/insights_article2_mockup.jpg" alt="Cloud Architecture" className="article-image" />
+              <img 
+                src="/insights_article2_mockup.jpg" 
+                alt="Arquitectura Cloud Moderna y Modernización de Sistemas Monolíticos" 
+                className="article-image" 
+                loading="lazy" 
+                decoding="async" 
+              />
               <div className="article-card-content">
                 <div className="article-meta">
                   <span className="category-tag" style={{ background: 'transparent', padding: 0, border: 'none' }}>{t('insights.article2_category')}</span>
@@ -82,7 +103,13 @@ export default function InsightsPage() {
 
             {/* Article 3 */}
             <div className="article-card animate-fade-in-up" style={{ animationDelay: "300ms" }}>
-              <img src="/ai_mockup.jpg" alt="Cybersecurity AI" className="article-image" />
+              <img 
+                src="/ai_mockup.jpg" 
+                alt="Ciberseguridad e Inteligencia Artificial Autónoma en Entornos Empresariales" 
+                className="article-image" 
+                loading="lazy" 
+                decoding="async" 
+              />
               <div className="article-card-content">
                 <div className="article-meta">
                   <span className="category-tag" style={{ background: 'transparent', padding: 0, border: 'none' }}>{t('insights.article3_category')}</span>

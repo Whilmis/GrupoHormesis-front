@@ -1,6 +1,7 @@
 import { Bot, BrainCircuit, Code, Network, Database, ShieldCheck, Zap, ArrowUpRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import SEO from "../../components/SEO";
 import "./b2b.css";
 import "./ia.css";
 
@@ -9,6 +10,12 @@ export default function Ia() {
 
   return (
     <div className="ia-page page-transition">
+      <SEO 
+        title="Inteligencia Artificial Aplicada para Negocios | Grupo Hormesis"
+        description="Soluciones de inteligencia artificial generativa, LLMs privados, agentes autónomos y análisis predictivo integrados en tus procesos empresariales."
+        canonical="/soluciones/ia"
+        ogImage="https://grupohormesis.com/ai_workflow_mockup.jpg"
+      />
       
       {/* Hero Section */}
       <section className="ia-hero-section">
@@ -38,7 +45,12 @@ export default function Ia() {
             </div>
             <div className="ia-hero-visual animate-fade-in-up" style={{ animationDelay: "400ms" }}>
               <div className="ia-hero-img-wrap">
-                <img src="/ai_mockup.jpg" alt="AI Platform Mockup" />
+                <img 
+                  src="/ai_mockup.jpg" 
+                  alt="Plataforma de Inteligencia Artificial para Empresas Grupo Hormesis" 
+                  loading="lazy" 
+                  decoding="async" 
+                />
               </div>
             </div>
           </div>
@@ -119,7 +131,12 @@ export default function Ia() {
             </div>
             
             <div className="ia-arch-visual" data-aos="fade-left" data-aos-delay="100">
-              <img src="/ai_workflow_mockup.jpg" alt="AI Orchestration Workflow" />
+              <img 
+                src="/ai_workflow_mockup.jpg" 
+                alt="Flujo de Trabajo Orquestado con IA Grupo Hormesis" 
+                loading="lazy" 
+                decoding="async" 
+              />
             </div>
           </div>
         </div>

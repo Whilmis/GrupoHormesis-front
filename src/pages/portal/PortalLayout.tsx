@@ -7,9 +7,11 @@ import {
   Settings, 
   LogOut, 
   FolderKanban,
-  FileText
+  FileText,
+  Calendar
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import SEO from '../../components/SEO';
 import './portal.css';
 
 export default function PortalLayout() {
@@ -30,7 +32,8 @@ export default function PortalLayout() {
       case 'admin':
         return [
           { name: t('portal.overview', 'Vista General'), path: '/portal/admin', icon: LayoutDashboard },
-          { name: t('portal.users', 'Usuarios'), path: '/portal/admin/usuarios', icon: Users },
+                    { name: t('portal.users', 'Usuarios'), path: '/portal/admin/usuarios', icon: Users },
+          { name: 'Calendarios', path: '/portal/admin/calendars', icon: Calendar },
           { name: t('portal.projects', 'Proyectos'), path: '/portal/admin/proyectos', icon: Briefcase },
           { name: 'Workflows', path: '/portal/admin/workflows', icon: FolderKanban },
           { name: t('portal.config', 'Configuración'), path: '/portal/admin/settings', icon: Settings },
@@ -38,8 +41,9 @@ export default function PortalLayout() {
       case 'colaborador':
         return [
           { name: t('portal.my_dashboard', 'Mi Tablero'), path: '/portal/colaborador', icon: LayoutDashboard },
-          { name: 'Workflows', path: '/portal/colaborador/workflows', icon: FolderKanban },
-          { name: t('portal.documents', 'Documentos'), path: '/portal/colaborador/docs', icon: FileText },
+          { name: 'Mis Reuniones', path: '/portal/colaborador/reuniones', icon: Calendar },
+          { name: 'Empresas & Leads', path: '/portal/colaborador/leads', icon: Briefcase },
+          { name: 'Formularios', path: '/portal/colaborador/forms', icon: FileText },
         ];
       case 'cliente':
         return [
@@ -57,6 +61,7 @@ export default function PortalLayout() {
 
   return (
     <div className="portal-container">
+      <SEO title="Portal | Grupo Hormesis" noIndex={true} />
       {/* Sidebar */}
       <aside className="portal-sidebar">
         <div className="portal-logo-container">

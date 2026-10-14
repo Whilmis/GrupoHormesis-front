@@ -1,9 +1,10 @@
 import { useState, useMemo } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Mail, Lock, Eye, EyeOff, ArrowLeft, UserPlus, User, Building2, Briefcase, Users } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, ArrowLeft, UserPlus, User, Building2, Briefcase, Users, Share2, Sparkles } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { ApiError } from '../../api/client';
+import SEO from '../../components/SEO';
 import './login.css';
 import './register.css';
 
@@ -24,9 +25,12 @@ function getPasswordStrength(password: string): { level: number; label: string; 
 }
 
 export default function Register() {
+  const [searchParams] = useSearchParams();
+  const isColaboradorRef = searchParams.get('role') === 'colaborador';
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
-  const [role, setRole] = useState<UserRole>('cliente');
+  const [role, setRole] = useState<UserRole>(isColaboradorRef ? 'colaborador' : 'cliente');
   const [name, setName] = useState('');
   const [company, setCompany] = useState('');
   const [email, setEmail] = useState('');
@@ -92,6 +96,7 @@ export default function Register() {
 
   return (
     <div className="login-page">
+      <SEO title="Crear Cuenta | Grupo Hormesis" noIndex={true} />
       {/* Left Branding Panel — reuses login branding layout */}
       <div className="login-branding">
         <div className="login-orbs">
@@ -151,9 +156,32 @@ export default function Register() {
           transition={{ duration: 0.5, delay: 0.1 }}
         >
           <div className="login-card-header">
-            <h1>Crear Cuenta</h1>
-            <p>Completa tus datos para unirte al portal</p>
+            <h1>{isColaboradorRef ? 'Registro de Colaborador' : 'Crear Cuenta'}</h1>
+            <p>{isColaboradorRef ? 'Únete a nuestro sistema de referidos y gana comisiones' : 'Completa tus datos para unirte al portal'}</p>
           </div>
+
+          {isColaboradorRef && (
+            <div style={{
+              background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(6, 182, 212, 0.08))',
+              border: '1.5px solid rgba(16, 185, 129, 0.35)',
+              borderRadius: '12px',
+              padding: '0.9rem 1.1rem',
+              marginBottom: '1.25rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.85rem'
+            }}>
+              <div style={{ background: '#10b981', color: 'white', borderRadius: '50%', width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <Share2 size={18} />
+              </div>
+              <div style={{ fontSize: '0.82rem', color: '#334155', lineHeight: 1.4 }}>
+                <strong style={{ display: 'block', color: '#0f172a', fontSize: '0.9rem', marginBottom: '2px' }}>
+                  Sistema de Referidos & Afiliados
+                </strong>
+                Al registrarte obtendrás tu enlace y código único para referir clientes, dar seguimiento en el portal y monetizar con Grupo Hormesis.
+              </div>
+            </div>
+          )}
 
           <form className="login-form" onSubmit={handleSubmit}>
             {error && (

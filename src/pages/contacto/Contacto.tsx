@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { ArrowRight, MapPin, Mail, Phone, Calendar, Clock, Building2, Zap, Send, Tag } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
+import SEO from '../../components/SEO';
 import './contacto.css';
 
 export default function Contacto() {
@@ -11,8 +12,8 @@ export default function Contacto() {
   
   // 1. Configurar el ID de desarrollo (Fallback)
   let workflowId = searchParams.get('wid') || searchParams.get('workflowId');
-  if (!workflowId && import.meta.env.DEV) {
-    workflowId = 'eec6f7e7-7706-4b50-8cad-987b1a2fef61';
+  if (!workflowId && (import.meta as any).env?.DEV) {
+    workflowId = '757c17df-73ea-4427-9ba0-88396360b457';
   }
   const [showCoupon, setShowCoupon] = useState(false);
 
@@ -55,6 +56,11 @@ export default function Contacto() {
 
   return (
     <main className="main-content page-contacto">
+      <SEO 
+        title="Agenda una Sesión Estratégica | Contacto Grupo Hormesis"
+        description="Agenda una Discovery Call o envíanos un briefing técnico. Evaluamos tus cuellos de botella operativos y diseñamos tu plan de sistematización."
+        canonical="/contacto"
+      />
       {/* Background Orbs for Premium feel */}
       <div className="contacto-bg-orbs">
         <div className="c-orb c-orb-1"></div>
@@ -151,22 +157,21 @@ export default function Contacto() {
                     </div>
                   </div>
                   
-                  <div className="form-grid-2">
-                    <div className="form-group">
-                      <label>Teléfono / WhatsApp (Opcional)</label>
-                      <input type="tel" name="phone" placeholder="+34 600 000 000" />
-                    </div>
-                    <div className="form-group">
-                      <label>Tipo de Solución Requerida</label>
-                      <select name="service" defaultValue={defaultSolution}>
-                        <option>Sistematización & Workflows</option>
-                        <option>Desarrollo a Medida (Apps)</option>
-                        <option>Ecosistema B2B (CRM/ERP)</option>
-                        <option>Integración con IA</option>
-                        <option>Modernización de Arquitectura Cloud</option>
-                        <option>Otro Desafío Técnico</option>
-                      </select>
-                    </div>
+                  <div className="form-group" style={{ position: 'relative', zIndex: 10 }}>
+                    <label>Teléfono / WhatsApp (Opcional)</label>
+                    <CustomPhoneInput />
+                  </div>
+                  
+                  <div className="form-group">
+                    <label>Tipo de Solución Requerida</label>
+                    <select name="service" defaultValue={defaultSolution}>
+                      <option>Sistematización & Workflows</option>
+                      <option>Desarrollo a Medida (Apps)</option>
+                      <option>Ecosistema B2B (CRM/ERP)</option>
+                      <option>Integración con IA</option>
+                      <option>Modernización de Arquitectura Cloud</option>
+                      <option>Otro Desafío Técnico</option>
+                    </select>
                   </div>
                   
                   <div className="form-group">
@@ -258,3 +263,64 @@ export default function Contacto() {
     </main>
   );
 }
+
+
+
+
+
+
+const CustomPhoneInput = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedCountry, setSelectedCountry] = useState({ code: '+34', flag: '🇪🇸', name: 'España' });
+  
+  const countries = [
+    { code: '+34', flag: '🇪🇸', name: 'España' },
+    { code: '+52', flag: '🇲🇽', name: 'México' },
+    { code: '+57', flag: '🇨🇴', name: 'Colombia' },
+    { code: '+54', flag: '🇦🇷', name: 'Argentina' },
+    { code: '+56', flag: '🇨🇱', name: 'Chile' },
+    { code: '+51', flag: '🇵🇪', name: 'Perú' },
+    { code: '+1', flag: '🇺🇸', name: 'Estados Unidos' }
+  ];
+
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', background: '#fff', border: '1px solid #e2e8f0', borderRadius: '8px', padding: '0.75rem 1rem', width: '100%', position: 'relative' }}>
+      <div 
+        onClick={() => setIsOpen(!isOpen)}
+        style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', marginRight: '1rem', position: 'relative' }}
+      >
+        <span style={{ fontSize: '1.2rem' }}>{selectedCountry.flag}</span>
+        <span style={{ fontSize: '0.95rem', color: '#1e293b', fontWeight: 500 }}>{selectedCountry.code}</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: '#94a3b8' }}>
+          <path d="m6 9 6 6 6-6"/>
+        </svg>
+      </div>
+      
+      {isOpen && (
+        <div style={{ position: 'absolute', top: '110%', left: 0, background: 'white', border: '1px solid #e2e8f0', borderRadius: '8px', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', zIndex: 50, width: '200px', maxHeight: '200px', overflowY: 'auto' }}>
+          {countries.map(c => (
+            <div 
+              key={c.code}
+              onClick={() => { setSelectedCountry(c); setIsOpen(false); }}
+              style={{ padding: '0.5rem 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', transition: 'background 0.2s' }}
+              onMouseOver={(e) => e.currentTarget.style.background = '#f8fafc'}
+              onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}
+            >
+              <span style={{ fontSize: '1.2rem' }}>{c.flag}</span>
+              <span style={{ fontSize: '0.9rem', color: '#1e293b', flex: 1 }}>{c.name}</span>
+              <span style={{ fontSize: '0.85rem', color: '#64748b' }}>{c.code}</span>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <div style={{ width: '1px', height: '24px', background: '#e2e8f0', marginRight: '1rem' }}></div>
+      <input 
+        type="tel" 
+        name="phone" 
+        placeholder="600 000 000" 
+        style={{ border: 'none', background: 'transparent', outline: 'none', width: '100%', fontSize: '0.95rem', color: '#1e293b', padding: '0.25rem 0' }} 
+      />
+    </div>
+  );
+};

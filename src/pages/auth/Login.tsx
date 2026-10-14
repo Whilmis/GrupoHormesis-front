@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Mail, Lock, Eye, EyeOff, ArrowRight, ArrowLeft, LogIn } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { ApiError } from '../../api/client';
+import SEO from '../../components/SEO';
 import './login.css';
 
 // Simple inline SVG icons for Google & Microsoft to avoid extra dependencies
@@ -55,6 +56,7 @@ export default function Login() {
 
   return (
     <div className="login-page">
+      <SEO title="Iniciar Sesión | Grupo Hormesis" noIndex={true} />
       {/* Left Branding Panel */}
       <div className="login-branding">
         <div className="login-orbs">

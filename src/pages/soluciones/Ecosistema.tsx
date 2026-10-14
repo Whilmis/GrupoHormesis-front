@@ -1,6 +1,7 @@
 import { ArrowRight, Database, Globe, Network, Activity, PieChart, LayoutDashboard, Share2, Building2, Users, Briefcase, BarChart } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import SEO from "../../components/SEO";
 import "./b2b.css";
 import "./ecosistema.css";
 
@@ -9,6 +10,12 @@ export default function Ecosistema() {
 
   return (
     <main className="ecosistema-page b2b-page">
+      <SEO 
+        title="Ecosistema & Integraciones Empresariales | Grupo Hormesis"
+        description="Unifica tus bases de datos, CRMs, ERPs y canales de comunicación en un solo ecosistema integrado y automatizado."
+        canonical="/soluciones/ecosistema"
+        ogImage="https://grupohormesis.com/b2b_mockup.jpg"
+      />
       {/* Background elements */}
       <div className="b2b-bg-orbs">
         <div className="s-orb s-orb-1 bg-emerald"></div>
@@ -81,10 +88,20 @@ export default function Ecosistema() {
 
           <div className="showcase-grid">
             <div className="showcase-item">
-              <img src="/crm_mockup.jpg" alt="CRM Dashboard Mockup" />
+              <img 
+                src="/crm_mockup.jpg" 
+                alt="Panel de Control y CRM Integrado Grupo Hormesis" 
+                loading="lazy" 
+                decoding="async" 
+              />
             </div>
             <div className="showcase-item">
-              <img src="/b2b_mockup.jpg" alt="B2B Portal Mockup" />
+              <img 
+                src="/b2b_mockup.jpg" 
+                alt="Portal B2B de Gestión Empresarial Grupo Hormesis" 
+                loading="lazy" 
+                decoding="async" 
+              />
             </div>
           </div>
         </div>

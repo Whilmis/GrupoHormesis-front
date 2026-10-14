@@ -1,0 +1,17 @@
+# Robots.txt for Grupo Hormesis (https://grupohormesis.com)
+User-agent: *
+Allow: /
+Allow: /soluciones
+Allow: /nosotros
+Allow: /insights
+Allow: /contacto
+Allow: /book/
+
+# Excluir paneles administrativos y autenticación privada
+Disallow: /portal/
+Disallow: /login
+Disallow: /registro
+Disallow: /confirm-email
+Disallow: /api/
+
+Sitemap: https://grupohormesis.com/sitemap.xml

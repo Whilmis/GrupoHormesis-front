@@ -2,12 +2,19 @@ import { Workflow, Code, BarChart, BrainCircuit, ArrowRight, LayoutDashboard, Ch
 import "./b2b.css";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import SEO from "../../components/SEO";
 
 export default function SolucionesB2B() {
   const { t } = useTranslation();
 
   return (
     <main className="b2b-page">
+      <SEO 
+        title="Soluciones de Automatización & Software B2B | Grupo Hormesis"
+        description="Descubre nuestras soluciones de automatización de ventas, integraciones API avanzadas y desarrollo de software empresarial a medida."
+        canonical="/soluciones"
+        ogImage="https://grupohormesis.com/private_app_store_mockup.jpg"
+      />
       {/* Background Orbs */}
       <div className="b2b-bg-orbs">
         <div className="s-orb s-orb-1"></div>
@@ -31,7 +38,13 @@ export default function SolucionesB2B() {
           </p>
 
           <div className="ia-hero-visual animate-fade-in-up mx-auto" style={{ animationDelay: "300ms", maxWidth: "1000px", borderRadius: "20px", overflow: "hidden", border: "1px solid var(--border-subtle, rgba(0,0,0,0.08))", boxShadow: "0 25px 50px -12px rgba(0,0,0,0.15)" }}>
-            <img src="/private_app_store_mockup.jpg" alt="Private App Store Mockup" style={{ width: "100%", display: "block" }} />
+            <img 
+              src="/private_app_store_mockup.jpg" 
+              alt="Plataforma de Soluciones de Software y Automatización B2B de Grupo Hormesis" 
+              loading="lazy" 
+              decoding="async"
+              style={{ width: "100%", display: "block" }} 
+            />
           </div>
         </div>
       </section>

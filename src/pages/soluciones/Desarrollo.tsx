@@ -1,6 +1,7 @@
 import { ArrowRight, Code, Terminal, Server, Shield, Database, LayoutTemplate, Bug, Rocket, AppWindow, Smartphone, Cpu, Cloud } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import SEO from "../../components/SEO";
 import "./b2b.css";
 import "./desarrollo.css";
 
@@ -9,6 +10,12 @@ export default function Desarrollo() {
 
   return (
     <main className="desarrollo-page b2b-page">
+      <SEO 
+        title="Desarrollo de Software & Arquitectura Cloud a Medida | Grupo Hormesis"
+        description="Ingeniería de software de alta gama, microservicios resilientes, arquitecturas modernas y aplicaciones escalables."
+        canonical="/soluciones/desarrollo"
+        ogImage="https://grupohormesis.com/api_integration_mockup.jpg"
+      />
       {/* Asymmetric Hero Section */}
       <section className="dev-hero-async">
         <div className="dev-hero-bg-slate"></div>

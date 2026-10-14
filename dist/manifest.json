@@ -1,0 +1,21 @@
+{
+  "short_name": "Grupo Hormesis",
+  "name": "Grupo Hormesis | Sistematización Empresarial e Inteligencia Artificial",
+  "description": "Arquitecturas de software a medida, automatización con IA y sistematización de procesos de negocio.",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/favicon.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "display": "standalone"
+}

@@ -53,7 +53,7 @@
 }
 @media (min-width: 1024px) {
   .contact-grid { 
-    grid-template-columns: 1fr 1fr; 
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); 
     gap: 6rem;
   }
 }
@@ -171,9 +171,10 @@
   -webkit-backdrop-filter: blur(24px);
   border: 1px solid rgba(255, 255, 255, 0.8);
   border-radius: 24px;
-  padding: 3rem;
+  padding: 3.5rem;
   box-shadow: 
     0 40px 80px -20px rgba(0,0,0,0.1),
+    0 0 40px rgba(16, 185, 129, 0.05),
     inset 0 0 0 1px rgba(255,255,255,1);
 }
 
@@ -196,22 +197,22 @@
 .premium-form {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 2.75rem;
 }
 
 .form-grid-2 {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 1.5rem;
+  gap: 2.75rem;
 }
-@media (min-width: 640px) { .form-grid-2 { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 640px) { .form-grid-2 { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
 
 .form-group label {
   display: block;
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   font-weight: 700;
-  color: var(--on-surface, #1b1c19);
-  margin-bottom: 0.5rem;
+  color: #334155;
+  margin-bottom: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -219,25 +220,29 @@
 .form-group input,
 .form-group select,
 .form-group textarea {
+  box-sizing: border-box;
   width: 100%;
-  padding: 1rem 1.25rem;
-  border-radius: 12px;
-  background-color: rgba(255, 255, 255, 0.8);
-  border: 1px solid rgba(199, 198, 203, 0.4);
+  padding: 1.25rem 1.5rem;
+  border-radius: 16px;
+  background-color: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(0, 0, 0, 0.05);
   font-family: 'Inter', sans-serif;
-  font-size: 0.95rem;
-  color: var(--on-surface, #1b1c19);
-  transition: all 0.2s ease;
-  box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+  font-size: 1rem;
+  color: #1e293b;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: inset 0 2px 6px rgba(0,0,0,0.02), 0 2px 8px -2px rgba(0,0,0,0.02);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 .form-group input:focus, 
 .form-group select:focus, 
 .form-group textarea:focus {
   outline: none;
-  background-color: #ffffff;
-  border-color: #10B981;
-  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15), inset 0 2px 4px rgba(0,0,0,0.02);
+  background-color: rgba(255, 255, 255, 0.95);
+  border-color: rgba(16, 185, 129, 0.4);
+  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1), 0 8px 24px -4px rgba(16, 185, 129, 0.12);
+  transform: translateY(-2px);
 }
 
 .form-group input::placeholder,
@@ -424,7 +429,7 @@
 }
 @media (min-width: 768px) {
   .faq-grid {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     gap: 3rem;
   }
 }
@@ -455,4 +460,9 @@
   font-size: 0.95rem;
   color: var(--on-surface-variant, #46464b);
   line-height: 1.6;
+}
+
+.form-group select option {
+  background-color: #ffffff;
+  color: #1e293b;
 }

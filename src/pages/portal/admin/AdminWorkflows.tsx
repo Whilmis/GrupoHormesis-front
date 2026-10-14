@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { FolderKanban, Play, Key, Plus, Loader2, Database, KeySquare, ChevronRight, Trash2, Mail, Eye, EyeOff, Copy, Edit2, Check, X, Edit3, Sparkles, Users } from 'lucide-react';
+import { Clock, FolderKanban, Play, Key, Plus, Loader2, Database, KeySquare, ChevronRight, Trash2, Mail, Eye, EyeOff, Copy, Edit2, Check, X, Edit3, Sparkles, Users, Maximize, ExternalLink, Image, AlertTriangle, CheckCircle2, Layers, AlertCircle, FileText, Smartphone, Monitor } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { apiClient } from '../../../api/client';
 import '../portal.css';
@@ -24,6 +24,7 @@ interface Template {
   requiredCreds: string[];
   configSchema: {
     properties: Record<string, any>;
+    required?: string[];
   };
 }
 
@@ -61,6 +62,7 @@ export default function AdminWorkflows() {
   const [newWfName, setNewWfName] = useState('');
   const [newWfProjectId, setNewWfProjectId] = useState<string>('');
   const [projects, setProjects] = useState<any[]>([]);
+  const [calendars, setCalendars] = useState<any[]>([]);
   const [newWfConfig, setNewWfConfig] = useState<Record<string, any>>({});
   const [newWfCreds, setNewWfCreds] = useState<Record<string, string>>({});
 
@@ -81,18 +83,80 @@ export default function AdminWorkflows() {
   const [businessContext, setBusinessContext] = useState('');
   const [servicesInput, setServicesInput] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
+  const [isGeneratingOutreach, setIsGeneratingOutreach] = useState(false);
   const [generatedTemplates, setGeneratedTemplates] = useState<Record<string, {subject: string, body: string}> | null>(null);
     const [executionResult, setExecutionResult] = useState<{ wfId: string; result: any } | null>(null);
+    const [showFullScreenResults, setShowFullScreenResults] = useState<{ wfId: string; result: any } | null>(null);
 
   // Email viewing and refining states
-    const [viewingLeadsWfId, setViewingLeadsWfId] = useState<string | null>(null);
+  const [viewingLeadsWfId, setViewingLeadsWfId] = useState<string | null>(null);
   const [wfExecutions, setWfExecutions] = useState<any[]>([]);
-const [viewingEmailsWfId, setViewingEmailsWfId] = useState<string | null>(null);
+  const [viewingEmailsWfId, setViewingEmailsWfId] = useState<string | null>(null);
   const [refinementPrompts, setRefinementPrompts] = useState<Record<string, string>>({});
   const [isRefining, setIsRefining] = useState<string | null>(null);
   const [editingTemplate, setEditingTemplate] = useState<{wfId: string, service: string} | null>(null);
 
-  const handleRefineTemplates = async (wf: UserWorkflow) => {
+  // Lead Audit & Screenshots Modal states
+  const [selectedAuditLead, setSelectedAuditLead] = useState<any | null>(null);
+  const [activeScreenshotIdx, setActiveScreenshotIdx] = useState<number>(0);
+
+  const getScreenshotLabel = (type: string) => {
+    switch (type) {
+      case 'desktop_home':
+        return { label: 'Hero Escritorio', icon: '🖥️' };
+      case 'desktop_footer':
+        return { label: 'Pie de Página (Footer)', icon: '📑' };
+      case 'mobile_home':
+        return { label: 'Móvil (UX / Responsive)', icon: '📱' };
+      case 'services_page':
+        return { label: 'Página de Servicios', icon: '💼' };
+      case 'contact_page':
+        return { label: 'Página de Contacto', icon: '✉️' };
+      default:
+        return { label: type || 'Captura', icon: '📸' };
+    }
+  };
+
+  const parseLeadAudit = (lead: any) => {
+    let meta = lead?.metadata;
+    if (typeof meta === 'string') {
+      try {
+        meta = JSON.parse(meta);
+      } catch (e) {
+        meta = {};
+      }
+    }
+    const technicalAnalysis = meta?.technicalAnalysis || lead?.technicalAnalysis || null;
+    const aiAuditReport = meta?.aiAuditReport || lead?.aiAuditReport || null;
+
+    let screenshots: { type: string; url: string }[] = [];
+    if (technicalAnalysis?.screenshots && Array.isArray(technicalAnalysis.screenshots)) {
+      screenshots = technicalAnalysis.screenshots;
+    } else if (technicalAnalysis?.screenshotUrl) {
+      screenshots = [{ type: 'desktop_home', url: technicalAnalysis.screenshotUrl }];
+    }
+
+    const technicalErrors: string[] = Array.isArray(aiAuditReport?.technicalErrors) ? aiAuditReport.technicalErrors : [];
+    const visualErrors: string[] = Array.isArray(aiAuditReport?.visualErrors) ? aiAuditReport.visualErrors : [];
+    const detailedAnalysis: string = aiAuditReport?.detailedAnalysis || '';
+
+    const mockup = meta?.creativeAssets?.mockup || lead?.mockup || null;
+    const hasAudit = screenshots.length > 0 || technicalErrors.length > 0 || visualErrors.length > 0 || Boolean(detailedAnalysis) || Boolean(technicalAnalysis) || Boolean(mockup);
+
+    return {
+      meta,
+      technicalAnalysis,
+      aiAuditReport,
+      screenshots,
+      technicalErrors,
+      visualErrors,
+      detailedAnalysis,
+      hasAudit,
+      mockup
+    };
+  };
+
+  const handleRefineTemplates = async (wf: UserWorkflow, service?: string) => {
     const prompt = refinementPrompts[wf.id];
     if (!prompt) return alert('Escribe qu� deseas cambiar.');
     setIsRefining(wf.id);
@@ -140,6 +204,10 @@ const [viewingEmailsWfId, setViewingEmailsWfId] = useState<string | null>(null);
       try { pData = await apiClient('/projects'); } catch(e: any) { if (e.status !== 404) console.error(e); }
       setProjects(pData);
 
+      let calData = [];
+      try { calData = await apiClient('/calendars'); } catch(e: any) { console.error('Error fetching calendars', e); }
+      setCalendars(calData);
+
       const [tpls, wfs, creds] = await Promise.all([
         apiClient<Template[]>('/workflows/templates'),
         apiClient<UserWorkflow[]>('/workflows'),
@@ -159,6 +227,34 @@ const [viewingEmailsWfId, setViewingEmailsWfId] = useState<string | null>(null);
       setLoading(false);
     }
   };
+
+    
+    const handleGenerateOutreachTemplate = async () => {
+      if (!newWfConfig.businessContext) return alert('Rellena el contexto de la empresa primero.');
+      if (!newWfConfig.brandVoice) return alert('Rellena la lA-nea de color o tono de marca primero.');
+      
+      setIsGeneratingOutreach(true);
+      try {
+        const res = await apiClient('/workflows/generate-templates', {
+          method: 'POST',
+          data: { 
+            business_context: newWfConfig.businessContext, 
+            services: ['Propuesta de Negocios'],
+            brandVoice: newWfConfig.brandVoice,
+            groqCredentialId: newWfCreds['groq_api_key'] || undefined
+          }
+        });
+        
+        const email = res['Propuesta de Negocios'];
+        if (email) {
+          setNewWfConfig({...newWfConfig, generated_outreach_email: email});
+        }
+      } catch (error: any) {
+        alert('Error generando correo con IA: ' + (error.message || 'AsegAurate de tener la credencial groq_api_key'));
+      } finally {
+        setIsGeneratingOutreach(false);
+      }
+    };
 
     const handleGenerateTemplates = async () => {
     if (!businessContext || !servicesInput) return alert('Rellena el contexto y los servicios');
@@ -353,109 +449,11 @@ const [viewingEmailsWfId, setViewingEmailsWfId] = useState<string | null>(null);
   }
 
   const activeTemplate = templates.find(t => t.id === activeTab);
-  const activeTemplateWorkflows = workflows.filter(w => w.templateId === activeTab);  if (activeWorkflowEditor) {
+  const activeTemplateWorkflows = workflows.filter(w => w.templateId === activeTab);
+
+  if (activeWorkflowEditor) {
     const wf = activeWorkflowEditor;
-    if (viewingLeadsWfId) {
-    const wf = workflows.find(w => w.id === viewingLeadsWfId);
     return (
-      <div style={{ background: '#f8fafc', padding: '2rem', borderRadius: '8px', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)', minHeight: '600px' }}>
-        <button 
-          onClick={() => setViewingLeadsWfId(null)}
-          style={{ background: 'white', border: '1px solid #cbd5e1', color: '#0f172a', padding: '0.5rem 1rem', borderRadius: '6px', cursor: 'pointer', marginBottom: '1.5rem', display: 'inline-flex', alignItems: 'center', gap: '0.5rem', fontWeight: 500, boxShadow: '0 1px 2px rgba(0,0,0,0.05)' }}
-        >
-          ← Volver a Workflows
-        </button>
-        <h3 style={{ margin: '0 0 1.5rem 0', color: '#0f172a', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <Users size={24} color="#10b981" /> 
-          CRM: Leads Capturados - {wf?.name || 'Workflow'}
-        </h3>
-        
-        {wfExecutions.length === 0 ? (
-          <div style={{ padding: '3rem', textAlign: 'center', background: 'white', borderRadius: '6px', border: '1px dashed #cbd5e1' }}>
-            <p style={{ color: '#64748b', margin: 0 }}>Aún no hay leads procesados para este flujo.</p>
-          </div>
-        ) : (
-          <div style={{ overflowX: 'auto', background: 'white', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
-              <thead>
-                <tr style={{ background: '#f1f5f9', color: '#475569', textAlign: 'left' }}>
-                  <th style={{ padding: '1rem', borderBottom: '1px solid #e2e8f0' }}>Fecha</th>
-                  <th style={{ padding: '1rem', borderBottom: '1px solid #e2e8f0' }}>Prospecto / Empresa</th>
-                  <th style={{ padding: '1rem', borderBottom: '1px solid #e2e8f0' }}>Email</th>
-                  <th style={{ padding: '1rem', borderBottom: '1px solid #e2e8f0' }}>Cupón / Referido</th>
-                  <th style={{ padding: '1rem', borderBottom: '1px solid #e2e8f0' }}>Payload (Otros Datos)</th>
-                </tr>
-              </thead>
-              <tbody>
-                {wfExecutions.map((exec: any) => {
-                  const payload = exec.payload || exec.resultData?.leadData || exec;
-                  const dateStr = new Date(exec.createdAt || exec.startedAt || new Date()).toLocaleString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
-                  
-                  const mapping = wf?.config?.fieldMappings || {};
-                  // El usuario parece haber configurado mal el mapping en la UI (puso 'service' en lugar de 'usedCouponCode'). 
-                  // Vamos a forzar la lectura de usedCouponCode si existe en el payload, para evitar errores visuales.
-                  const couponValue = payload.usedCouponCode || payload.coupon || (mapping.referralCodeField ? payload[mapping.referralCodeField] : null);
-                  const serviceValue = payload.service || (mapping.servicesField ? payload[mapping.servicesField] : null);
-                  
-                  const extraData = { ...payload };
-                  delete extraData.name;
-                  delete extraData.email;
-                  delete extraData.businessName;
-                  if (mapping.referralCodeField) delete extraData[mapping.referralCodeField];
-
-                  return (
-                    <tr key={exec.id || Math.random()} style={{ borderBottom: '1px solid #f1f5f9' }}>
-                      <td style={{ padding: '1rem', color: '#64748b', whiteSpace: 'nowrap' }}>{dateStr}</td>
-                      <td style={{ padding: '1rem', fontWeight: 500, color: '#0f172a' }}>
-                        {payload.name || exec.name || 'Sin Nombre'}<br/>
-                        <span style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 'normal' }}>{payload.businessName || '-'}</span>
-                      </td>
-                      <td style={{ padding: '1rem' }}>
-                        {payload.email || exec.email ? <a href={`mailto:${payload.email || exec.email}`} style={{ color: '#3b82f6', textDecoration: 'none' }}>{payload.email || exec.email}</a> : '-'}
-                      </td>
-                      <td style={{ padding: '1rem' }}>
-                        {serviceValue && (
-                          <div style={{ marginBottom: '6px' }}>
-                            <span style={{ background: '#e0f2fe', color: '#0369a1', padding: '0.2rem 0.6rem', borderRadius: '12px', fontSize: '0.75rem', fontWeight: 'bold' }}>
-                              💼 {serviceValue}
-                            </span>
-                          </div>
-                        )}
-                        {exec.referredBy && exec.referredBy.name ? (
-                          <div style={{ marginTop: '6px', display: 'inline-flex', alignItems: 'center', background: '#dcfce7', color: '#166534', padding: '0.2rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600 }}>
-                            ✅ Vino referido por: {exec.referredBy.name}
-                          </div>
-                        ) : exec.referredByUserId ? (
-                          <div style={{ marginTop: '6px', display: 'inline-flex', alignItems: 'center', background: '#dcfce7', color: '#166534', padding: '0.2rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600 }}>
-                            ✅ Vino referido por: Usuario ({exec.referredByUserId})
-                          </div>
-                        ) : (
-                          couponValue && couponValue !== serviceValue && (
-                            <div style={{ marginBottom: '4px' }}>
-                              <span style={{ background: '#fef3c7', color: '#92400e', padding: '0.2rem 0.6rem', borderRadius: '12px', fontSize: '0.75rem', fontWeight: 'bold' }}>
-                                🏷️ Usando el cupón: {couponValue}
-                              </span>
-                            </div>
-                          )
-                        )}
-                      </td>
-                      <td style={{ padding: '1rem' }}>
-                        <pre style={{ margin: 0, background: '#1e293b', color: '#38bdf8', padding: '0.5rem', borderRadius: '4px', fontSize: '0.7rem', maxWidth: '350px', overflowX: 'auto', maxHeight: '100px' }}>
-                          {JSON.stringify(extraData, null, 2)}
-                        </pre>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
-    );
-  }
-
-  return (
       <div>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
           <h2 style={{ color: '#0f172a', display: 'flex', alignItems: 'center', gap: '0.5rem', margin: 0 }}>
@@ -490,7 +488,7 @@ const [viewingEmailsWfId, setViewingEmailsWfId] = useState<string | null>(null);
           </div>
 
           <div style={{ display: 'grid', gap: '2rem', gridTemplateColumns: '1fr' }}>
-            {Object.entries(wf.config.generated_responses || {}).map(([service, template]) => {
+            {Object.entries((wf.config?.generated_responses || {}) as Record<string, { subject: string; body: string }>).map(([service, template]) => {
               const isEditing = editingTemplate?.wfId === wf.id && editingTemplate?.service === service;
               return (
                 <div key={service} style={{ border: '1px solid #e2e8f0', borderRadius: '8px', overflow: 'hidden' }}>
@@ -559,80 +557,203 @@ const [viewingEmailsWfId, setViewingEmailsWfId] = useState<string | null>(null);
             <p style={{ color: '#64748b', margin: 0 }}>Aún no hay leads procesados para este flujo.</p>
           </div>
         ) : (
-          <div style={{ overflowX: 'auto', background: 'white', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
-              <thead>
-                <tr style={{ background: '#f1f5f9', color: '#475569', textAlign: 'left' }}>
-                  <th style={{ padding: '1rem', borderBottom: '1px solid #e2e8f0' }}>Fecha</th>
-                  <th style={{ padding: '1rem', borderBottom: '1px solid #e2e8f0' }}>Prospecto / Empresa</th>
-                  <th style={{ padding: '1rem', borderBottom: '1px solid #e2e8f0' }}>Email</th>
-                  <th style={{ padding: '1rem', borderBottom: '1px solid #e2e8f0' }}>Cupón / Referido</th>
-                  <th style={{ padding: '1rem', borderBottom: '1px solid #e2e8f0' }}>Payload (Otros Datos)</th>
-                </tr>
-              </thead>
-              <tbody>
-                {wfExecutions.map((exec: any) => {
-                  const payload = exec.payload || exec.resultData?.leadData || exec;
-                  const dateStr = new Date(exec.createdAt || exec.startedAt || new Date()).toLocaleString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
-                  
-                  const mapping = wf?.config?.fieldMappings || {};
-                  // El usuario parece haber configurado mal el mapping en la UI (puso 'service' en lugar de 'usedCouponCode'). 
-                  // Vamos a forzar la lectura de usedCouponCode si existe en el payload, para evitar errores visuales.
-                  const couponValue = payload.usedCouponCode || payload.coupon || (mapping.referralCodeField ? payload[mapping.referralCodeField] : null);
-                  const serviceValue = payload.service || (mapping.servicesField ? payload[mapping.servicesField] : null);
-                  
-                  const extraData = { ...payload };
-                  delete extraData.name;
-                  delete extraData.email;
-                  delete extraData.businessName;
-                  if (mapping.referralCodeField) delete extraData[mapping.referralCodeField];
+          <div style={{ overflowX: 'auto', background: 'white', borderRadius: '8px', border: '1px solid #e2e8f0', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
+            {(() => {
+              const allLeads = wfExecutions.flatMap((exec: any) => {
+                if (exec.resultData?.leads && Array.isArray(exec.resultData.leads)) {
+                  return exec.resultData.leads.map((l: any, idx: number) => ({
+                    ...l,
+                    _id: `${exec.id || 'exec'}-lead-${idx}`,
+                    _date: exec.createdAt || exec.startedAt,
+                    _isMapLead: true,
+                    _rawExec: exec
+                  }));
+                }
+                const payload = exec.payload || exec.resultData?.leadData || exec;
+                return [{
+                  ...payload,
+                  _id: exec.id || Math.random().toString(),
+                  _date: exec.createdAt || exec.startedAt,
+                  _isMapLead: false,
+                  _rawExec: exec,
+                  referredBy: exec.referredBy,
+                  referredByUserId: exec.referredByUserId
+                }];
+              });
 
-                  return (
-                    <tr key={exec.id || Math.random()} style={{ borderBottom: '1px solid #f1f5f9' }}>
-                      <td style={{ padding: '1rem', color: '#64748b', whiteSpace: 'nowrap' }}>{dateStr}</td>
-                      <td style={{ padding: '1rem', fontWeight: 500, color: '#0f172a' }}>
-                        {payload.name || exec.name || 'Sin Nombre'}<br/>
-                        <span style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 'normal' }}>{payload.businessName || '-'}</span>
-                      </td>
-                      <td style={{ padding: '1rem' }}>
-                        {payload.email || exec.email ? <a href={`mailto:${payload.email || exec.email}`} style={{ color: '#3b82f6', textDecoration: 'none' }}>{payload.email || exec.email}</a> : '-'}
-                      </td>
-                      <td style={{ padding: '1rem' }}>
-                        {serviceValue && (
-                          <div style={{ marginBottom: '6px' }}>
-                            <span style={{ background: '#e0f2fe', color: '#0369a1', padding: '0.2rem 0.6rem', borderRadius: '12px', fontSize: '0.75rem', fontWeight: 'bold' }}>
-                              💼 {serviceValue}
-                            </span>
-                          </div>
-                        )}
-                        {exec.referredBy && exec.referredBy.name ? (
-                          <div style={{ marginTop: '6px', display: 'inline-flex', alignItems: 'center', background: '#dcfce7', color: '#166534', padding: '0.2rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600 }}>
-                            ✅ Vino referido por: {exec.referredBy.name}
-                          </div>
-                        ) : exec.referredByUserId ? (
-                          <div style={{ marginTop: '6px', display: 'inline-flex', alignItems: 'center', background: '#dcfce7', color: '#166534', padding: '0.2rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600 }}>
-                            ✅ Vino referido por: Usuario ({exec.referredByUserId})
-                          </div>
-                        ) : (
-                          couponValue && couponValue !== serviceValue && (
-                            <div style={{ marginBottom: '4px' }}>
-                              <span style={{ background: '#fef3c7', color: '#92400e', padding: '0.2rem 0.6rem', borderRadius: '12px', fontSize: '0.75rem', fontWeight: 'bold' }}>
-                                🏷️ Usando el cupón: {couponValue}
-                              </span>
-                            </div>
-                          )
-                        )}
-                      </td>
-                      <td style={{ padding: '1rem' }}>
-                        <pre style={{ margin: 0, background: '#1e293b', color: '#38bdf8', padding: '0.5rem', borderRadius: '4px', fontSize: '0.7rem', maxWidth: '350px', overflowX: 'auto', maxHeight: '100px' }}>
-                          {JSON.stringify(extraData, null, 2)}
-                        </pre>
-                      </td>
+              if (allLeads.length === 0) {
+                return (
+                  <div style={{ padding: '3rem', textAlign: 'center' }}>
+                    <p style={{ color: '#64748b', margin: 0 }}>No hay prospectos disponibles.</p>
+                  </div>
+                );
+              }
+
+              return (
+                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
+                  <thead>
+                    <tr style={{ background: '#f1f5f9', color: '#475569', textAlign: 'left' }}>
+                      <th style={{ padding: '1rem', borderBottom: '1px solid #e2e8f0' }}>Fecha</th>
+                      <th style={{ padding: '1rem', borderBottom: '1px solid #e2e8f0' }}>Prospecto / Empresa</th>
+                      <th style={{ padding: '1rem', borderBottom: '1px solid #e2e8f0' }}>Contacto</th>
+                      <th style={{ padding: '1rem', borderBottom: '1px solid #e2e8f0' }}>Auditoría IA & Capturas</th>
+                      <th style={{ padding: '1rem', borderBottom: '1px solid #e2e8f0' }}>Datos / Cupón</th>
                     </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+                  </thead>
+                  <tbody>
+                    {allLeads.map((item: any) => {
+                      const dateStr = new Date(item._date || new Date()).toLocaleString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+                      const audit = parseLeadAudit(item);
+
+                      const mapping = wf?.config?.fieldMappings || {};
+                      const couponValue = item.usedCouponCode || item.coupon || (mapping.referralCodeField ? item[mapping.referralCodeField] : null);
+                      const serviceValue = item.service || (mapping.servicesField ? item[mapping.servicesField] : null);
+
+                      const extraData = { ...item };
+                      delete extraData.name;
+                      delete extraData.email;
+                      delete extraData.phone;
+                      delete extraData.website;
+                      delete extraData.address;
+                      delete extraData.metadata;
+                      delete extraData.technicalAnalysis;
+                      delete extraData.aiAuditReport;
+                      delete extraData._id;
+                      delete extraData._date;
+                      delete extraData._isMapLead;
+                      delete extraData._rawExec;
+
+                      return (
+                        <tr key={item._id} style={{ borderBottom: '1px solid #f1f5f9' }}>
+                          <td style={{ padding: '1rem', color: '#64748b', whiteSpace: 'nowrap', verticalAlign: 'top' }}>{dateStr}</td>
+                          <td style={{ padding: '1rem', fontWeight: 600, color: '#0f172a', verticalAlign: 'top' }}>
+                            <div style={{ fontSize: '0.95rem', marginBottom: '0.25rem' }}>{item.name || item.businessName || 'Sin Nombre'}</div>
+                            {item.rating && (
+                              <span style={{ display: 'inline-flex', alignItems: 'center', background: '#fef08a', color: '#854d0e', padding: '0.15rem 0.5rem', borderRadius: '10px', fontSize: '0.75rem', fontWeight: 500, marginRight: '0.5rem' }}>
+                                ⭐ {item.rating}
+                              </span>
+                            )}
+                            {item.address && (
+                              <div style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 'normal', marginTop: '0.25rem', maxWidth: '220px' }}>
+                                📍 {item.address}
+                              </div>
+                            )}
+                          </td>
+                          <td style={{ padding: '1rem', verticalAlign: 'top' }}>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', fontSize: '0.8rem' }}>
+                              {item.email ? (
+                                <a href={`mailto:${item.email}`} style={{ color: '#2563eb', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                  <Mail size={13} /> {item.email}
+                                </a>
+                              ) : null}
+                              {item.phone && item.phone !== 'No disponible' ? (
+                                <a href={`tel:${item.phone}`} style={{ color: '#059669', textDecoration: 'none', fontWeight: 500 }}>
+                                  📞 {item.phone}
+                                </a>
+                              ) : null}
+                              {item.website && item.website !== 'No disponible' ? (
+                                <a href={item.website} target="_blank" rel="noreferrer" style={{ color: '#4f46e5', textDecoration: 'none', fontWeight: 500, display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                  <ExternalLink size={13} /> {item.website.replace(/^https?:\/\//, '').replace(/\/$/, '')}
+                                </a>
+                              ) : null}
+                              {!item.email && !item.phone && !item.website && (
+                                <span style={{ color: '#94a3b8' }}>-</span>
+                              )}
+                            </div>
+                          </td>
+                          <td style={{ padding: '1rem', verticalAlign: 'top' }}>
+                            {audit.hasAudit ? (
+                              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', minWidth: '170px' }}>
+                                {audit.screenshots.length > 0 && (
+                                  <div 
+                                    onClick={() => { setSelectedAuditLead(item); setActiveScreenshotIdx(0); }}
+                                    style={{ position: 'relative', cursor: 'pointer', borderRadius: '6px', overflow: 'hidden', border: '1px solid #cbd5e1', boxShadow: '0 1px 2px rgba(0,0,0,0.08)' }}
+                                    title="Clic para ver las 5 capturas en alta resolución"
+                                  >
+                                    <img 
+                                      src={audit.screenshots[0].url} 
+                                      alt="Screenshot" 
+                                      style={{ width: '100%', height: '70px', objectFit: 'cover', display: 'block' }} 
+                                    />
+                                    <span style={{ position: 'absolute', bottom: '4px', right: '4px', background: 'rgba(15, 23, 42, 0.85)', color: 'white', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 600 }}>
+                                      📸 {audit.screenshots.length} capturas
+                                    </span>
+                                  </div>
+                                )}
+                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+                                  {audit.mockup && (
+                                    <span style={{ background: '#ede9fe', color: '#6d28d9', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 600 }}>
+                                      🎨 Maqueta Stitch
+                                    </span>
+                                  )}
+                                  {audit.technicalErrors.length > 0 && (
+                                    <span style={{ background: '#fee2e2', color: '#991b1b', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 600 }}>
+                                      ⚠️ {audit.technicalErrors.length} téc.
+                                    </span>
+                                  )}
+                                  {audit.visualErrors.length > 0 && (
+                                    <span style={{ background: '#ffedd5', color: '#9a3412', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 600 }}>
+                                      👁️ {audit.visualErrors.length} visual.
+                                    </span>
+                                  )}
+                                </div>
+                                <button
+                                  onClick={() => { setSelectedAuditLead(item); setActiveScreenshotIdx(0); }}
+                                  style={{
+                                    background: '#0f172a',
+                                    color: 'white',
+                                    border: 'none',
+                                    padding: '0.4rem 0.6rem',
+                                    borderRadius: '6px',
+                                    fontSize: '0.75rem',
+                                    fontWeight: 600,
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    gap: '4px'
+                                  }}
+                                >
+                                  <Sparkles size={12} color="#10b981" /> Ver Auditoría IA
+                                </button>
+                              </div>
+                            ) : (
+                              <span style={{ color: '#94a3b8', fontSize: '0.75rem' }}>Sin auditoría web</span>
+                            )}
+                          </td>
+                          <td style={{ padding: '1rem', verticalAlign: 'top' }}>
+                            {serviceValue && (
+                              <div style={{ marginBottom: '6px' }}>
+                                <span style={{ background: '#e0f2fe', color: '#0369a1', padding: '0.2rem 0.6rem', borderRadius: '12px', fontSize: '0.75rem', fontWeight: 'bold' }}>
+                                  💼 {serviceValue}
+                                </span>
+                              </div>
+                            )}
+                            {item.referredBy && item.referredBy.name ? (
+                              <div style={{ marginTop: '6px', display: 'inline-flex', alignItems: 'center', background: '#dcfce7', color: '#166534', padding: '0.2rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600 }}>
+                                ✅ Referido por: {item.referredBy.name}
+                              </div>
+                            ) : couponValue && couponValue !== serviceValue ? (
+                              <div style={{ marginBottom: '4px' }}>
+                                <span style={{ background: '#fef3c7', color: '#92400e', padding: '0.2rem 0.6rem', borderRadius: '12px', fontSize: '0.75rem', fontWeight: 'bold' }}>
+                                  🏷️ Cupón: {couponValue}
+                                </span>
+                              </div>
+                            ) : null}
+
+                            {Object.keys(extraData).length > 0 && (
+                              <pre style={{ margin: '4px 0 0 0', background: '#1e293b', color: '#38bdf8', padding: '0.4rem', borderRadius: '4px', fontSize: '0.7rem', maxWidth: '240px', overflowX: 'auto', maxHeight: '75px' }}>
+                                {JSON.stringify(extraData, null, 2)}
+                              </pre>
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              );
+            })()}
           </div>
         )}
       </div>
@@ -820,39 +941,41 @@ const [viewingEmailsWfId, setViewingEmailsWfId] = useState<string | null>(null);
                         ))}
                       </select>
                     </div>
+                    {activeTemplate.typeIdentifier === 'form_contact_handler' && (
                     <div className="input-group" style={{ background: '#f8fafc', padding: '1rem', border: '1px solid #e2e8f0', borderRadius: '6px' }}>
-                      <h5 style={{ margin: '0 0 0.5rem 0', color: '#0f172a' }}>Estructura y Mapeo Dinámico de Formulario</h5>
-                      <p style={{ margin: '0 0 1rem 0', fontSize: '0.75rem', color: '#64748b' }}>Define los campos esperados del formulario y mapea los que cumplen funciones especiales.</p>
-                      
-                      <label>Estructura esperada del formulario (variables separadas por coma)</label>
-                      <input 
-                        type="text" 
-                        value={newWfConfig?.formSchema ? newWfConfig.formSchema.join(', ') : ''} 
-                        onChange={(e) => setNewWfConfig({...newWfConfig, formSchema: e.target.value.split(',').map(s => s.trim()).filter(Boolean)})} 
-                        className="auth-input" 
-                        placeholder="Ej. name, email, businessName, usedCouponCode, service" 
-                        style={{ marginBottom: '1rem' }}
-                      />
-                      
-                      <label>Campo para Cupón / Referido</label>
-                      <input 
-                        type="text" 
-                        value={newWfConfig?.fieldMappings?.referralCodeField || ''} 
-                        onChange={(e) => setNewWfConfig({...newWfConfig, fieldMappings: {...(newWfConfig.fieldMappings || {}), referralCodeField: e.target.value}})} 
-                        className="auth-input" 
-                        placeholder="Ej. usedCouponCode" 
-                        style={{ marginBottom: '0.75rem' }}
-                      />
-
-                      <label>Campo para Servicios</label>
-                      <input 
-                        type="text" 
-                        value={newWfConfig?.fieldMappings?.servicesField || ''} 
-                        onChange={(e) => setNewWfConfig({...newWfConfig, fieldMappings: {...(newWfConfig.fieldMappings || {}), servicesField: e.target.value}})} 
-                        className="auth-input" 
-                        placeholder="Ej. service" 
-                      />
-                    </div>
+                        <h5 style={{ margin: '0 0 0.5rem 0', color: '#0f172a' }}>Estructura y Mapeo Dinámico de Formulario</h5>
+                        <p style={{ margin: '0 0 1rem 0', fontSize: '0.75rem', color: '#64748b' }}>Define los campos esperados del formulario y mapea los que cumplen funciones especiales.</p>
+                        
+                        <label>Estructura esperada del formulario (variables separadas por coma)</label>
+                        <input 
+                          type="text" 
+                          value={newWfConfig?.formSchema ? newWfConfig.formSchema.join(', ') : ''} 
+                          onChange={(e) => setNewWfConfig({...newWfConfig, formSchema: e.target.value.split(',').map(s => s.trim()).filter(Boolean)})} 
+                          className="auth-input" 
+                          placeholder="Ej. name, email, businessName, usedCouponCode, service" 
+                          style={{ marginBottom: '1rem' }}
+                        />
+                        
+                        <label>Campo para Cupón / Referido</label>
+                        <input 
+                          type="text" 
+                          value={newWfConfig?.fieldMappings?.referralCodeField || ''} 
+                          onChange={(e) => setNewWfConfig({...newWfConfig, fieldMappings: {...(newWfConfig.fieldMappings || {}), referralCodeField: e.target.value}})} 
+                          className="auth-input" 
+                          placeholder="Ej. usedCouponCode" 
+                          style={{ marginBottom: '0.75rem' }}
+                        />
+  
+                        <label>Campo para Servicios</label>
+                        <input 
+                          type="text" 
+                          value={newWfConfig?.fieldMappings?.servicesField || ''} 
+                          onChange={(e) => setNewWfConfig({...newWfConfig, fieldMappings: {...(newWfConfig.fieldMappings || {}), servicesField: e.target.value}})} 
+                          className="auth-input" 
+                          placeholder="Ej. service" 
+                        />
+                      </div>
+                  )}
                     {activeTemplate.requiredCreds && activeTemplate.requiredCreds.map((reqCred: string) => (
                       <div className="input-group" key={reqCred}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
@@ -874,6 +997,24 @@ const [viewingEmailsWfId, setViewingEmailsWfId] = useState<string | null>(null);
                         </select>
                       </div>
                     ))}
+                    {activeTemplate.configSchema?.properties?.calendarId && (
+                      <div className="input-group">
+                        <label>Calendario Asignado para Reuniones</label>
+                        <p style={{ fontSize: '0.7rem', color: '#64748b', margin: '0 0 0.5rem 0' }}>Selecciona el calendario al que el cliente será dirigido en el correo</p>
+                        <select
+                          required={activeTemplate.configSchema.required?.includes('calendarId')}
+                          value={newWfConfig['calendarId'] || ''}
+                          onChange={(e) => setNewWfConfig({...newWfConfig, calendarId: e.target.value})}
+                          className="auth-input"
+                          style={{ appearance: 'auto', background: 'white' }}
+                        >
+                          <option value="">-- Selecciona un Calendario --</option>
+                          {calendars.map(cal => (
+                            <option key={cal.id} value={cal.id}>{cal.name || 'Sin nombre (' + cal.id + ')'}</option>
+                          ))}
+                        </select>
+                      </div>
+                    )}
                       {activeTemplate.typeIdentifier === 'form_contact_handler' && (
                         <div style={{ background: '#f1f5f9', padding: '1.5rem', borderRadius: '8px', border: '1px dashed #cbd5e1', marginBottom: '1rem' }}>
                           <h4 style={{ margin: '0 0 1rem 0', color: '#0f172a' }}>✨ Asistente de Plantillas IA</h4>
@@ -1013,12 +1154,204 @@ const [viewingEmailsWfId, setViewingEmailsWfId] = useState<string | null>(null);
                           </div>
                         </div>
                       )}
+
+                      {activeTemplate.typeIdentifier === 'auto_outreach_google_maps' && (
+                        <div style={{ background: '#f1f5f9', padding: '1.5rem', borderRadius: '8px', border: '1px dashed #cbd5e1', marginBottom: '1rem' }}>
+                          <h4 style={{ margin: '0 0 1rem 0', color: '#0f172a' }}>⚙️ Configuración de Auto Outreach</h4>
+                          <p style={{ fontSize: '0.8rem', color: '#64748b', marginBottom: '1rem' }}>
+                            Envía correos personalizados con diagnóstico web, GIF conceptual Antes vs. Línea de Diseño, resolución de problemas técnicos del nicho y botones de agendamiento y respuesta directa.
+                          </p>
+                      
+                          <div className="input-group" style={{ marginBottom: '1rem' }}>
+                            <label>Fuente de Leads (Campaña Google Maps)</label>
+                            <select 
+                              required
+                              value={newWfConfig.sourceWorkflowId || ''} 
+                              onChange={e => setNewWfConfig({...newWfConfig, sourceWorkflowId: e.target.value})} 
+                              className="auth-input" 
+                            >
+                              <option value="">Selecciona una campaña...</option>
+                              {workflows.filter(w => w.template?.typeIdentifier === 'lead_collector').map(w => (
+                                <option key={w.id} value={w.id}>{w.name}</option>
+                              ))}
+                            </select>
+                          </div>
+                      
+                          <div className="input-group" style={{ marginBottom: '1rem' }}>
+                            <label>Contexto de tu Empresa para Groq AI</label>
+                            <textarea 
+                              required
+                              value={newWfConfig.businessContext || ''} 
+                              onChange={e => setNewWfConfig({...newWfConfig, businessContext: e.target.value})} 
+                              className="auth-input" 
+                              placeholder="Ej. Somos una agencia B2B que ayuda a empresas con transformación digital." 
+                              style={{ minHeight: '60px', resize: 'vertical' }} 
+                            />
+                          </div>
+                      
+                          <div className="input-group" style={{ marginBottom: '1rem' }}>
+                            <label>Línea de Color / Tono de la Marca</label>
+                            <input 
+                              required
+                              type="text"
+                              value={newWfConfig.brandVoice || ''} 
+                              onChange={e => setNewWfConfig({...newWfConfig, brandVoice: e.target.value})} 
+                              className="auth-input" 
+                              placeholder="Ej. Tono formal, amigable, persuasivo, colores serios." 
+                            />
+                          </div>
+                      
+                          <div className="input-group" style={{ marginBottom: '1rem' }}>
+                            <label>Límite de Envío Diario</label>
+                            <input 
+                              required
+                              type="number"
+                              min="1"
+                              max="500"
+                              value={newWfConfig.maxEmailsPerDay || 50} 
+                              onChange={e => setNewWfConfig({...newWfConfig, maxEmailsPerDay: parseInt(e.target.value, 10)})} 
+                              className="auth-input" 
+                            />
+                          </div>
+                      
+                          <div className="input-group" style={{ marginBottom: '1rem' }}>
+                            <label>Horario de Envío (Cron)</label>
+                            <select 
+                              value={
+                                ['0 8 * * 1-5', '0 10 * * 1-5', '0 12 * * 1-5', '0 9 * * 1-5'].includes(newWfConfig.schedule || '0 8 * * 1-5') 
+                                ? (newWfConfig.schedule || '0 8 * * 1-5') 
+                                : 'custom'
+                              }
+                              onChange={e => {
+                                if (e.target.value === 'custom') {
+                                  setNewWfConfig({...newWfConfig, schedule: ''});
+                                } else {
+                                  setNewWfConfig({...newWfConfig, schedule: e.target.value});
+                                }
+                              }}
+                              className="auth-input"
+                              style={{ marginBottom: '0.5rem' }}
+                            >
+                              <option value="0 8 * * 1-5">Lunes a Viernes a las 8:00 AM</option>
+                              <option value="0 10 * * 1-5">Lunes a Viernes a las 10:00 AM</option>
+                              <option value="0 12 * * 1-5">Lunes a Viernes a las 12:00 PM</option>
+                              <option value="0 9 * * 1-5">Lunes a Viernes a las 9:00 AM</option>
+                              <option value="custom">Personalizado (Avanzado)</option>
+                            </select>
+                            
+                            {(!['0 8 * * 1-5', '0 10 * * 1-5', '0 12 * * 1-5', '0 9 * * 1-5'].includes(newWfConfig.schedule || '0 8 * * 1-5')) && (
+                              <input 
+                                type="text" 
+                                value={newWfConfig.schedule || '0 8 * * 1-5'} 
+                                onChange={e => setNewWfConfig({...newWfConfig, schedule: e.target.value})} 
+                                className="auth-input" 
+                                placeholder="Ingresa tu expresión Cron (ej. 0 8 * * 1-5)" 
+                              />
+                            )}
+                          </div>
+
+                          <div style={{ marginTop: '1rem', borderTop: '1px solid #cbd5e1', paddingTop: '1rem' }}>
+                            <button 
+                              type="button"
+                              onClick={handleGenerateOutreachTemplate}
+                              disabled={isGeneratingOutreach}
+                              style={{ width: '100%', padding: '0.75rem', background: isGeneratingOutreach ? '#94a3b8' : '#0f172a', color: 'white', border: 'none', borderRadius: '6px', cursor: isGeneratingOutreach ? 'not-allowed' : 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem', fontWeight: '500', marginBottom: '1rem' }}
+                            >
+                              {isGeneratingOutreach ? <Loader2 size={16} className="spinner" /> : <Sparkles size={16} />}
+                              {isGeneratingOutreach ? 'Generando Plantilla...' : 'Generar Correo Inicial con IA'}
+                            </button>
+
+                            {newWfConfig.generated_outreach_email && (
+                              <div style={{ background: 'white', padding: '1rem', borderRadius: '6px', border: '1px solid #e2e8f0' }}>
+                                <label style={{ display: 'block', fontSize: '0.75rem', color: '#64748b', marginBottom: '0.25rem', fontWeight: 'bold' }}>Asunto Generado</label>
+                                <input 
+                                  type="text" 
+                                  value={newWfConfig.generated_outreach_email.subject} 
+                                  onChange={e => setNewWfConfig({...newWfConfig, generated_outreach_email: {...newWfConfig.generated_outreach_email, subject: e.target.value}})} 
+                                  className="auth-input" 
+                                  style={{ marginBottom: '1rem' }} 
+                                />
+                                
+                                  <label style={{ display: 'block', fontSize: '0.75rem', color: '#64748b', marginBottom: '0.25rem', fontWeight: 'bold' }}>Cuerpo del Correo (HTML)</label>
+                                  <textarea 
+                                    value={newWfConfig.generated_outreach_email.body} 
+                                    onChange={e => setNewWfConfig({...newWfConfig, generated_outreach_email: {...newWfConfig.generated_outreach_email, body: e.target.value}})} 
+                                    className="auth-input" 
+                                    style={{ minHeight: '300px', resize: 'vertical', marginBottom: '1rem' }} 
+                                  />
+                                  
+                                  <label style={{ display: 'block', fontSize: '0.75rem', color: '#64748b', marginBottom: '0.5rem', fontWeight: 'bold' }}>Previsualización</label>
+                                  <div 
+                                    style={{ border: '1px solid #cbd5e1', borderRadius: '6px', padding: '1rem', background: '#f8fafc', maxHeight: '500px', overflowY: 'auto' }}
+                                    dangerouslySetInnerHTML={{ __html: newWfConfig.generated_outreach_email.body }}
+                                  />
+
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      )}
+
+                      {activeTemplate.typeIdentifier === 'google_stitch_designer' && (
+                        <div style={{ background: '#f8fafc', padding: '1.5rem', borderRadius: '8px', border: '1px dashed #cbd5e1', marginBottom: '1rem' }}>
+                          <h4 style={{ margin: '0 0 0.5rem 0', color: '#0f172a', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                            🎨 Configuración de Google Stitch
+                          </h4>
+                          <p style={{ fontSize: '0.8rem', color: '#64748b', marginBottom: '1.25rem' }}>
+                            Conecta tu campaña de Google Maps para que la API de Google Stitch genere maquetas visuales modernas basadas en los hallazgos de auditoría.
+                          </p>
+
+                          <div className="input-group" style={{ marginBottom: '1rem' }}>
+                            <label>Campaña Fuente (Recolector de Leads)</label>
+                            <select 
+                              required
+                              value={newWfConfig.sourceWorkflowId || ''} 
+                              onChange={e => setNewWfConfig({...newWfConfig, sourceWorkflowId: e.target.value})} 
+                              className="auth-input" 
+                            >
+                              <option value="">Selecciona una campaña de Google Maps...</option>
+                              {workflows.filter(w => w.template?.typeIdentifier === 'lead_collector').map(w => (
+                                <option key={w.id} value={w.id}>{w.name}</option>
+                              ))}
+                            </select>
+                          </div>
+
+                          <div className="input-group" style={{ marginBottom: '1rem' }}>
+                            <label>Estilo Visual de Maquetación</label>
+                            <select 
+                              value={newWfConfig.designStyle || 'modern_clean'} 
+                              onChange={e => setNewWfConfig({...newWfConfig, designStyle: e.target.value})} 
+                              className="auth-input" 
+                            >
+                              <option value="modern_clean">✨ Moderno y Limpio (Recomendado - Conversión Alta)</option>
+                              <option value="minimalist">🌿 Minimalista y Elegante (Servicios Premium)</option>
+                              <option value="bold_vibrant">🔥 Bold y Llamativo (Gran Impacto Visual)</option>
+                              <option value="corporate">🏢 Corporativo y Tecnológico</option>
+                            </select>
+                          </div>
+
+                          <div className="input-group" style={{ marginBottom: '1rem' }}>
+                            <label>Límite de Maquetas por Ejecución</label>
+                            <input 
+                              type="number"
+                              min="1"
+                              max="50"
+                              value={newWfConfig.batchLimit || 5} 
+                              onChange={e => setNewWfConfig({...newWfConfig, batchLimit: parseInt(e.target.value, 10)})} 
+                              className="auth-input" 
+                            />
+                            <p style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.25rem' }}>
+                              Cantidad máxima de leads a diseñar por cada vez que se ejecute el workflow.
+                            </p>
+                          </div>
+                        </div>
+                      )}
                       
                       {/* Mostrar campos dinamicos basados en configSchema */}
-                      {activeTemplate.configSchema && activeTemplate.configSchema.properties && Object.entries(activeTemplate.configSchema.properties).map(([key, prop]: [string, any]) => (
+                      {activeTemplate.configSchema && activeTemplate.configSchema.properties && !['auto_outreach_google_maps', 'google_stitch_designer'].includes(activeTemplate.typeIdentifier) && Object.entries(activeTemplate.configSchema.properties).filter(([key]) => key !== 'calendarId').map(([key, prop]: [string, any]) => (
                       <div className="input-group" key={key}>
-                        <label>{prop.title || key}</label>
-                        {prop.description && <p style={{ fontSize: '0.7rem', color: '#64748b', margin: '0 0 0.5rem 0' }}>{prop.description}</p>}
+                        <label>{prop.title ? fixEncoding(prop.title) : key}</label>
+                        {prop.description && <p style={{ fontSize: '0.7rem', color: '#64748b', margin: '0 0 0.5rem 0' }}>{fixEncoding(prop.description).replace('ser', 'será').replace('ser\ufffd', 'será')}</p>}
                         {prop.format === 'textarea' ? (
                           <textarea 
                             required 
@@ -1028,6 +1361,19 @@ const [viewingEmailsWfId, setViewingEmailsWfId] = useState<string | null>(null);
                             style={{ minHeight: '100px', resize: 'vertical' }}
                             placeholder={prop.description}
                           />
+                        ) : prop.format === 'calendar' ? (
+                          <select
+                            required
+                            value={newWfConfig[key] || ''}
+                            onChange={(e) => setNewWfConfig({...newWfConfig, [key]: e.target.value})}
+                            className="auth-input"
+                            style={{ appearance: 'auto', background: 'white' }}
+                          >
+                            <option value="">-- Selecciona un Calendario --</option>
+                            {calendars.map(cal => (
+                              <option key={cal.id} value={cal.id}>{cal.name || 'Sin nombre (' + cal.id + ')'}</option>
+                            ))}
+                          </select>
                         ) : (
                           <input 
                             type="text" 
@@ -1100,7 +1446,45 @@ const [viewingEmailsWfId, setViewingEmailsWfId] = useState<string | null>(null);
                         })}
                       </div>
 
-                      {/* URL Webhook para form_contact_handler */}
+                      
+                        {/* PROGRAMACION PARA RECOLECTOR DE LEADS */}
+                        {wf.template.typeIdentifier === 'lead_collector' && wf.config?.schedule && (
+                          <div style={{ marginBottom: '1rem', padding: '0.75rem', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: '6px', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                            <Clock size={20} color="#16a34a" />
+                            <div>
+                              <div style={{ fontSize: '0.7rem', color: '#166534', textTransform: 'uppercase', fontWeight: 'bold' }}>{t('portal.scheduled_execution', 'Próxima ejecución programada')}</div>
+                              <div style={{ fontSize: '0.85rem', color: '#14532d', fontWeight: '600' }}>
+                                  {wf.config?.schedule === '0 * * * *' ? 'Cada hora' : 
+                                   wf.config?.schedule === '0 8 * * *' ? 'Todos los días a las 8:00 AM' :
+                                   wf.config?.schedule === '0 10 * * *' ? 'Todos los días a las 10:00 AM' :
+                                   wf.config?.schedule === '0 12 * * *' ? 'Todos los días a las 12:00 PM' :
+                                   wf.config?.schedule === '0 9 * * 1' ? 'Una vez a la semana (Lunes 9:00 AM)' :
+                                   `Expresión Cron: ${wf.config?.schedule}`}
+                              </div>
+                            </div>
+                          </div>
+                        )}
+
+                        
+                        {/* PROGRAMACION PARA AUTO OUTREACH */}
+                        {wf.template.typeIdentifier === 'auto_outreach_google_maps' && (
+                          <div style={{ marginBottom: '1rem', padding: '0.75rem', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: '6px', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                            <Clock size={20} color="#16a34a" />
+                            <div>
+                              <div style={{ fontSize: '0.7rem', color: '#166534', textTransform: 'uppercase', fontWeight: 'bold' }}>{t('portal.scheduled_execution', 'Próxima ejecución programada')}</div>
+                              <div style={{ fontSize: '0.85rem', color: '#14532d', fontWeight: '600' }}>
+                                  {(wf.config?.schedule || '0 8 * * 1-5') === '0 8 * * 1-5' ? 'Lunes a Viernes a las 8:00 AM' : 
+                                   (wf.config?.schedule || '0 8 * * 1-5') === '0 10 * * 1-5' ? 'Lunes a Viernes a las 10:00 AM' :
+                                   (wf.config?.schedule || '0 8 * * 1-5') === '0 12 * * 1-5' ? 'Lunes a Viernes a las 12:00 PM' :
+                                   (wf.config?.schedule || '0 8 * * 1-5') === '0 9 * * 1-5' ? 'Lunes a Viernes a las 9:00 AM' :
+                                   `Expresión Cron: ${(wf.config?.schedule || '0 8 * * 1-5')}`}
+                              </div>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* URL Webhook para form_contact_handler */}
+
                       {wf.template.typeIdentifier === 'form_contact_handler' && (
                         <div style={{ marginBottom: '1rem', padding: '0.75rem', background: '#0f172a', borderRadius: '6px' }}>
                           <div style={{ fontSize: '0.7rem', color: '#94a3b8', marginBottom: '0.25rem', textTransform: 'uppercase', fontWeight: 'bold' }}>{t('portal.webhook_url', 'URL del Webhook (POST)')}</div>
@@ -1151,7 +1535,7 @@ const [viewingEmailsWfId, setViewingEmailsWfId] = useState<string | null>(null);
                                 </button>
                               </div>
                               
-                              {Object.entries(wf.config.generated_responses).map(([service, template]: [string, any]) => {
+                              {Object.entries(wf.config?.generated_responses).map(([service, template]: [string, any]) => {
                                 const isEditing = editingTemplate?.wfId === wf.id && editingTemplate?.service === service;
                                 return (
                                   <div key={service} style={{ marginBottom: '1.5rem', border: '1px solid #e2e8f0', borderRadius: '6px', overflow: 'hidden' }}>
@@ -1190,7 +1574,7 @@ const [viewingEmailsWfId, setViewingEmailsWfId] = useState<string | null>(null);
                         <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1rem' }}>
                           
                         {/* CRM BUTTON */}
-                        {wf.template.typeIdentifier === 'form_contact_handler' && (
+                        {(wf.template.typeIdentifier === 'form_contact_handler' || wf.template.typeIdentifier === 'lead_collector') && (
                           <button 
                             onClick={() => handleViewLeads(wf.id)}
                             style={{ 
@@ -1225,8 +1609,20 @@ const [viewingEmailsWfId, setViewingEmailsWfId] = useState<string | null>(null);
                       {executionResult?.wfId === wf.id && (
                         <div style={{ marginTop: '1rem', padding: '1.5rem', background: 'white', borderRadius: '8px', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}>
                           <h4 style={{ margin: '0 0 1rem 0', color: '#0f172a', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                            <Database size={18} color="#10b981" /> 
-                            {executionResult.result.leads ? `Cosecha Exitosa: ${executionResult.result.total_found || executionResult.result.leads.length} Leads Encontrados` : 'Resultado de Ejecución'}
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                <Database size={18} color="#10b981" /> 
+                                {executionResult.result.leads ? `Cosecha Exitosa: ${executionResult.result.total_found || executionResult.result.leads.length} Leads Encontrados` : 'Resultado de Ejecución'}
+                              </div>
+                              {executionResult.result.leads && (
+                                <button
+                                  onClick={() => setShowFullScreenResults(executionResult)}
+                                  style={{ background: '#3b82f6', color: 'white', padding: '0.5rem 1rem', borderRadius: '6px', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 500 }}
+                                >
+                                  <Maximize size={16} /> Ver en Pantalla Completa
+                                </button>
+                              )}
+                            </div>
                           </h4>
                           
                           {executionResult.result.leads ? (
@@ -1242,10 +1638,23 @@ const [viewingEmailsWfId, setViewingEmailsWfId] = useState<string | null>(null);
                                     <th style={{ padding: '0.75rem 1rem', borderBottom: '1px solid #e2e8f0' }}>Teléfono</th>
                                     <th style={{ padding: '0.75rem 1rem', borderBottom: '1px solid #e2e8f0' }}>Sitio Web</th>
                                     <th style={{ padding: '0.75rem 1rem', borderBottom: '1px solid #e2e8f0' }}>Rating</th>
+                                    <th style={{ padding: '0.75rem 1rem', borderBottom: '1px solid #e2e8f0' }}>Análisis Web</th>
                                   </tr>
                                 </thead>
                                 <tbody>
-                                  {executionResult.result.leads.map((lead: any, i: number) => (
+                                  {executionResult.result.leads.map((lead: any, i: number) => {
+                                    console.log("Lead item:", lead);
+                                    let analysis = lead.metadata?.technicalAnalysis || lead.technicalAnalysis;
+                                    
+                                    // Sometimes metadata comes as string from backend
+                                    if (!analysis && typeof lead.metadata === 'string') {
+                                      try {
+                                        const parsedMeta = JSON.parse(lead.metadata);
+                                        analysis = parsedMeta.technicalAnalysis;
+                                      } catch(e) {}
+                                    }
+                                    
+                                    return (
                                     <tr key={i} style={{ borderBottom: '1px solid #f1f5f9' }}>
                                       <td style={{ padding: '0.75rem 1rem', fontWeight: 500, color: '#0f172a' }}>{lead.name}</td>
                                       <td style={{ padding: '0.75rem 1rem', color: '#64748b' }}>{lead.address || '-'}</td>
@@ -1268,8 +1677,67 @@ const [viewingEmailsWfId, setViewingEmailsWfId] = useState<string | null>(null);
                                           ⭐ {lead.rating || 'N/A'}
                                         </span>
                                       </td>
+                                      <td style={{ padding: '0.75rem 1rem' }}>
+                                        {(() => {
+                                          const audit = parseLeadAudit(lead);
+                                          if (!audit.hasAudit) {
+                                            return <span style={{ color: '#94a3b8', fontSize: '0.75rem' }}>Sin análisis web</span>;
+                                          }
+                                          return (
+                                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', minWidth: '170px' }}>
+                                              {audit.screenshots.length > 0 && (
+                                                <div 
+                                                  onClick={() => { setSelectedAuditLead(lead); setActiveScreenshotIdx(0); }}
+                                                  style={{ position: 'relative', cursor: 'pointer', borderRadius: '6px', overflow: 'hidden', border: '1px solid #cbd5e1', boxShadow: '0 1px 2px rgba(0,0,0,0.08)' }}
+                                                  title="Clic para ver las 5 capturas en alta resolución"
+                                                >
+                                                  <img 
+                                                    src={audit.screenshots[0].url} 
+                                                    alt="Preview" 
+                                                    style={{ width: '100%', height: '65px', objectFit: 'cover', display: 'block' }} 
+                                                  />
+                                                  <span style={{ position: 'absolute', bottom: '4px', right: '4px', background: 'rgba(15, 23, 42, 0.85)', color: 'white', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 600 }}>
+                                                    📸 {audit.screenshots.length} capturas
+                                                  </span>
+                                                </div>
+                                              )}
+                                              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+                                                {audit.technicalErrors.length > 0 && (
+                                                  <span style={{ background: '#fee2e2', color: '#991b1b', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 600 }}>
+                                                    ⚠️ {audit.technicalErrors.length} téc.
+                                                  </span>
+                                                )}
+                                                {audit.visualErrors.length > 0 && (
+                                                  <span style={{ background: '#ffedd5', color: '#9a3412', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 600 }}>
+                                                    👁️ {audit.visualErrors.length} visual.
+                                                  </span>
+                                                )}
+                                              </div>
+                                              <button
+                                                onClick={() => { setSelectedAuditLead(lead); setActiveScreenshotIdx(0); }}
+                                                style={{
+                                                  background: '#0f172a',
+                                                  color: 'white',
+                                                  border: 'none',
+                                                  padding: '0.4rem 0.6rem',
+                                                  borderRadius: '6px',
+                                                  fontSize: '0.75rem',
+                                                  fontWeight: 600,
+                                                  cursor: 'pointer',
+                                                  display: 'flex',
+                                                  alignItems: 'center',
+                                                  justifyContent: 'center',
+                                                  gap: '4px'
+                                                }}
+                                              >
+                                                <Sparkles size={12} color="#10b981" /> Ver Auditoría IA
+                                              </button>
+                                            </div>
+                                          );
+                                        })()}
+                                      </td>
                                     </tr>
-                                  ))}
+                                  )})}
                                 </tbody>
                               </table>
                             </div>
@@ -1319,6 +1787,582 @@ const [viewingEmailsWfId, setViewingEmailsWfId] = useState<string | null>(null);
         </div>
       )}
 
+      {/* Modal de Resultados Full Screen */}
+      {showFullScreenResults && (
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: '#f8fafc', zIndex: 9999, overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
+          <div style={{ background: 'white', padding: '1.5rem', borderBottom: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'sticky', top: 0, zIndex: 10 }}>
+            <div>
+              <h2 style={{ margin: 0, color: '#0f172a', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <Database size={24} color="#10b981" />
+                Cosecha de Leads - Vista Completa
+              </h2>
+              <p style={{ margin: '0.5rem 0 0 0', color: '#64748b' }}>
+                Término buscado: <strong>{showFullScreenResults.result.searchQuery || 'Búsqueda por defecto'}</strong> ({showFullScreenResults.result.total_found || showFullScreenResults.result.leads?.length} leads encontrados)
+              </p>
+            </div>
+            <button
+              onClick={() => setShowFullScreenResults(null)}
+              style={{ background: '#ef4444', color: 'white', padding: '0.75rem 1.5rem', borderRadius: '8px', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 600 }}
+            >
+              <X size={20} /> Cerrar Vista
+            </button>
+          </div>
+          
+          <div style={{ padding: '2rem', flex: 1 }}>
+            {showFullScreenResults.result.leads ? (
+              <div style={{ background: 'white', borderRadius: '12px', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)', overflowX: 'auto' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.95rem' }}>
+                  <thead>
+                    <tr style={{ background: '#f1f5f9', color: '#475569', textAlign: 'left' }}>
+                      <th style={{ padding: '1rem', borderBottom: '2px solid #e2e8f0' }}>Empresa</th>
+                      <th style={{ padding: '1rem', borderBottom: '2px solid #e2e8f0' }}>Dirección</th>
+                      <th style={{ padding: '1rem', borderBottom: '2px solid #e2e8f0' }}>Contacto</th>
+                      <th style={{ padding: '1rem', borderBottom: '2px solid #e2e8f0' }}>Análisis Web</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {showFullScreenResults.result.leads.map((lead: any, i: number) => {
+                      let analysis = lead.metadata?.technicalAnalysis || lead.technicalAnalysis;
+                      if (!analysis && typeof lead.metadata === 'string') {
+                        try {
+                          const parsedMeta = JSON.parse(lead.metadata);
+                          analysis = parsedMeta.technicalAnalysis;
+                        } catch(e) {}
+                      }
+                      
+                      return (
+                      <tr key={i} style={{ borderBottom: '1px solid #e2e8f0' }}>
+                        <td style={{ padding: '1.2rem 1rem', fontWeight: 600, color: '#0f172a', verticalAlign: 'top' }}>
+                          <div style={{ marginBottom: '0.5rem' }}>{lead.name}</div>
+                          <span style={{ background: '#fef08a', color: '#854d0e', padding: '0.2rem 0.6rem', borderRadius: '12px', fontSize: '0.8rem', fontWeight: 'normal' }}>
+                            ⭐ {lead.rating || 'N/A'}
+                          </span>
+                        </td>
+                        <td style={{ padding: '1.2rem 1rem', color: '#64748b', verticalAlign: 'top', maxWidth: '250px' }}>{lead.address || '-'}</td>
+                        <td style={{ padding: '1.2rem 1rem', color: '#64748b', verticalAlign: 'top' }}>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                            {lead.phone && lead.phone !== 'No disponible' ? (
+                              <a href={`tel:${lead.phone}`} style={{ color: '#10b981', textDecoration: 'none', fontWeight: 500 }}>📞 {lead.phone}</a>
+                            ) : (
+                              <span style={{ color: '#94a3b8' }}>{lead.phone || '-'}</span>
+                            )}
+                            {lead.website && lead.website !== 'No disponible' ? (
+                              <a href={lead.website} target="_blank" rel="noreferrer" style={{ color: '#3b82f6', textDecoration: 'none', fontWeight: 500 }}>🌐 Visitar Web</a>
+                            ) : (
+                              <span style={{ color: '#94a3b8' }}>{lead.website || '-'}</span>
+                            )}
+                          </div>
+                        </td>
+                        <td style={{ padding: '1.2rem 1rem', verticalAlign: 'top' }}>
+                          {(() => {
+                            const audit = parseLeadAudit(lead);
+                            if (!audit.hasAudit) {
+                              return <span style={{ color: '#94a3b8', fontSize: '0.85rem' }}>Sin análisis</span>;
+                            }
+                            return (
+                              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', minWidth: '220px' }}>
+                                {audit.screenshots.length > 0 && (
+                                  <div 
+                                    onClick={() => { setSelectedAuditLead(lead); setActiveScreenshotIdx(0); }}
+                                    style={{ position: 'relative', cursor: 'pointer', borderRadius: '8px', overflow: 'hidden', border: '1px solid #cbd5e1', boxShadow: '0 2px 4px rgba(0,0,0,0.08)' }}
+                                    title="Clic para ver las 5 capturas en alta resolución"
+                                  >
+                                    <img 
+                                      src={audit.screenshots[0].url} 
+                                      alt="Web Preview" 
+                                      style={{ width: '100%', height: '110px', objectFit: 'cover', display: 'block' }} 
+                                    />
+                                    <div style={{ position: 'absolute', bottom: '6px', right: '6px', background: 'rgba(15, 23, 42, 0.85)', color: 'white', padding: '3px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: 600 }}>
+                                      📸 {audit.screenshots.length} capturas
+                                    </div>
+                                  </div>
+                                )}
+
+                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                                  {audit.technicalErrors.length > 0 && (
+                                    <span style={{ background: '#fee2e2', color: '#991b1b', padding: '3px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: 600 }}>
+                                      ⚠️ {audit.technicalErrors.length} errores técnicos
+                                    </span>
+                                  )}
+                                  {audit.visualErrors.length > 0 && (
+                                    <span style={{ background: '#ffedd5', color: '#9a3412', padding: '3px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: 600 }}>
+                                      👁️ {audit.visualErrors.length} errores visuales
+                                    </span>
+                                  )}
+                                </div>
+
+                                <button
+                                  onClick={() => { setSelectedAuditLead(lead); setActiveScreenshotIdx(0); }}
+                                  style={{
+                                    background: '#0f172a',
+                                    color: 'white',
+                                    border: 'none',
+                                    padding: '0.5rem 0.8rem',
+                                    borderRadius: '6px',
+                                    fontSize: '0.8rem',
+                                    fontWeight: 600,
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    gap: '6px',
+                                    boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+                                  }}
+                                >
+                                  <Sparkles size={14} color="#10b981" /> Ver Auditoría IA Completa
+                                </button>
+                              </div>
+                            );
+                          })()}
+                        </td>
+                      </tr>
+                    )})}
+                  </tbody>
+                </table>
+              </div>
+            ) : null}
+          </div>
+        </div>
+      )}
+
+      {/* Modal de Auditoría Completa de Lead con IA & Galería de Capturas */}
+      {selectedAuditLead && (() => {
+        const lead = selectedAuditLead;
+        const audit = parseLeadAudit(lead);
+        const screenshots = audit.screenshots;
+        const currentShot = screenshots[activeScreenshotIdx] || screenshots[0];
+        const currentLabel = currentShot ? getScreenshotLabel(currentShot.type) : { label: 'Captura', icon: '📸' };
+
+        const handleCopyAuditProposal = () => {
+          const techList = audit.technicalErrors.length > 0 
+            ? audit.technicalErrors.map(e => `• ${e}`).join('\n')
+            : '• Ningún error técnico crítico detectado';
+          const visualList = audit.visualErrors.length > 0 
+            ? audit.visualErrors.map(e => `• ${e}`).join('\n')
+            : '• Diseño responsive sin incidencias graves';
+          
+          const pitch = `🔍 AUDITORÍA WEB & OPORTUNIDADES DE MEJORA PARA ${lead.name?.toUpperCase() || 'SU EMPRESA'}
+Web auditada: ${lead.website || lead.url || 'N/A'}
+Teléfono: ${lead.phone || 'N/A'}
+
+⚠️ ERRORES TÉCNICOS Y SEO DETECTADOS:
+${techList}
+
+👁️ ERRORES VISUALES, DE DISEÑO Y UX:
+${visualList}
+
+✨ INFORME Y DIAGNÓSTICO DE LA IA:
+${audit.detailedAnalysis || 'Análisis en proceso.'}
+
+📸 Capturas y evidencias fotográficas analizadas: ${screenshots.length} capturas en escritorio y móvil.`;
+
+          navigator.clipboard.writeText(pitch);
+          alert('¡Propuesta de auditoría copiada al portapapeles! Lista para enviar por email o WhatsApp.');
+        };
+
+        return (
+          <div 
+            style={{ 
+              position: 'fixed', 
+              top: 0, 
+              left: 0, 
+              right: 0, 
+              bottom: 0, 
+              background: 'rgba(15, 23, 42, 0.75)', 
+              backdropFilter: 'blur(6px)', 
+              zIndex: 10000, 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center',
+              padding: '1.5rem'
+            }}
+            onClick={() => setSelectedAuditLead(null)}
+          >
+            <div 
+              style={{ 
+                background: 'white', 
+                borderRadius: '16px', 
+                width: '100%', 
+                maxWidth: '1150px', 
+                maxHeight: '92vh', 
+                display: 'flex', 
+                flexDirection: 'column', 
+                boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+                overflow: 'hidden'
+              }}
+              onClick={e => e.stopPropagation()}
+            >
+              {/* Header */}
+              <div style={{ background: '#0f172a', color: 'white', padding: '1.5rem 2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '1px solid #1e293b' }}>
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap', marginBottom: '0.5rem' }}>
+                    <h2 style={{ margin: 0, fontSize: '1.35rem', fontWeight: 700, color: '#f8fafc', letterSpacing: '-0.02em' }}>
+                      {lead.name || 'Auditoría de Lead'}
+                    </h2>
+                    {lead.rating && (
+                      <span style={{ background: '#fef08a', color: '#854d0e', padding: '0.2rem 0.6rem', borderRadius: '12px', fontSize: '0.8rem', fontWeight: 600 }}>
+                        ⭐ {lead.rating}
+                      </span>
+                    )}
+                    <span style={{ background: 'rgba(16, 185, 129, 0.2)', color: '#34d399', padding: '0.2rem 0.6rem', borderRadius: '12px', fontSize: '0.8rem', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                      <Sparkles size={13} /> Auditado con Groq Vision
+                    </span>
+                  </div>
+
+                  <div style={{ display: 'flex', gap: '1.25rem', flexWrap: 'wrap', fontSize: '0.85rem', color: '#94a3b8' }}>
+                    {lead.website && lead.website !== 'No disponible' && (
+                      <a href={lead.website} target="_blank" rel="noreferrer" style={{ color: '#38bdf8', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                        <ExternalLink size={14} /> {lead.website}
+                      </a>
+                    )}
+                    {lead.phone && lead.phone !== 'No disponible' && (
+                      <a href={`tel:${lead.phone}`} style={{ color: '#34d399', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                        📞 {lead.phone}
+                      </a>
+                    )}
+                    {lead.email && (
+                      <a href={`mailto:${lead.email}`} style={{ color: '#cbd5e1', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                        <Mail size={14} /> {lead.email}
+                      </a>
+                    )}
+                    {lead.address && (
+                      <span style={{ color: '#64748b' }}>📍 {lead.address}</span>
+                    )}
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                  <button 
+                    onClick={handleCopyAuditProposal}
+                    style={{ 
+                      background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)', 
+                      color: 'white', 
+                      border: 'none', 
+                      padding: '0.6rem 1.1rem', 
+                      borderRadius: '8px', 
+                      fontSize: '0.85rem', 
+                      fontWeight: 600, 
+                      cursor: 'pointer', 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      gap: '0.5rem',
+                      boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
+                    }}
+                  >
+                    <Copy size={15} /> Copiar Propuesta
+                  </button>
+                  <button 
+                    onClick={() => setSelectedAuditLead(null)}
+                    style={{ background: 'rgba(255,255,255,0.1)', color: 'white', border: 'none', padding: '0.5rem', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                    title="Cerrar"
+                  >
+                    <X size={20} />
+                  </button>
+                </div>
+              </div>
+
+              {/* KPI Quick Bar */}
+              <div style={{ background: '#f8fafc', padding: '1rem 2rem', borderBottom: '1px solid #e2e8f0', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1rem' }}>
+                <div style={{ background: 'white', padding: '0.75rem 1rem', borderRadius: '10px', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                  <div style={{ width: '38px', height: '38px', borderRadius: '8px', background: '#dbeafe', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#2563eb' }}>
+                    <Image size={20} />
+                  </div>
+                  <div>
+                    <div style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 500 }}>Capturas HD</div>
+                    <div style={{ fontSize: '1.1rem', fontWeight: 700, color: '#0f172a' }}>{screenshots.length} guardadas</div>
+                  </div>
+                </div>
+
+                <div style={{ background: 'white', padding: '0.75rem 1rem', borderRadius: '10px', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                  <div style={{ width: '38px', height: '38px', borderRadius: '8px', background: '#fee2e2', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#dc2626' }}>
+                    <AlertTriangle size={20} />
+                  </div>
+                  <div>
+                    <div style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 500 }}>Errores Técnicos</div>
+                    <div style={{ fontSize: '1.1rem', fontWeight: 700, color: '#dc2626' }}>{audit.technicalErrors.length} detectados</div>
+                  </div>
+                </div>
+
+                <div style={{ background: 'white', padding: '0.75rem 1rem', borderRadius: '10px', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                  <div style={{ width: '38px', height: '38px', borderRadius: '8px', background: '#ffedd5', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ea580c' }}>
+                    <Smartphone size={20} />
+                  </div>
+                  <div>
+                    <div style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 500 }}>Errores Visuales/UX</div>
+                    <div style={{ fontSize: '1.1rem', fontWeight: 700, color: '#ea580c' }}>{audit.visualErrors.length} detectados</div>
+                  </div>
+                </div>
+
+                <div style={{ background: 'white', padding: '0.75rem 1rem', borderRadius: '10px', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                  <div style={{ width: '38px', height: '38px', borderRadius: '8px', background: '#ecfdf5', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#059669' }}>
+                    <Clock size={20} />
+                  </div>
+                  <div>
+                    <div style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 500 }}>Tiempo de Carga</div>
+                    <div style={{ fontSize: '1.1rem', fontWeight: 700, color: '#059669' }}>
+                      {audit.technicalAnalysis?.loadTimeMs ? `${audit.technicalAnalysis.loadTimeMs}ms` : 'Rápido (<1s)'}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Scrollable Body (2 columns) */}
+              <div style={{ padding: '1.5rem 2rem', overflowY: 'auto', flex: 1, display: 'grid', gridTemplateColumns: 'minmax(350px, 1.1fr) minmax(350px, 1.2fr)', gap: '2rem' }}>
+                {/* Column 1: Gallery */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <h4 style={{ margin: 0, color: '#0f172a', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1rem' }}>
+                      <Layers size={18} color="#2563eb" /> Galería de Capturas ({screenshots.length})
+                    </h4>
+                    {currentShot && (
+                      <a 
+                        href={currentShot.url} 
+                        target="_blank" 
+                        rel="noreferrer" 
+                        style={{ color: '#2563eb', fontSize: '0.8rem', fontWeight: 600, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                      >
+                        <ExternalLink size={13} /> Abrir imagen HD original
+                      </a>
+                    )}
+                  </div>
+
+                  {/* Tabs / Pills */}
+                  {screenshots.length > 0 ? (
+                    <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                      {screenshots.map((s, idx) => {
+                        const info = getScreenshotLabel(s.type);
+                        const isSelected = activeScreenshotIdx === idx;
+                        return (
+                          <button
+                            key={idx}
+                            onClick={() => setActiveScreenshotIdx(idx)}
+                            style={{
+                              background: isSelected ? '#0f172a' : '#f1f5f9',
+                              color: isSelected ? 'white' : '#475569',
+                              border: isSelected ? '1px solid #0f172a' : '1px solid #e2e8f0',
+                              padding: '0.35rem 0.75rem',
+                              borderRadius: '20px',
+                              fontSize: '0.78rem',
+                              fontWeight: isSelected ? 600 : 500,
+                              cursor: 'pointer',
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: '4px',
+                              transition: 'all 0.15s ease'
+                            }}
+                          >
+                            <span>{info.icon}</span> {info.label}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  ) : null}
+
+                  {/* Large Image Preview Container */}
+                  {currentShot ? (
+                    <div style={{ position: 'relative', background: '#090d16', borderRadius: '12px', border: '1px solid #cbd5e1', overflow: 'hidden', minHeight: '320px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <img 
+                        src={currentShot.url} 
+                        alt={currentLabel.label} 
+                        style={{ width: '100%', maxHeight: '420px', objectFit: 'contain', display: 'block' }} 
+                      />
+                      <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'linear-gradient(to top, rgba(15,23,42,0.95), transparent)', padding: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: 'white', fontSize: '0.8rem' }}>
+                        <span style={{ fontWeight: 600 }}>{currentLabel.icon} {currentLabel.label}</span>
+                        <span style={{ color: '#94a3b8' }}>Captura {activeScreenshotIdx + 1} de {screenshots.length}</span>
+                      </div>
+                    </div>
+                  ) : (
+                    <div style={{ padding: '3rem', textAlign: 'center', background: '#f8fafc', borderRadius: '12px', border: '1px dashed #cbd5e1' }}>
+                      <p style={{ color: '#64748b', margin: 0 }}>No hay capturas disponibles para esta web.</p>
+                    </div>
+                  )}
+
+                  {/* Thumbnail Row */}
+                  {screenshots.length > 1 && (
+                    <div style={{ display: 'grid', gridTemplateColumns: `repeat(${screenshots.length}, 1fr)`, gap: '0.5rem' }}>
+                      {screenshots.map((s, idx) => {
+                        const isSelected = activeScreenshotIdx === idx;
+                        return (
+                          <div 
+                            key={idx}
+                            onClick={() => setActiveScreenshotIdx(idx)}
+                            style={{ 
+                              cursor: 'pointer', 
+                              borderRadius: '6px', 
+                              overflow: 'hidden', 
+                              border: isSelected ? '2px solid #2563eb' : '1px solid #cbd5e1',
+                              opacity: isSelected ? 1 : 0.65,
+                              transition: 'all 0.15s ease'
+                            }}
+                          >
+                            <img src={s.url} alt={`Thumb ${idx}`} style={{ width: '100%', height: '48px', objectFit: 'cover', display: 'block' }} />
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+
+                  {/* Technical Metadata tags */}
+                  {audit.technicalAnalysis && (
+                    <div style={{ background: '#f8fafc', padding: '1rem', borderRadius: '10px', border: '1px solid #e2e8f0', fontSize: '0.8rem', color: '#475569' }}>
+                      {audit.technicalAnalysis.h1 && (
+                        <div style={{ marginBottom: '0.4rem' }}>
+                          <strong style={{ color: '#0f172a' }}>H1 detectado:</strong> {audit.technicalAnalysis.h1}
+                        </div>
+                      )}
+                      {audit.technicalAnalysis.metaDescription && (
+                        <div>
+                          <strong style={{ color: '#0f172a' }}>Meta Description:</strong> {audit.technicalAnalysis.metaDescription}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+
+                {/* Column 2: AI Audit Report */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                  {/* Technical Errors */}
+                  <div style={{ background: '#fff5f5', border: '1px solid #fecaca', borderRadius: '12px', padding: '1.25rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem', color: '#991b1b', fontWeight: 700, fontSize: '0.95rem' }}>
+                      <AlertTriangle size={18} />
+                      Errores Técnicos y SEO ({audit.technicalErrors.length})
+                    </div>
+                    {audit.technicalErrors.length > 0 ? (
+                      <ul style={{ margin: 0, paddingLeft: '1.25rem', display: 'flex', flexDirection: 'column', gap: '0.5rem', color: '#7f1d1d', fontSize: '0.85rem', lineHeight: 1.5 }}>
+                        {audit.technicalErrors.map((err, idx) => (
+                          <li key={idx}>{err}</li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p style={{ margin: 0, color: '#15803d', fontSize: '0.85rem' }}>✅ No se han detectado errores técnicos graves.</p>
+                    )}
+                  </div>
+
+                  {/* Visual Errors */}
+                  <div style={{ background: '#fffbeb', border: '1px solid #fde68a', borderRadius: '12px', padding: '1.25rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem', color: '#92400e', fontWeight: 700, fontSize: '0.95rem' }}>
+                      <Eye size={18} />
+                      Errores Visuales y de UX ({audit.visualErrors.length})
+                    </div>
+                    {audit.visualErrors.length > 0 ? (
+                      <ul style={{ margin: 0, paddingLeft: '1.25rem', display: 'flex', flexDirection: 'column', gap: '0.5rem', color: '#78350f', fontSize: '0.85rem', lineHeight: 1.5 }}>
+                        {audit.visualErrors.map((err, idx) => (
+                          <li key={idx}>{err}</li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p style={{ margin: 0, color: '#15803d', fontSize: '0.85rem' }}>✅ Diseño responsive y elementos visuales optimizados.</p>
+                    )}
+                  </div>
+
+                  {/* Detailed Analysis from Groq */}
+                  <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '1.25rem', flex: 1, display: 'flex', flexDirection: 'column' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem', color: '#0f172a', fontWeight: 700, fontSize: '0.95rem' }}>
+                      <Sparkles size={18} color="#10b981" />
+                      Diagnóstico Global de la IA (Estrategia de Venta)
+                    </div>
+                    {audit.detailedAnalysis ? (
+                      <div style={{ whiteSpace: 'pre-wrap', color: '#334155', fontSize: '0.88rem', lineHeight: 1.6, background: 'white', padding: '1rem', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+                        {audit.detailedAnalysis}
+                      </div>
+                    ) : (
+                      <p style={{ color: '#64748b', fontSize: '0.85rem', margin: 0 }}>
+                        Sin informe detallado disponible.
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Google Stitch Mockup Preview */}
+                  {audit.mockup && (
+                    <div style={{ background: '#f5f3ff', border: '1px solid #ddd6fe', borderRadius: '12px', padding: '1.25rem', display: 'flex', flexDirection: 'column' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#6d28d9', fontWeight: 700, fontSize: '0.95rem' }}>
+                          🎨 Maqueta Diseñada con Google Stitch
+                        </div>
+                        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const newTab = window.open();
+                              if (newTab) {
+                                newTab.document.write(audit.mockup.previewHtml);
+                                newTab.document.close();
+                              }
+                            }}
+                            style={{
+                              background: '#7c3aed',
+                              color: 'white',
+                              border: 'none',
+                              padding: '4px 10px',
+                              borderRadius: '8px',
+                              fontSize: '0.75rem',
+                              fontWeight: 700,
+                              cursor: 'pointer',
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '4px',
+                              boxShadow: '0 2px 6px rgba(124, 58, 237, 0.3)'
+                            }}
+                          >
+                            🖥️ Pantalla Completa
+                          </button>
+                          <span style={{ background: '#ede9fe', color: '#5b21b6', fontSize: '0.75rem', fontWeight: 600, padding: '3px 8px', borderRadius: '12px' }}>
+                            Estilo: {audit.mockup.designStyle || 'Vanguardia 2026'}
+                          </span>
+                        </div>
+                      </div>
+                      <p style={{ fontSize: '0.85rem', color: '#4c1d95', margin: '0 0 0.75rem 0', fontWeight: 600 }}>
+                        {audit.mockup.title || 'Propuesta de Rediseño Web'}
+                      </p>
+                      {audit.mockup.previewHtml && (
+                        <div style={{ background: 'white', borderRadius: '12px', overflow: 'hidden', border: '1px solid #cbd5e1', boxShadow: '0 10px 25px -5px rgba(0,0,0,0.1)' }}>
+                          {/* Browser Window Header */}
+                          <div style={{ background: '#f1f5f9', padding: '0.5rem 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', borderBottom: '1px solid #e2e8f0' }}>
+                            <div style={{ display: 'flex', gap: '6px' }}>
+                              <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#ef4444', display: 'inline-block' }}></span>
+                              <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#f59e0b', display: 'inline-block' }}></span>
+                              <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#10b981', display: 'inline-block' }}></span>
+                            </div>
+                            <div style={{ flex: 1, background: 'white', padding: '2px 10px', borderRadius: '4px', fontSize: '11px', color: '#64748b', border: '1px solid #e2e8f0', textAlign: 'center', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                              🔒 {lead.website || 'https://rediseño-oficial.com'}
+                            </div>
+                          </div>
+                          <iframe 
+                            srcDoc={audit.mockup.previewHtml} 
+                            title="Mockup Preview" 
+                            style={{ width: '100%', height: '480px', border: 'none', background: 'white', display: 'block' }} 
+                            sandbox="allow-scripts allow-same-origin"
+                          />
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Footer */}
+              <div style={{ background: '#f1f5f9', padding: '1rem 2rem', borderTop: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(JSON.stringify(lead, null, 2));
+                    alert('¡JSON completo copiado al portapapeles!');
+                  }}
+                  style={{ background: 'white', border: '1px solid #cbd5e1', color: '#475569', padding: '0.5rem 1rem', borderRadius: '6px', fontSize: '0.8rem', cursor: 'pointer', fontWeight: 500 }}
+                >
+                  📋 Copiar JSON de Diagnóstico
+                </button>
+                <button
+                  onClick={() => setSelectedAuditLead(null)}
+                  style={{ background: '#0f172a', color: 'white', border: 'none', padding: '0.6rem 1.5rem', borderRadius: '8px', fontSize: '0.85rem', fontWeight: 600, cursor: 'pointer' }}
+                >
+                  Cerrar
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
+
       {/* Spinner CSS */}
       <style>{`
         @keyframes spin { 100% { transform: rotate(360deg); } }
@@ -1327,6 +2371,7 @@ const [viewingEmailsWfId, setViewingEmailsWfId] = useState<string | null>(null);
     </div>
   );
 }
+
 
 
 

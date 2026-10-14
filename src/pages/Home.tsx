@@ -5,10 +5,47 @@ import "./page.css";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
+import SEO from '../components/SEO';
 
 export default function Home() {
   const { t } = useTranslation();
   const [activeExpTab, setActiveExpTab] = useState(0);
+
+  const homeSchema = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'Organization',
+        '@id': 'https://grupohormesis.com/#organization',
+        'name': 'Grupo Hormesis',
+        'url': 'https://grupohormesis.com',
+        'logo': 'https://grupohormesis.com/logo.png',
+        'description': 'Sistematización empresarial, consultoría de software y automatización con Inteligencia Artificial.',
+        'sameAs': ['https://www.linkedin.com/company/grupo-hormesis'],
+        'contactPoint': {
+          '@type': 'ContactPoint',
+          'contactType': 'sales',
+          'url': 'https://grupohormesis.com/contacto',
+          'availableLanguage': ['Spanish', 'English']
+        }
+      },
+      {
+        '@type': 'WebSite',
+        '@id': 'https://grupohormesis.com/#website',
+        'url': 'https://grupohormesis.com',
+        'name': 'Grupo Hormesis',
+        'publisher': { '@id': 'https://grupohormesis.com/#organization' }
+      },
+      {
+        '@type': 'ProfessionalService',
+        'name': 'Grupo Hormesis',
+        'image': 'https://grupohormesis.com/ai_workflow_mockup.jpg',
+        'url': 'https://grupohormesis.com',
+        'priceRange': '$$',
+        'areaServed': ['ES', 'Latam', 'Worldwide']
+      }
+    ]
+  };
 
   const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -20,6 +57,12 @@ export default function Home() {
 
   return (
     <main className="main-content">
+      <SEO 
+        title="Grupo Hormesis | Sistematización Empresarial e Inteligencia Artificial"
+        description="Transformamos operaciones de negocio con arquitecturas de software a medida, automatización con IA y sistematización de procesos para maximizar tu rentabilidad."
+        canonical="/"
+        schema={homeSchema}
+      />
       {/* ==================== HERO SECTION ==================== */}
       <section 
         className="hero-section" 
@@ -68,12 +111,12 @@ export default function Home() {
 
           {/* CTAs */}
           <div className="hero-cta animate-fade-in" style={{ animationDelay: "300ms" }}>
-            <Link href="#briefing" className="btn-primary btn-lg btn-shadow">
+            <Link to="/contacto" className="btn-primary btn-lg btn-shadow">
               <Zap size={18} />
               {t('hero.btn_primary')}
             </Link>
-            <Link href="#telemetry-console" className="btn-secondary btn-lg">
-              <BarChart size={18} />
+            <Link to="/registro?role=colaborador" className="btn-secondary btn-lg">
+              <Users size={18} />
               {t('hero.btn_secondary')}
             </Link>
           </div>

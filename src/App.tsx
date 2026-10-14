@@ -24,7 +24,13 @@ import Usuarios from './pages/portal/admin/Usuarios';
 import AdminProyectos from './pages/portal/admin/AdminProyectos';
 import AdminSettings from './pages/portal/admin/AdminSettings';
 import AdminWorkflows from './pages/portal/admin/AdminWorkflows';
+import AdminCalendars from './pages/portal/admin/AdminCalendars';
+import PublicBooking from './pages/portal/public/PublicBooking';
+
 import ColaboradorDashboard from './pages/portal/colaborador/ColaboradorDashboard';
+import ColaboradorReuniones from './pages/portal/colaborador/ColaboradorReuniones';
+import ColaboradorLeads from './pages/portal/colaborador/ColaboradorLeads';
+import ColaboradorForms from './pages/portal/colaborador/ColaboradorForms';
 import ClienteDashboard from './pages/portal/cliente/ClienteDashboard';
 
 // Routes where Navigation should be hidden
@@ -54,6 +60,7 @@ function App() {
         <Route path="/confirmar-email" element={<ConfirmEmail />} />
         
         {/* Portal (Protected Routes) */}
+        <Route path="/book/:id" element={<PublicBooking />} />
         <Route path="/portal" element={<ProtectedRoute />}>
           <Route element={<PortalLayout />}>
             <Route index element={<PortalRedirect />} />
@@ -83,10 +90,30 @@ function App() {
                   <AdminWorkflows />
                 </ProtectedRoute>
               } />
+              <Route path="calendars" element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <AdminCalendars />
+                </ProtectedRoute>
+              } />
             </Route>
             <Route path="colaborador" element={
               <ProtectedRoute allowedRoles={['colaborador']}>
                 <ColaboradorDashboard />
+              </ProtectedRoute>
+            } />
+            <Route path="colaborador/reuniones" element={
+              <ProtectedRoute allowedRoles={['colaborador']}>
+                <ColaboradorReuniones />
+              </ProtectedRoute>
+            } />
+            <Route path="colaborador/leads" element={
+              <ProtectedRoute allowedRoles={['colaborador']}>
+                <ColaboradorLeads />
+              </ProtectedRoute>
+            } />
+            <Route path="colaborador/forms" element={
+              <ProtectedRoute allowedRoles={['colaborador']}>
+                <ColaboradorForms />
               </ProtectedRoute>
             } />
             <Route path="cliente" element={
