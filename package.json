@@ -28,7 +28,8 @@
     "react-i18next": "^17.0.14",
     "react-router-dom": "^7.1.5",
     "react-select": "^5.10.2",
-    "react-timezone-select": "^3.3.3"
+    "react-timezone-select": "^3.3.3",
+    "yaml": "^2.9.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.19.0",
