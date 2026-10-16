@@ -6,13 +6,14 @@ import { Calendar as BigCalendar, dateFnsLocalizer, Views } from 'react-big-cale
 import { format, parse, startOfWeek, getDay } from 'date-fns';
 import { es } from 'date-fns/locale';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
+import { BASE_URL } from '../../../api/client';
 
 const locales = { 'es': es };
 const localizer = dateFnsLocalizer({ format, parse, startOfWeek, getDay, locales });
 
 // Helper to fetch sin auth
 const fetchPublic = async (url: string, options?: any) => {
-  const res = await fetch(`http://localhost:3000/api${url}`, {
+  const res = await fetch(`${BASE_URL}${url}`, {
     ...options,
     headers: {
       'Content-Type': 'application/json',

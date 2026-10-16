@@ -20,7 +20,7 @@ import {
   TrendingUp,
   Tag
 } from 'lucide-react';
-import { apiClient } from '../../../api/client';
+import { apiClient, BASE_URL } from '../../../api/client';
 
 interface Lead {
   id: string;
@@ -376,7 +376,7 @@ export default function ColaboradorLeads() {
                   </button>
 
                   <a
-                    href={`http://localhost:3000/api/leads/public/${lead.id}/mockup`}
+                    href={`${BASE_URL}/leads/public/${lead.id}/mockup`}
                     target="_blank"
                     rel="noreferrer"
                     style={{
@@ -502,7 +502,7 @@ export default function ColaboradorLeads() {
                       </h4>
                     </div>
                     <a
-                      href={`http://localhost:3000/api/leads/public/${selectedLead.id}/mockup`}
+                      href={`${BASE_URL}/leads/public/${selectedLead.id}/mockup`}
                       target="_blank"
                       rel="noreferrer"
                       style={{

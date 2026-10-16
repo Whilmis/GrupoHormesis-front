@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Clock, FolderKanban, Play, Key, Plus, Loader2, Database, KeySquare, ChevronRight, Trash2, Mail, Eye, EyeOff, Copy, Edit2, Check, X, Edit3, Sparkles, Users, Maximize, ExternalLink, Image, AlertTriangle, CheckCircle2, Layers, AlertCircle, FileText, Smartphone, Monitor } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { apiClient } from '../../../api/client';
+import { apiClient, BASE_URL } from '../../../api/client';
 import '../portal.css';
 
 const fixEncoding = (str: string) => {
@@ -1557,12 +1557,12 @@ export default function AdminWorkflows() {
                             <input 
                               type="text" 
                               readOnly 
-                              value={`http://localhost:3000/api/workflows/webhook/${wf.id}`} 
+                              value={`${BASE_URL}/workflows/webhook/${wf.id}`} 
                               style={{ flex: 1, background: 'transparent', border: 'none', color: '#10b981', fontSize: '0.75rem', outline: 'none' }} 
                             />
                             <button 
                               onClick={() => {
-                                navigator.clipboard.writeText(`http://localhost:3000/api/workflows/webhook/${wf.id}`);
+                                navigator.clipboard.writeText(`${BASE_URL}/workflows/webhook/${wf.id}`);
                                 alert('¡URL copiada al portapapeles!');
                               }}
                               style={{ background: '#1e293b', color: 'white', border: 'none', padding: '4px 8px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.7rem' }}

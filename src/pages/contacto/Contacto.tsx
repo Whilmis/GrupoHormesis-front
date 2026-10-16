@@ -3,6 +3,7 @@ import { ArrowRight, MapPin, Mail, Phone, Calendar, Clock, Building2, Zap, Send,
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
 import SEO from '../../components/SEO';
+import { BASE_URL } from '../../api/client';
 import './contacto.css';
 
 export default function Contacto() {
@@ -35,7 +36,7 @@ export default function Contacto() {
       }
 
       // 2. Apuntar al Endpoint Correcto
-      const res = await fetch(`http://localhost:3000/api/forms/${workflowId}/submit`, {
+      const res = await fetch(`${BASE_URL}/forms/${workflowId}/submit`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

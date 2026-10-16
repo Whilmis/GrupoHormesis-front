@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { apiClient } from '../../../api/client';
+import { apiClient, BASE_URL } from '../../../api/client';
 import { Calendar as CalendarIcon, Clock, Link, Trash2, Plus, X, Settings as SettingsIcon, AlertCircle, Mail, User } from 'lucide-react';
 import { Calendar as BigCalendar, dateFnsLocalizer, Views } from 'react-big-calendar';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
@@ -121,7 +121,7 @@ export default function AdminCalendars() {
 
   const fetchMeetings = async (calendarId: string) => {
     try {
-      const res = await fetch(`http://localhost:3000/api/calendars/public/${calendarId}/meetings`);
+      const res = await fetch(`${BASE_URL}/calendars/public/${calendarId}/meetings`);
       const data = await res.json();
       const formatted = data.map((m: any) => ({
         id: m.id,
@@ -214,7 +214,7 @@ export default function AdminCalendars() {
     if (!promptModal || !promptData.name || !promptData.email) return;
     
     try {
-      const res = await fetch(`http://localhost:3000/api/calendars/public/${activeCalendar?.id}/book`, {
+      const res = await fetch(`${BASE_URL}/calendars/public/${activeCalendar?.id}/book`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

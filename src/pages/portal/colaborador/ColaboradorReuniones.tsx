@@ -15,7 +15,7 @@ import {
   FileSearch,
   Sparkles
 } from 'lucide-react';
-import { apiClient } from '../../../api/client';
+import { apiClient, BASE_URL } from '../../../api/client';
 
 interface Meeting {
   id: string;
@@ -423,7 +423,7 @@ export default function ColaboradorReuniones() {
             {/* Botón Ver Maqueta en Pantalla Completa */}
             {selectedLeadAudit.leadId && (
               <a
-                href={`http://localhost:3000/api/leads/public/${selectedLeadAudit.leadId}/mockup`}
+                href={`${BASE_URL}/leads/public/${selectedLeadAudit.leadId}/mockup`}
                 target="_blank"
                 rel="noreferrer"
                 style={{
