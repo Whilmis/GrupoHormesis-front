@@ -7,7 +7,11 @@ export default defineConfig({
   preview: {
     host: true,
     port: process.env.PORT ? parseInt(process.env.PORT) : 4173,
-    allowedHosts: true, // Permite "hormesis-front-production.up.railway.app", subdominios de Railway y dominios personalizados
+    allowedHosts: [
+      'hormesis-front-production.up.railway.app',
+      '.railway.app',
+      '.up.railway.app'
+    ],
   },
   server: {
     host: true,
