@@ -11,7 +11,7 @@ export default function Desarrollo() {
   return (
     <main className="desarrollo-page b2b-page">
       <SEO 
-        title="Desarrollo de Software & Arquitectura Cloud a Medida | Grupo Hormesis"
+        title="Desarrollo de software y arquitectura cloud a medida | Grupo Hormesis"
         description="Ingeniería de software de alta gama, microservicios resilientes, arquitecturas modernas y aplicaciones escalables."
         canonical="/soluciones/desarrollo"
         ogImage="https://grupohormesis.com/api_integration_mockup.jpg"
@@ -230,17 +230,17 @@ export default function Desarrollo() {
                 <span className="kb-tag">UX/UI</span>
               </div>
               <div className="kb-card">
-                <p>Diseño de Base de Datos</p>
+                <p>Diseño de base de datos</p>
                 <span className="kb-tag">Backend</span>
               </div>
             </div>
 
             <div className="kanban-column">
               <div className="kb-header border-b text-emerald">
-                <Terminal size={16} /> <span>2. Sprints de Dev</span>
+                <Terminal size={16} /> <span>2. Sprints de desarrollo</span>
               </div>
               <div className="kb-card active-card">
-                <p>Desarrollo Iterativo</p>
+                <p>Desarrollo iterativo</p>
                 <div className="kb-progress">
                   <div className="progress-bar" style={{width: '60%'}}></div>
                 </div>

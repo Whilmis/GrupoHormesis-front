@@ -13,7 +13,7 @@ export default function AdminDashboard() {
       <div className="dashboard-grid">
         <div className="stat-card">
           <div className="stat-header">
-            <span className="stat-title">{t('admin_dashboard.active_users', 'Usuarios Activos')}</span>
+            <span className="stat-title">{t('admin_dashboard.active_users', 'Usuarios activos')}</span>
             <Users className="stat-icon" />
           </div>
           <span className="stat-value">1,248</span>
@@ -40,7 +40,7 @@ export default function AdminDashboard() {
 
         <div className="stat-card">
           <div className="stat-header">
-            <span className="stat-title">{t('admin_dashboard.system_health', 'Salud del Sistema')}</span>
+            <span className="stat-title">{t('admin_dashboard.system_health', 'Salud del sistema')}</span>
             <Activity className="stat-icon" />
           </div>
           <span className="stat-value">99.9%</span>
@@ -49,7 +49,7 @@ export default function AdminDashboard() {
       </div>
 
       <div style={{ background: 'white', padding: '1.5rem', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
-        <h3 style={{ marginBottom: '1rem', color: '#0f172a' }}>{t('admin_dashboard.recent_activity', 'Actividad Reciente')}</h3>
+        <h3 style={{ marginBottom: '1rem', color: '#0f172a' }}>{t('admin_dashboard.recent_activity', 'Actividad reciente')}</h3>
         <p style={{ color: '#64748b' }}>{t('admin_dashboard.activity_log', 'Aquí se mostrará el log de actividad general del sistema.')}</p>
       </div>
     </div>

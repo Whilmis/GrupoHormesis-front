@@ -483,13 +483,13 @@ export default function AdminCalendars() {
       <div style={{ width: '320px', background: '#f8fafc', borderRight: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column' }}>
         <div style={{ padding: '1.5rem', borderBottom: '1px solid #e2e8f0' }}>
           <h2 style={{ margin: '0 0 1rem 0', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.25rem', color: '#0f172a' }}>
-            <CalendarIcon size={20} color="#10b981" /> Mis Calendarios
+            <CalendarIcon size={20} color="#10b981" /> Mis calendarios
           </h2>
           <button 
             onClick={() => setIsModalOpen(true)}
             style={{ width: '100%', background: '#10b981', color: 'white', padding: '0.75rem', borderRadius: '8px', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', cursor: 'pointer', fontWeight: 600 }}
           >
-            <Plus size={18} /> Nuevo Calendario
+            <Plus size={18} /> Nuevo calendario
           </button>
         </div>
 
@@ -529,7 +529,7 @@ export default function AdminCalendars() {
                     onClick={(e) => copyLink(cal.id, e)}
                     style={{ width: '100%', padding: '0.5rem', background: 'white', border: '1px solid #cbd5e1', borderRadius: '4px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.25rem', fontSize: '0.8rem', fontWeight: 500 }}
                   >
-                    <Link size={14} /> Copiar Link Público
+                    <Link size={14} /> Copiar enlace público
                   </button>
                 </div>
               ))}
@@ -594,18 +594,18 @@ export default function AdminCalendars() {
         <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
           <div style={{ background: 'white', padding: '2rem', borderRadius: '12px', width: '90%', maxWidth: '700px', maxHeight: '90vh', overflowY: 'auto' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
-              <h2 style={{ margin: 0 }}>Configurar Calendario</h2>
+              <h2 style={{ margin: 0 }}>Configurar calendario</h2>
               <button onClick={() => setIsModalOpen(false)} style={{ background: 'none', border: 'none', cursor: 'pointer' }}><X size={24} /></button>
             </div>
             
             <form onSubmit={handleSave} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                 <div>
-                  <label style={{ display: 'block', fontSize: '0.85rem', marginBottom: '0.25rem', fontWeight: 600 }}>Nombre Público</label>
+                  <label style={{ display: 'block', fontSize: '0.85rem', marginBottom: '0.25rem', fontWeight: 600 }}>Nombre público</label>
                   <input required type="text" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} style={{ width: '100%', padding: '0.6rem', borderRadius: '6px', border: '1px solid #cbd5e1' }} />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '0.85rem', marginBottom: '0.25rem', fontWeight: 600 }}>Zona Horaria / País</label>
+                  <label style={{ display: 'block', fontSize: '0.85rem', marginBottom: '0.25rem', fontWeight: 600 }}>Zona horaria / país</label>
                   <TimezoneSelect
                     timezones={customTimezones}
                     value={formData.timezone}
@@ -648,7 +648,7 @@ export default function AdminCalendars() {
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: '1rem', marginBottom: '1rem', fontWeight: 600, borderBottom: '1px solid #e2e8f0', paddingBottom: '0.5rem' }}>Disponibilidad Semanal</label>
+                <label style={{ display: 'block', fontSize: '1rem', marginBottom: '1rem', fontWeight: 600, borderBottom: '1px solid #e2e8f0', paddingBottom: '0.5rem' }}>Disponibilidad semanal</label>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                   {DAYS.map(day => (
                     <div key={day.id} style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
@@ -686,7 +686,7 @@ export default function AdminCalendars() {
               </div>
               
               <button type="submit" style={{ background: '#10b981', color: 'white', padding: '1rem', borderRadius: '6px', border: 'none', marginTop: '1rem', cursor: 'pointer', fontWeight: 'bold', fontSize: '1rem' }}>
-                Guardar Configuración
+                Guardar configuración
               </button>
             </form>
           </div>
@@ -698,7 +698,7 @@ export default function AdminCalendars() {
         <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
           <div style={{ background: 'white', padding: '2rem', borderRadius: '12px', width: '90%', maxWidth: '400px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1.5rem', borderBottom: '1px solid #e2e8f0', paddingBottom: '1rem' }}>
-              <h2 style={{ margin: 0, fontSize: '1.25rem' }}>Detalles de Reunión</h2>
+              <h2 style={{ margin: 0, fontSize: '1.25rem' }}>Detalles de la reunión</h2>
               <button onClick={() => setSelectedMeeting(null)} style={{ background: 'none', border: 'none', cursor: 'pointer' }}><X size={24} /></button>
             </div>
             
@@ -739,7 +739,7 @@ export default function AdminCalendars() {
               onClick={() => handleDeleteMeeting(selectedMeeting.id)}
               style={{ width: '100%', background: '#fee2e2', color: '#ef4444', padding: '0.75rem', borderRadius: '8px', border: '1px solid #fca5a5', fontWeight: 600, cursor: 'pointer' }}
             >
-              Cancelar Reunión
+              Cancelar reunión
             </button>
           </div>
         </div>
@@ -759,7 +759,7 @@ export default function AdminCalendars() {
                 Cancelar
               </button>
               <button onClick={confirmModal.onConfirm} style={{ padding: '0.75rem 1.5rem', background: '#ef4444', color: 'white', borderRadius: '8px', border: 'none', fontWeight: 600, cursor: 'pointer' }}>
-                Sí, Confirmar
+                Sí, confirmar
               </button>
             </div>
           </div>
@@ -772,7 +772,7 @@ export default function AdminCalendars() {
           <div style={{ background: 'white', padding: '2.5rem', borderRadius: '16px', width: '90%', maxWidth: '450px', boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
               <div>
-                <h2 style={{ margin: '0 0 0.5rem 0', fontSize: '1.5rem', color: '#0f172a' }}>Agendar Reunión Manual</h2>
+                <h2 style={{ margin: '0 0 0.5rem 0', fontSize: '1.5rem', color: '#0f172a' }}>Agendar reunión manual</h2>
                 <p style={{ margin: 0, color: '#10b981', fontWeight: 500, fontSize: '0.9rem' }}>
                   {promptModal.start.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})} - {promptModal.end.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
                 </p>
@@ -782,14 +782,14 @@ export default function AdminCalendars() {
             
             <form onSubmit={handleManualBooking} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
               <div>
-                <label style={{ display: 'block', fontSize: '0.9rem', marginBottom: '0.5rem', fontWeight: 600, color: '#475569' }}>Nombre del Invitado</label>
+                <label style={{ display: 'block', fontSize: '0.9rem', marginBottom: '0.5rem', fontWeight: 600, color: '#475569' }}>Nombre del invitado</label>
                 <div style={{ position: 'relative' }}>
                   <User size={18} color="#94a3b8" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
                   <input required type="text" value={promptData.name} onChange={e => setPromptData({...promptData, name: e.target.value})} style={{ width: '100%', padding: '0.75rem 0.75rem 0.75rem 2.5rem', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '1rem', outline: 'none' }} placeholder="Ej. Juan Pérez" />
                 </div>
               </div>
               <div>
-                <label style={{ display: 'block', fontSize: '0.9rem', marginBottom: '0.5rem', fontWeight: 600, color: '#475569' }}>Correo Electrónico</label>
+                <label style={{ display: 'block', fontSize: '0.9rem', marginBottom: '0.5rem', fontWeight: 600, color: '#475569' }}>Correo electrónico</label>
                 <div style={{ position: 'relative' }}>
                   <Mail size={18} color="#94a3b8" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
                   <input required type="email" value={promptData.email} onChange={e => setPromptData({...promptData, email: e.target.value})} style={{ width: '100%', padding: '0.75rem 0.75rem 0.75rem 2.5rem', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '1rem', outline: 'none' }} placeholder="ejemplo@correo.com" />
@@ -801,7 +801,7 @@ export default function AdminCalendars() {
                   Cancelar
                 </button>
                 <button type="submit" style={{ padding: '0.75rem 1.5rem', background: '#10b981', color: 'white', borderRadius: '8px', border: 'none', fontWeight: 600, cursor: 'pointer', boxShadow: '0 4px 6px -1px rgba(16, 185, 129, 0.3)' }}>
-                  Agendar Cita
+                  Agendar cita
                 </button>
               </div>
             </form>

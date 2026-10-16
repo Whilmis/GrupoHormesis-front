@@ -31,8 +31,8 @@ export default function PortalLayout() {
     switch (user.role) {
       case 'admin':
         return [
-          { name: t('portal.overview', 'Vista General'), path: '/portal/admin', icon: LayoutDashboard },
-                    { name: t('portal.users', 'Usuarios'), path: '/portal/admin/usuarios', icon: Users },
+          { name: t('portal.overview', 'Vista general'), path: '/portal/admin', icon: LayoutDashboard },
+          { name: t('portal.users', 'Usuarios'), path: '/portal/admin/usuarios', icon: Users },
           { name: 'Calendarios', path: '/portal/admin/calendars', icon: Calendar },
           { name: t('portal.projects', 'Proyectos'), path: '/portal/admin/proyectos', icon: Briefcase },
           { name: 'Workflows', path: '/portal/admin/workflows', icon: FolderKanban },
@@ -40,15 +40,15 @@ export default function PortalLayout() {
         ];
       case 'colaborador':
         return [
-          { name: t('portal.my_dashboard', 'Mi Tablero'), path: '/portal/colaborador', icon: LayoutDashboard },
-          { name: 'Mis Reuniones', path: '/portal/colaborador/reuniones', icon: Calendar },
-          { name: 'Empresas & Leads', path: '/portal/colaborador/leads', icon: Briefcase },
+          { name: t('portal.my_dashboard', 'Mi tablero'), path: '/portal/colaborador', icon: LayoutDashboard },
+          { name: 'Mis reuniones', path: '/portal/colaborador/reuniones', icon: Calendar },
+          { name: 'Empresas y leads', path: '/portal/colaborador/leads', icon: Briefcase },
           { name: 'Formularios', path: '/portal/colaborador/forms', icon: FileText },
         ];
       case 'cliente':
         return [
           { name: t('portal.summary', 'Resumen'), path: '/portal/cliente', icon: LayoutDashboard },
-          { name: t('portal.my_projects', 'Mis Proyectos'), path: '/portal/cliente/proyectos', icon: Briefcase },
+          { name: t('portal.my_projects', 'Mis proyectos'), path: '/portal/cliente/proyectos', icon: Briefcase },
           { name: t('portal.billing', 'Facturación'), path: '/portal/cliente/facturacion', icon: FileText },
         ];
       default:
@@ -89,7 +89,7 @@ export default function PortalLayout() {
         <div style={{ padding: '1.5rem 1rem', borderTop: '1px solid #e2e8f0' }}>
           <button onClick={handleLogout} className="portal-nav-item" style={{ width: '100%', background: 'transparent', border: 'none', cursor: 'pointer', color: '#ef4444' }}>
             <LogOut className="portal-nav-icon" />
-            {t('portal.logout', 'Cerrar Sesión')}
+            {t('portal.logout', 'Cerrar sesión')}
           </button>
         </div>
       </aside>

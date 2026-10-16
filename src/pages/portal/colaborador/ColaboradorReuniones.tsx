@@ -109,7 +109,7 @@ export default function ColaboradorReuniones() {
         <div>
           <h2 style={{ fontSize: '1.6rem', fontWeight: 800, color: '#0f172a', margin: '0 0 0.25rem 0', display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
             <CalendarIcon size={26} color="#2563eb" />
-            Mis Reuniones & Sesiones Agendadas
+            Mis reuniones y sesiones agendadas
           </h2>
           <p style={{ color: '#64748b', fontSize: '0.9rem', margin: 0 }}>
             Revisa las sesiones reservadas por tus clientes, confirma tu asistencia y accede a la auditoría técnica previa a la llamada.
@@ -136,7 +136,7 @@ export default function ColaboradorReuniones() {
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '1rem' }}>
               <AlertCircle size={20} color="#f59e0b" />
               <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#0f172a', margin: 0 }}>
-                Invitaciones Pendientes de Confirmar ({pendingMeetings.length})
+                Invitaciones pendientes de confirmar ({pendingMeetings.length})
               </h3>
             </div>
 
@@ -170,7 +170,7 @@ export default function ColaboradorReuniones() {
                         {/* Cabecera Tarjeta */}
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
                           <span style={{ background: '#fef9c3', color: '#854d0e', fontSize: '0.75rem', fontWeight: 700, padding: '3px 9px', borderRadius: '20px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                            Requiere tu Confirmación
+                            Requiere tu confirmación
                           </span>
                           <span style={{ color: '#64748b', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '4px' }}>
                             <Clock size={13} /> {formatDateTime(m.startTime)}
@@ -208,7 +208,7 @@ export default function ColaboradorReuniones() {
                               onClick={() => setSelectedLeadAudit({ name: m.lead?.businessName || m.guestName, audit: auditReport, leadId: m.lead?.id || '' })}
                               style={{ background: '#f8fafc', border: '1px solid #e2e8f0', color: '#334155', borderRadius: '6px', padding: '0.4rem 0.75rem', fontSize: '0.8rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px', width: '100%', justifyContent: 'center' }}
                             >
-                              <FileSearch size={14} color="#6366f1" /> Ver Diagnóstico & Maqueta Previa
+                              <FileSearch size={14} color="#6366f1" /> Ver diagnóstico y maqueta previa
                             </button>
                           </div>
                         )}
@@ -237,7 +237,7 @@ export default function ColaboradorReuniones() {
                           }}
                         >
                           {actionLoading === m.id ? <Loader2 size={16} className="spinner" /> : <CheckCircle2 size={16} />}
-                          Confirmar Asistencia
+                          Confirmar asistencia
                         </button>
                         <button
                           onClick={() => handleDecline(m.id)}
@@ -272,7 +272,7 @@ export default function ColaboradorReuniones() {
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '1rem' }}>
               <CheckCircle2 size={20} color="#10b981" />
               <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#0f172a', margin: 0 }}>
-                Reuniones Confirmadas ({confirmedMeetings.length})
+                Reuniones confirmadas ({confirmedMeetings.length})
               </h3>
             </div>
 
@@ -317,7 +317,7 @@ export default function ColaboradorReuniones() {
                         </h4>
                         
                         <div style={{ fontSize: '0.85rem', color: '#475569', marginBottom: '0.75rem' }}>
-                          Empresa: <strong>{m.lead?.businessName || 'Cliente Particular'}</strong>
+                          Empresa: <strong>{m.lead?.businessName || 'Cliente particular'}</strong>
                         </div>
 
                         {/* Botón Google Meet */}
@@ -357,7 +357,7 @@ export default function ColaboradorReuniones() {
                           onClick={() => setSelectedLeadAudit({ name: m.lead?.businessName || m.guestName, audit: auditReport, leadId: m.lead?.id || '' })}
                           style={{ background: '#f8fafc', border: '1px solid #e2e8f0', color: '#475569', borderRadius: '6px', padding: '0.45rem', fontSize: '0.8rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px', justifyContent: 'center' }}
                         >
-                          <FileSearch size={14} color="#6366f1" /> Ver Diagnóstico & Maqueta Previa
+                          <FileSearch size={14} color="#6366f1" /> Ver diagnóstico y maqueta previa
                         </button>
                       )}
                     </div>
@@ -377,7 +377,7 @@ export default function ColaboradorReuniones() {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.25rem', borderBottom: '1px solid #e2e8f0', paddingBottom: '1rem' }}>
               <div>
                 <h3 style={{ margin: '0 0 0.25rem 0', color: '#0f172a', fontSize: '1.25rem', fontWeight: 800 }}>
-                  Diagnóstico Técnico: {selectedLeadAudit.name}
+                  Diagnóstico técnico: {selectedLeadAudit.name}
                 </h3>
                 <p style={{ margin: 0, color: '#64748b', fontSize: '0.85rem' }}>
                   Datos recopilados por la IA para preparar tu reunión de forma estratégica.
@@ -393,7 +393,7 @@ export default function ColaboradorReuniones() {
 
             {/* Resumen Ejecutivo */}
             <div style={{ background: '#f8fafc', padding: '1rem', borderRadius: '8px', borderLeft: '4px solid #3b82f6', marginBottom: '1.25rem' }}>
-              <strong style={{ color: '#1e3a8a', fontSize: '0.85rem', display: 'block', marginBottom: '0.25rem' }}>Resumen del Análisis:</strong>
+              <strong style={{ color: '#1e3a8a', fontSize: '0.85rem', display: 'block', marginBottom: '0.25rem' }}>Resumen del análisis:</strong>
               <p style={{ margin: 0, color: '#334155', fontSize: '0.85rem', lineHeight: 1.5 }}>
                 {selectedLeadAudit.audit?.detailedAnalysis || 'Análisis estándar completado.'}
               </p>
@@ -402,7 +402,7 @@ export default function ColaboradorReuniones() {
             {/* Errores Técnicos y Visuales */}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem' }}>
               <div style={{ background: '#fff1f2', padding: '0.85rem', borderRadius: '8px', border: '1px solid #ffe4e6' }}>
-                <strong style={{ color: '#be123c', fontSize: '0.8rem', display: 'block', marginBottom: '0.4rem' }}>Fallos Técnicos Detectados:</strong>
+                <strong style={{ color: '#be123c', fontSize: '0.8rem', display: 'block', marginBottom: '0.4rem' }}>Fallos técnicos detectados:</strong>
                 <ul style={{ margin: 0, paddingLeft: '1.1rem', fontSize: '0.8rem', color: '#881337', lineHeight: 1.4 }}>
                   {(selectedLeadAudit.audit?.technicalErrors || ['Sin errores críticos']).map((e: string, i: number) => (
                     <li key={i} style={{ marginBottom: '4px' }}>{e}</li>
@@ -411,7 +411,7 @@ export default function ColaboradorReuniones() {
               </div>
 
               <div style={{ background: '#fffbeb', padding: '0.85rem', borderRadius: '8px', border: '1px solid #fef3c7' }}>
-                <strong style={{ color: '#b45309', fontSize: '0.8rem', display: 'block', marginBottom: '0.4rem' }}>Fricciones Visuales / UX:</strong>
+                <strong style={{ color: '#b45309', fontSize: '0.8rem', display: 'block', marginBottom: '0.4rem' }}>Fricciones visuales / UX:</strong>
                 <ul style={{ margin: 0, paddingLeft: '1.1rem', fontSize: '0.8rem', color: '#78350f', lineHeight: 1.4 }}>
                   {(selectedLeadAudit.audit?.visualErrors || ['Diseño estándar']).map((e: string, i: number) => (
                     <li key={i} style={{ marginBottom: '4px' }}>{e}</li>
@@ -442,7 +442,7 @@ export default function ColaboradorReuniones() {
                   boxSizing: 'border-box'
                 }}
               >
-                <Sparkles size={16} color="#10b981" /> Abrir Maqueta de Referencia en Pantalla Completa <ExternalLink size={14} />
+                <Sparkles size={16} color="#10b981" /> Abrir maqueta de referencia en pantalla completa <ExternalLink size={14} />
               </a>
             )}
           </div>

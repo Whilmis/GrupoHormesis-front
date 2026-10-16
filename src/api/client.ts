@@ -1,4 +1,4 @@
-﻿const BASE_URL = 'http://localhost:3000/api';
+const BASE_URL = (import.meta as any).env?.VITE_API_URL || 'http://localhost:3000/api';
 
 export class ApiError extends Error {
   constructor(public status: number, message: string) {
@@ -60,7 +60,7 @@ export const apiClient = async <T = any>(
     if (error instanceof ApiError) {
       throw error;
     }
-    throw new Error('Error de red. Verifica tu conexiÃ³n.');
+    throw new Error('Error de red. Verifica tu conexión.');
   }
 };
 

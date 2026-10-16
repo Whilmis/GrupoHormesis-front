@@ -148,8 +148,6 @@
   margin-bottom: 2rem;
   transition: color 0.2s ease;
   font-size: 0.9rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
 }
 
 .back-to-insights:hover {
@@ -373,7 +371,6 @@
   font-size: 1rem;
   font-weight: 700;
   margin-bottom: 1rem;
-  text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 

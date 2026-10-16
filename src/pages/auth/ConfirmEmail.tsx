@@ -58,7 +58,7 @@ export default function ConfirmEmail() {
           )}
 
           <h2 style={{ fontSize: '1.5rem', color: '#0f172a', marginBottom: '1rem' }}>
-            {status === 'loading' ? 'Verificando...' : status === 'success' ? '¡Correo Verificado!' : 'Error de Verificación'}
+            {status === 'loading' ? 'Verificando...' : status === 'success' ? '¡Correo verificado!' : 'Error de verificación'}
           </h2>
           
           <p style={{ color: '#64748b', marginBottom: '2rem' }}>
@@ -67,7 +67,7 @@ export default function ConfirmEmail() {
 
           {status !== 'loading' && (
             <Link to="/login" className="login-submit" style={{ display: 'inline-flex', justifyContent: 'center', alignItems: 'center', textDecoration: 'none' }}>
-              Ir al Login
+              Ir a iniciar sesión
             </Link>
           )}
         </motion.div>

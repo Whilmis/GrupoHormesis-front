@@ -12,7 +12,7 @@ export default function Workflows() {
   return (
     <main className="workflows-page b2b-page">
       <SEO 
-        title="Sistematización & Workflows Automatizados | Grupo Hormesis"
+        title="Sistematización y workflows automatizados | Grupo Hormesis"
         description="Conecta tus herramientas, automatiza el pipeline comercial y elimina la carga operativa manual con flujos de trabajo inteligentes."
         canonical="/soluciones/workflows"
         ogImage="https://grupohormesis.com/business_process_mockup.jpg"
@@ -80,7 +80,7 @@ export default function Workflows() {
             {/* Bad Way */}
             <div className="compare-card bad-way premium-glass">
               <div className="compare-header">
-                <h3>El Camino Tradicional</h3>
+                <h3>El camino tradicional</h3>
                 <span>Trabajo manual</span>
               </div>
               <ul className="compare-list">
@@ -94,8 +94,8 @@ export default function Workflows() {
             {/* Good Way */}
             <div className="compare-card good-way premium-glass">
               <div className="compare-header">
-                <h3 className="text-emerald">La Arquitectura Hormesis</h3>
-                <span className="text-emerald-light">Workflows Automatizados</span>
+                <h3 className="text-emerald">La arquitectura Hormesis</h3>
+                <span className="text-emerald-light">Workflows automatizados</span>
               </div>
               <ul className="compare-list">
                 <li><CheckCircle size={18} className="text-emerald inline-icon" /> Enrutamiento inteligente y aprobaciones a un clic.</li>
@@ -137,19 +137,19 @@ export default function Workflows() {
 
           <div className="catalog-grid">
             <BentoCard 
-              title="Aprobaciones Multinivel" 
+              title="Aprobaciones multinivel" 
               description="Diseñamos flujos condicionales. Si un gasto supera los $10k, se envía automáticamente al CFO para su firma antes de continuar."
               icon={<ShieldCheck size={28} className="text-emerald" />}
               className="premium-bento"
             />
             <BentoCard 
-              title="Disparadores (Triggers) Inteligentes" 
+              title="Disparadores (triggers) inteligentes" 
               description="Inicia procesos basados en eventos: un nuevo cliente en el CRM, un email con un adjunto específico o a una hora predeterminada."
               icon={<Zap size={28} className="text-emerald" />}
               className="premium-bento"
             />
             <BentoCard 
-              title="Integraciones API Nativas" 
+              title="Integraciones API nativas" 
               description="Conectamos el motor con tu ERP actual (SAP, Oracle), tu facturador o cualquier software legado que ya utilices."
               icon={<Workflow size={28} className="text-emerald" />}
               className="premium-bento"
@@ -217,7 +217,7 @@ export default function Workflows() {
             <div className="process-step">
               <div className="step-number">1</div>
               <div className="step-content premium-glass">
-                <h4>Auditoría de Procesos</h4>
+                <h4>Auditoría de procesos</h4>
                 <p>Mapeamos tus flujos de trabajo actuales e identificamos los cuellos de botella que están quemando el tiempo de tu equipo.</p>
               </div>
             </div>
@@ -225,7 +225,7 @@ export default function Workflows() {
             <div className="process-step">
               <div className="step-number">2</div>
               <div className="step-content premium-glass">
-                <h4>Modelado Lógico</h4>
+                <h4>Modelado lógico</h4>
                 <p>Diseñamos las reglas de negocio, aprobaciones condicionales y conexiones API sin afectar tu base de datos de producción.</p>
               </div>
             </div>

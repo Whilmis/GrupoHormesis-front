@@ -7,15 +7,15 @@ import '../portal.css';
 const getScreenshotLabel = (type: string) => {
   switch (type) {
     case 'desktop_home':
-      return { label: 'Hero Escritorio', icon: '🖥️' };
+      return { label: 'Hero escritorio', icon: '🖥️' };
     case 'desktop_footer':
-      return { label: 'Pie de Página (Footer)', icon: '📑' };
+      return { label: 'Pie de página (footer)', icon: '📑' };
     case 'mobile_home':
-      return { label: 'Móvil (UX / Responsive)', icon: '📱' };
+      return { label: 'Móvil (UX / responsive)', icon: '📱' };
     case 'services_page':
-      return { label: 'Página de Servicios', icon: '💼' };
+      return { label: 'Página de servicios', icon: '💼' };
     case 'contact_page':
-      return { label: 'Página de Contacto', icon: '✉️' };
+      return { label: 'Página de contacto', icon: '✉️' };
     default:
       return { label: type || 'Captura', icon: '📸' };
   }
@@ -468,7 +468,7 @@ ${audit.detailedAnalysis || 'Análisis en proceso.'}
                   boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
                 }}
               >
-                <Copy size={15} /> Copiar Propuesta
+                <Copy size={15} /> Copiar propuesta
               </button>
               <button 
                 onClick={() => setSelectedAuditLead(null)}
@@ -497,7 +497,7 @@ ${audit.detailedAnalysis || 'Análisis en proceso.'}
                 <AlertTriangle size={20} />
               </div>
               <div>
-                <div style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 500 }}>Errores Técnicos</div>
+                <div style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 500 }}>Errores técnicos</div>
                 <div style={{ fontSize: '1.1rem', fontWeight: 700, color: '#dc2626' }}>{audit.technicalErrors.length} detectados</div>
               </div>
             </div>
@@ -507,7 +507,7 @@ ${audit.detailedAnalysis || 'Análisis en proceso.'}
                 <Smartphone size={20} />
               </div>
               <div>
-                <div style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 500 }}>Errores Visuales/UX</div>
+                <div style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 500 }}>Errores visuales/UX</div>
                 <div style={{ fontSize: '1.1rem', fontWeight: 700, color: '#ea580c' }}>{audit.visualErrors.length} detectados</div>
               </div>
             </div>
@@ -517,7 +517,7 @@ ${audit.detailedAnalysis || 'Análisis en proceso.'}
                 <Clock size={20} />
               </div>
               <div>
-                <div style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 500 }}>Tiempo de Carga</div>
+                <div style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 500 }}>Tiempo de carga</div>
                 <div style={{ fontSize: '1.1rem', fontWeight: 700, color: '#059669' }}>
                   {audit.technicalAnalysis?.loadTimeMs ? `${audit.technicalAnalysis.loadTimeMs}ms` : 'Rápido (<1s)'}
                 </div>
@@ -531,7 +531,7 @@ ${audit.detailedAnalysis || 'Análisis en proceso.'}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <h4 style={{ margin: 0, color: '#0f172a', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1rem' }}>
-                  <Layers size={18} color="#2563eb" /> Galería de Capturas ({screenshots.length})
+                  <Layers size={18} color="#2563eb" /> Galería de capturas ({screenshots.length})
                 </h4>
                 {currentShot && (
                   <a 
@@ -631,7 +631,7 @@ ${audit.detailedAnalysis || 'Análisis en proceso.'}
                       )}
                       {audit.technicalAnalysis.metaDescription && (
                         <div>
-                          <strong style={{ color: '#0f172a' }}>Meta Description:</strong> {audit.technicalAnalysis.metaDescription}
+                          <strong style={{ color: '#0f172a' }}>Meta descripción:</strong> {audit.technicalAnalysis.metaDescription}
                         </div>
                       )}
                 </div>
@@ -644,7 +644,7 @@ ${audit.detailedAnalysis || 'Análisis en proceso.'}
               <div style={{ background: '#fff5f5', border: '1px solid #fecaca', borderRadius: '12px', padding: '1.25rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem', color: '#991b1b', fontWeight: 700, fontSize: '0.95rem' }}>
                   <AlertTriangle size={18} />
-                  Errores Técnicos y SEO ({audit.technicalErrors.length})
+                  Errores técnicos y SEO ({audit.technicalErrors.length})
                 </div>
                 {audit.technicalErrors.length > 0 ? (
                   <ul style={{ margin: 0, paddingLeft: '1.25rem', display: 'flex', flexDirection: 'column', gap: '0.5rem', color: '#7f1d1d', fontSize: '0.85rem', lineHeight: 1.5 }}>
@@ -661,7 +661,7 @@ ${audit.detailedAnalysis || 'Análisis en proceso.'}
               <div style={{ background: '#fffbeb', border: '1px solid #fde68a', borderRadius: '12px', padding: '1.25rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem', color: '#92400e', fontWeight: 700, fontSize: '0.95rem' }}>
                   <Eye size={18} />
-                  Errores Visuales y de UX ({audit.visualErrors.length})
+                  Errores visuales y de UX ({audit.visualErrors.length})
                 </div>
                 {audit.visualErrors.length > 0 ? (
                   <ul style={{ margin: 0, paddingLeft: '1.25rem', display: 'flex', flexDirection: 'column', gap: '0.5rem', color: '#78350f', fontSize: '0.85rem', lineHeight: 1.5 }}>
@@ -678,7 +678,7 @@ ${audit.detailedAnalysis || 'Análisis en proceso.'}
               <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '1.25rem', flex: 1, display: 'flex', flexDirection: 'column' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem', color: '#0f172a', fontWeight: 700, fontSize: '0.95rem' }}>
                   <Sparkles size={18} color="#10b981" />
-                  Diagnóstico Global de la IA (Estrategia de Venta)
+                  Diagnóstico global de la IA (estrategia de venta)
                 </div>
                 {audit.detailedAnalysis ? (
                   <div style={{ whiteSpace: 'pre-wrap', color: '#334155', fontSize: '0.88rem', lineHeight: 1.6, background: 'white', padding: '1rem', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
@@ -696,7 +696,7 @@ ${audit.detailedAnalysis || 'Análisis en proceso.'}
                   <div style={{ background: '#f5f3ff', border: '1px solid #ddd6fe', borderRadius: '12px', padding: '1.25rem', marginTop: '1rem', display: 'flex', flexDirection: 'column' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#6d28d9', fontWeight: 700, fontSize: '0.95rem' }}>
-                        🎨 Maqueta Diseñada con Google Stitch
+                        🎨 Maqueta diseñada con Google Stitch
                       </div>
                       <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                         <button
@@ -723,7 +723,7 @@ ${audit.detailedAnalysis || 'Análisis en proceso.'}
                             boxShadow: '0 2px 6px rgba(124, 58, 237, 0.3)'
                           }}
                         >
-                          🖥️ Pantalla Completa
+                          🖥️ Pantalla completa
                         </button>
                         <span style={{ background: '#ede9fe', color: '#5b21b6', fontSize: '0.75rem', fontWeight: 600, padding: '3px 8px', borderRadius: '12px' }}>
                           Estilo: {audit.mockup.designStyle || 'Vanguardia 2026'}
@@ -731,7 +731,7 @@ ${audit.detailedAnalysis || 'Análisis en proceso.'}
                       </div>
                     </div>
                     <p style={{ fontSize: '0.85rem', color: '#4c1d95', margin: '0 0 0.75rem 0', fontWeight: 600 }}>
-                      {audit.mockup.title || 'Propuesta de Rediseño Web'}
+                      {audit.mockup.title || 'Propuesta de rediseño web'}
                     </p>
                     {audit.mockup.previewHtml && (
                       <div style={{ background: 'white', borderRadius: '12px', overflow: 'hidden', border: '1px solid #cbd5e1', boxShadow: '0 10px 25px -5px rgba(0,0,0,0.1)' }}>
@@ -768,7 +768,7 @@ ${audit.detailedAnalysis || 'Análisis en proceso.'}
               }}
               style={{ background: 'white', border: '1px solid #cbd5e1', color: '#475569', padding: '0.5rem 1rem', borderRadius: '6px', fontSize: '0.8rem', cursor: 'pointer', fontWeight: 500 }}
             >
-              📋 Copiar JSON de Diagnóstico
+              📋 Copiar JSON de diagnóstico
             </button>
             <button
               onClick={() => setSelectedAuditLead(null)}
@@ -789,7 +789,7 @@ ${audit.detailedAnalysis || 'Análisis en proceso.'}
           onClick={() => { setViewingProject(null); setSelectedLead(null); }}
           style={{ background: 'transparent', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem', borderRadius: '6px', cursor: 'pointer', marginBottom: '1.5rem', color: '#475569', alignSelf: 'flex-start' }}
         >
-          <ChevronLeft size={16} /> Volver a Empresas
+          <ChevronLeft size={16} /> Volver a empresas
         </button>
 
         <h2 style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', color: '#0f172a', marginBottom: '0.5rem' }}>
@@ -805,19 +805,19 @@ ${audit.detailedAnalysis || 'Análisis en proceso.'}
             onClick={() => setActiveTab('INBOX')}
             style={{ background: 'none', border: 'none', borderBottom: activeTab === 'INBOX' ? '2px solid #3b82f6' : '2px solid transparent', color: activeTab === 'INBOX' ? '#3b82f6' : '#64748b', fontWeight: 600, padding: '0.5rem 1rem', cursor: 'pointer', fontSize: '1rem' }}
           >
-            📥 Todo lo Recibido
+            📥 Todo lo recibido
           </button>
           <button 
             onClick={() => { setActiveTab('COMPANIES'); setSelectedLead(null); }}
             style={{ background: 'none', border: 'none', borderBottom: activeTab === 'COMPANIES' ? '2px solid #10b981' : '2px solid transparent', color: activeTab === 'COMPANIES' ? '#10b981' : '#64748b', fontWeight: 600, padding: '0.5rem 1rem', cursor: 'pointer', fontSize: '1rem' }}
           >
-            🏢 Directorio de Empresas
+            🏢 Directorio de empresas
           </button>
           <button 
             onClick={() => { setActiveTab('ACTIVITIES'); setSelectedLead(null); }}
             style={{ background: 'none', border: 'none', borderBottom: activeTab === 'ACTIVITIES' ? '2px solid #f59e0b' : '2px solid transparent', color: activeTab === 'ACTIVITIES' ? '#f59e0b' : '#64748b', fontWeight: 600, padding: '0.5rem 1rem', cursor: 'pointer', fontSize: '1rem' }}
           >
-            ⚡ Actividades Recientes
+            ⚡ Actividades recientes
           </button>
         </div>
 
@@ -838,11 +838,11 @@ ${audit.detailedAnalysis || 'Análisis en proceso.'}
                 <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
                   <thead>
                     <tr style={{ background: '#f8fafc', color: '#475569', textAlign: 'left' }}>
-                      <th style={{ padding: '1rem', borderBottom: '1px solid #e2e8f0' }}>Fecha y Origen</th>
-                      <th style={{ padding: '1rem', borderBottom: '1px solid #e2e8f0' }}>Prospecto / Empresa</th>
+                      <th style={{ padding: '1rem', borderBottom: '1px solid #e2e8f0' }}>Fecha y origen</th>
+                      <th style={{ padding: '1rem', borderBottom: '1px solid #e2e8f0' }}>Prospecto / empresa</th>
                       <th style={{ padding: '1rem', borderBottom: '1px solid #e2e8f0' }}>Contacto</th>
-                      <th style={{ padding: '1rem', borderBottom: '1px solid #e2e8f0' }}>Auditoría IA & Capturas</th>
-                      <th style={{ padding: '1rem', borderBottom: '1px solid #e2e8f0' }}>Atributos y Referidos</th>
+                      <th style={{ padding: '1rem', borderBottom: '1px solid #e2e8f0' }}>Auditoría IA y capturas</th>
+                      <th style={{ padding: '1rem', borderBottom: '1px solid #e2e8f0' }}>Atributos y referidos</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -873,7 +873,7 @@ ${audit.detailedAnalysis || 'Análisis en proceso.'}
                         </td>
                         <td style={{ padding: '1rem', verticalAlign: 'top' }}>
                           <div style={{ fontWeight: 600, color: '#0f172a', fontSize: '0.95rem', marginBottom: '4px' }}>
-                            {lead.businessName || lead.contactName || 'Sin Nombre'}
+                            {lead.businessName || lead.contactName || 'Sin nombre'}
                           </div>
                           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
                             <span style={{ background: '#f1f5f9', color: '#475569', padding: '0.2rem 0.5rem', borderRadius: '12px', fontSize: '0.7rem', fontWeight: 500 }}>
@@ -892,7 +892,7 @@ ${audit.detailedAnalysis || 'Análisis en proceso.'}
                             <div style={{ marginBottom: '4px' }}><a href={`tel:${lead.phone}`} style={{ color: '#10b981', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}>📞 {lead.phone}</a></div>
                           )}
                           {lead.website && lead.website !== 'No disponible' && (
-                            <div><a href={lead.website} target="_blank" rel="noreferrer" style={{ color: '#6366f1', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}>🌐 Visitar Web</a></div>
+                            <div><a href={lead.website} target="_blank" rel="noreferrer" style={{ color: '#6366f1', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}>🌐 Visitar web</a></div>
                           )}
                           {!lead.email && !lead.phone && !lead.website && <span style={{ color: '#94a3b8' }}>-</span>}
                         </td>
@@ -950,7 +950,7 @@ ${audit.detailedAnalysis || 'Análisis en proceso.'}
                                   boxShadow: '0 1px 2px rgba(0,0,0,0.1)'
                                 }}
                               >
-                                <Sparkles size={12} color="#10b981" /> Ver Auditoría IA
+                                <Sparkles size={12} color="#10b981" /> Ver auditoría IA
                               </button>
                             </div>
                           ) : (
@@ -993,7 +993,7 @@ ${audit.detailedAnalysis || 'Análisis en proceso.'}
                   onClick={() => setSelectedLead(null)}
                   style={{ background: 'transparent', border: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', color: '#475569', fontWeight: 500, fontSize: '0.9rem', padding: 0 }}
                 >
-                  <ChevronLeft size={18} /> {t('portal.back_to_potential_companies', 'Volver a Empresas Potenciales')}
+                  <ChevronLeft size={18} /> {t('portal.back_to_potential_companies', 'Volver a empresas potenciales')}
                 </button>
               </div>
 
@@ -1001,7 +1001,7 @@ ${audit.detailedAnalysis || 'Análisis en proceso.'}
               <div style={{ padding: '2rem', background: 'white', borderBottom: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                 <div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap', marginBottom: '0.5rem' }}>
-                    <h2 style={{ margin: 0, color: '#0f172a', fontSize: '1.5rem' }}>{selectedLead.businessName || selectedLead.contactName || 'Empresa Desconocida'}</h2>
+                    <h2 style={{ margin: 0, color: '#0f172a', fontSize: '1.5rem' }}>{selectedLead.businessName || selectedLead.contactName || 'Empresa desconocida'}</h2>
                     {(() => {
                       const audit = parseLeadAudit(selectedLead);
                       if (!audit.rating) return null;
@@ -1032,7 +1032,7 @@ ${audit.detailedAnalysis || 'Análisis en proceso.'}
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.5rem' }}>
                   <span style={{ display: 'inline-block', background: '#dbeafe', color: '#1e40af', padding: '0.4rem 0.8rem', borderRadius: '8px', fontSize: '0.85rem', fontWeight: 600 }}>
-                    Estado Actual: {selectedLead.status || 'NUEVO'}
+                    Estado actual: {selectedLead.status || 'NUEVO'}
                   </span>
                   {(() => {
                     const audit = parseLeadAudit(selectedLead);
@@ -1055,7 +1055,7 @@ ${audit.detailedAnalysis || 'Análisis en proceso.'}
                           boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
                         }}
                       >
-                        <Sparkles size={14} color="#10b981" /> Ver Auditoría Web & Capturas HD ({audit.screenshots.length})
+                        <Sparkles size={14} color="#10b981" /> Ver auditoría web y capturas HD ({audit.screenshots.length})
                       </button>
                     );
                   })()}
@@ -1071,13 +1071,13 @@ ${audit.detailedAnalysis || 'Análisis en proceso.'}
                     <div style={{ background: 'white', borderRadius: '12px', border: '1px solid #e2e8f0', padding: '1.5rem', marginBottom: '2rem', boxShadow: '0 1px 3px rgba(0,0,0,0.05)', maxWidth: '950px' }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', borderBottom: '1px solid #f1f5f9', paddingBottom: '0.75rem' }}>
                         <h4 style={{ margin: 0, color: '#0f172a', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.05rem' }}>
-                          <Sparkles size={18} color="#10b981" /> Auditoría Web de Groq Vision
+                          <Sparkles size={18} color="#10b981" /> Auditoría web con Groq Vision
                         </h4>
                         <button
                           onClick={() => { setSelectedAuditLead(selectedLead); setActiveScreenshotIdx(0); }}
                           style={{ background: '#0f172a', color: 'white', border: 'none', padding: '0.4rem 0.8rem', borderRadius: '6px', fontSize: '0.8rem', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
                         >
-                          <Layers size={14} /> Abrir Galería Completa
+                          <Layers size={14} /> Abrir galería completa
                         </button>
                       </div>
 
@@ -1087,15 +1087,15 @@ ${audit.detailedAnalysis || 'Análisis en proceso.'}
                           <div style={{ fontSize: '1rem', fontWeight: 700, color: '#0f172a' }}>{audit.screenshots.length} guardadas</div>
                         </div>
                         <div style={{ background: '#fff5f5', padding: '0.75rem', borderRadius: '8px', border: '1px solid #fee2e2' }}>
-                          <div style={{ fontSize: '0.75rem', color: '#991b1b' }}>⚠️ Errores Técnicos</div>
+                          <div style={{ fontSize: '0.75rem', color: '#991b1b' }}>⚠️ Errores técnicos</div>
                           <div style={{ fontSize: '1rem', fontWeight: 700, color: '#dc2626' }}>{audit.technicalErrors.length} detectados</div>
                         </div>
                         <div style={{ background: '#fffbeb', padding: '0.75rem', borderRadius: '8px', border: '1px solid #fef3c7' }}>
-                          <div style={{ fontSize: '0.75rem', color: '#92400e' }}>👁️ Errores Visuales/UX</div>
+                          <div style={{ fontSize: '0.75rem', color: '#92400e' }}>👁️ Errores visuales/UX</div>
                           <div style={{ fontSize: '1rem', fontWeight: 700, color: '#d97706' }}>{audit.visualErrors.length} detectados</div>
                         </div>
                         <div style={{ background: '#ecfdf5', padding: '0.75rem', borderRadius: '8px', border: '1px solid #d1fae5' }}>
-                          <div style={{ fontSize: '0.75rem', color: '#065f46' }}>⚡ Carga de Web</div>
+                          <div style={{ fontSize: '0.75rem', color: '#065f46' }}>⚡ Carga de web</div>
                           <div style={{ fontSize: '1rem', fontWeight: 700, color: '#059669' }}>
                             {audit.technicalAnalysis?.loadTimeMs ? `${audit.technicalAnalysis.loadTimeMs}ms` : 'Rápida (<1s)'}
                           </div>
@@ -1104,7 +1104,7 @@ ${audit.detailedAnalysis || 'Análisis en proceso.'}
 
                       {audit.detailedAnalysis && (
                         <div style={{ background: '#f8fafc', padding: '1rem', borderRadius: '8px', border: '1px solid #e2e8f0', fontSize: '0.85rem', color: '#334155', lineHeight: 1.5 }}>
-                          <strong style={{ color: '#0f172a', display: 'block', marginBottom: '0.25rem' }}>Diagnóstico de Oportunidad (IA):</strong>
+                          <strong style={{ color: '#0f172a', display: 'block', marginBottom: '0.25rem' }}>Diagnóstico de oportunidad (IA):</strong>
                           {audit.detailedAnalysis}
                         </div>
                       )}
@@ -1113,7 +1113,7 @@ ${audit.detailedAnalysis || 'Análisis en proceso.'}
                 })()}
 
                 <h3 style={{ margin: '0 0 1.5rem 0', color: '#0f172a', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <MessageSquare size={20} color="#3b82f6" /> Panel de Actividades y Correos IA
+                  <MessageSquare size={20} color="#3b82f6" /> Panel de actividades y correos con IA
                 </h3>
                 
                 {loadingActivities ? (
@@ -1167,7 +1167,7 @@ ${audit.detailedAnalysis || 'Análisis en proceso.'}
                     style={{ background: '#3b82f6', color: 'white', border: 'none', padding: '0 1.5rem', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 600 }}
                     disabled={!newNote.trim()}
                   >
-                    <Send size={18} /> Guardar Nota
+                    <Send size={18} /> Guardar nota
                   </button>
                 </div>
               </div>
@@ -1175,7 +1175,7 @@ ${audit.detailedAnalysis || 'Análisis en proceso.'}
           ) : (
             <div style={{ width: '100%', transition: 'all 0.3s' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-                <h3 style={{ margin: 0, color: '#0f172a', fontSize: '1.25rem' }}>Directorio de Empresas Potenciales</h3>
+                <h3 style={{ margin: 0, color: '#0f172a', fontSize: '1.25rem' }}>Directorio de empresas potenciales</h3>
               </div>
               
               {leads.length === 0 ? (
@@ -1207,7 +1207,7 @@ ${audit.detailedAnalysis || 'Análisis en proceso.'}
                     >
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
                         <div>
-                          <h4 style={{ margin: 0, fontSize: '1.1rem', color: '#0f172a', paddingRight: '0.5rem' }}>{lead.businessName || lead.contactName || 'Sin Nombre'}</h4>
+                          <h4 style={{ margin: 0, fontSize: '1.1rem', color: '#0f172a', paddingRight: '0.5rem' }}>{lead.businessName || lead.contactName || 'Sin nombre'}</h4>
                           {audit.rating && (
                             <span style={{ background: '#fef08a', color: '#854d0e', padding: '0.15rem 0.5rem', borderRadius: '10px', fontSize: '0.72rem', fontWeight: 600, display: 'inline-block', marginTop: '4px' }}>
                               ⭐ {audit.rating}
@@ -1256,7 +1256,7 @@ ${audit.detailedAnalysis || 'Análisis en proceso.'}
                       </div>
 
                       <div style={{ borderTop: '1px solid #f1f5f9', paddingTop: '1rem', color: '#3b82f6', fontSize: '0.9rem', fontWeight: 500, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                        <span>Abrir Expediente</span>
+                        <span>Abrir expediente</span>
                         <ChevronLeft size={16} style={{ transform: 'rotate(180deg)' }} />
                       </div>
                     </div>
@@ -1267,7 +1267,7 @@ ${audit.detailedAnalysis || 'Análisis en proceso.'}
           ) ) : (
             <div style={{ width: '100%', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '2rem' }}>
               <h3 style={{ margin: '0 0 1.5rem 0', color: '#0f172a', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.25rem' }}>
-                ⚡ Línea de Tiempo Global del Proyecto
+                ⚡ Línea de tiempo global del proyecto
               </h3>
               
               {loadingGlobalActivities ? (
@@ -1326,13 +1326,13 @@ ${audit.detailedAnalysis || 'Análisis en proceso.'}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
         <h2 style={{ color: '#0f172a', display: 'flex', alignItems: 'center', gap: '0.5rem', margin: 0 }}>
           <Briefcase size={24} color="#10b981" />
-          {t('admin_projects.management', 'Gestión de Empresas (CRM Global)')}
+          {t('admin_projects.management', 'Gestión de empresas (CRM global)')}
         </h2>
         <button 
           onClick={() => setShowCreateModal(true)}
           style={{ background: '#10b981', color: 'white', border: 'none', padding: '0.5rem 1rem', borderRadius: '6px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 500 }}
         >
-          <Plus size={18} /> Nueva Empresa
+          <Plus size={18} /> Nueva empresa
         </button>
       </div>
       
@@ -1351,7 +1351,7 @@ ${audit.detailedAnalysis || 'Análisis en proceso.'}
             onClick={() => setShowCreateModal(true)}
             style={{ background: '#0f172a', color: 'white', border: 'none', padding: '0.5rem 1rem', borderRadius: '6px', cursor: 'pointer', fontWeight: 500 }}
           >
-            Agregar Empresa
+            Agregar empresa
           </button>
         </div>
       ) : (
@@ -1380,7 +1380,7 @@ ${audit.detailedAnalysis || 'Análisis en proceso.'}
                 </div>
                 <div>
                   <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#10b981' }}>{project._count?.leads || 0}</div>
-                  <div style={{ fontSize: '0.7rem', color: '#64748b', textTransform: 'uppercase' }}>Total Leads</div>
+                  <div style={{ fontSize: '0.7rem', color: '#64748b', textTransform: 'uppercase' }}>Total leads</div>
                 </div>
               </div>
 
@@ -1390,7 +1390,7 @@ ${audit.detailedAnalysis || 'Análisis en proceso.'}
                 onMouseOver={(e) => e.currentTarget.style.background = '#e2e8f0'}
                 onMouseOut={(e) => e.currentTarget.style.background = '#f8fafc'}
               >
-                Abrir CRM de Empresa
+                Abrir CRM de empresa
               </button>
             </div>
           ))}
@@ -1401,10 +1401,10 @@ ${audit.detailedAnalysis || 'Análisis en proceso.'}
       {showCreateModal && (
         <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 50 }}>
           <div style={{ background: 'white', padding: '2rem', borderRadius: '12px', width: '90%', maxWidth: '400px' }}>
-            <h3 style={{ marginTop: 0, marginBottom: '1.5rem', color: '#0f172a' }}>Registrar Nueva Empresa</h3>
+            <h3 style={{ marginTop: 0, marginBottom: '1.5rem', color: '#0f172a' }}>Registrar Nueva empresa</h3>
             
             <div style={{ marginBottom: '1rem' }}>
-              <label style={{ display: 'block', fontSize: '0.85rem', color: '#475569', marginBottom: '0.5rem' }}>Nombre de la Empresa</label>
+              <label style={{ display: 'block', fontSize: '0.85rem', color: '#475569', marginBottom: '0.5rem' }}>Nombre de la empresa</label>
               <input 
                 type="text" 
                 value={newProject.name}
@@ -1415,7 +1415,7 @@ ${audit.detailedAnalysis || 'Análisis en proceso.'}
             </div>
 
             <div style={{ marginBottom: '1rem' }}>
-              <label style={{ display: 'block', fontSize: '0.85rem', color: '#475569', marginBottom: '0.5rem' }}>Sector / Industria</label>
+              <label style={{ display: 'block', fontSize: '0.85rem', color: '#475569', marginBottom: '0.5rem' }}>Sector / industria</label>
               <input 
                 type="text" 
                 value={newProject.industry}
@@ -1426,7 +1426,7 @@ ${audit.detailedAnalysis || 'Análisis en proceso.'}
             </div>
 
             <div style={{ marginBottom: '1.5rem' }}>
-              <label style={{ display: 'block', fontSize: '0.85rem', color: '#475569', marginBottom: '0.5rem' }}>Descripción Corta</label>
+              <label style={{ display: 'block', fontSize: '0.85rem', color: '#475569', marginBottom: '0.5rem' }}>Descripción corta</label>
               <textarea 
                 value={newProject.description}
                 onChange={e => setNewProject({...newProject, description: e.target.value})}
@@ -1447,7 +1447,7 @@ ${audit.detailedAnalysis || 'Análisis en proceso.'}
                 disabled={!newProject.name}
                 style={{ background: '#10b981', color: 'white', border: 'none', padding: '0.5rem 1rem', borderRadius: '6px', cursor: 'pointer', opacity: !newProject.name ? 0.5 : 1 }}
               >
-                Guardar Empresa
+                Guardar empresa
               </button>
             </div>
           </div>

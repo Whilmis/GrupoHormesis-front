@@ -58,7 +58,7 @@ export default function Home() {
   return (
     <main className="main-content">
       <SEO 
-        title="Grupo Hormesis | Sistematización Empresarial e Inteligencia Artificial"
+        title="Grupo Hormesis | Sistematización empresarial e inteligencia artificial"
         description="Transformamos operaciones de negocio con arquitecturas de software a medida, automatización con IA y sistematización de procesos para maximizar tu rentabilidad."
         canonical="/"
         schema={homeSchema}
@@ -260,7 +260,7 @@ export default function Home() {
                 <div className="phone-notification">
                   <div className="notif-icon bg-emerald"><ArrowRight size={10} color="white" style={{transform:'rotate(-45deg)'}}/></div>
                   <div className="notif-content">
-                    <div className="notif-title">Nuevo Ingreso IA</div>
+                    <div className="notif-title">Nuevo ingreso con IA</div>
                     <div className="notif-desc">+$42,500 de la campaña.</div>
                   </div>
                 </div>
@@ -289,7 +289,7 @@ export default function Home() {
                       <ArrowUpRight size={14} className="text-emerald" /> 
                       <div style={{flex: 1}}>
                         <div>API Gateway</div>
-                        <div style={{fontSize: '9px', color: '#9ca3af', fontWeight: 400}}>Suscripción Anual</div>
+                        <div style={{fontSize: '9px', color: '#9ca3af', fontWeight: 400}}>Suscripción anual</div>
                       </div>
                       <div className="text-emerald font-mono">+$4,200</div>
                     </div>
@@ -297,7 +297,7 @@ export default function Home() {
                       <Database size={14} className="text-gray-400" /> 
                       <div style={{flex: 1}}>
                         <div>AWS Enterprise</div>
-                        <div style={{fontSize: '9px', color: '#9ca3af', fontWeight: 400}}>Servicios Cloud</div>
+                        <div style={{fontSize: '9px', color: '#9ca3af', fontWeight: 400}}>Servicios cloud</div>
                       </div>
                       <div className="font-mono text-gray-400">-$840</div>
                     </div>

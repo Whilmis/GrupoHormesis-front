@@ -17,9 +17,9 @@ export default function Contacto() {
   }
   const [showCoupon, setShowCoupon] = useState(false);
 
-  let defaultSolution = "Modernización de Arquitectura Cloud";
+  let defaultSolution = "Modernización de arquitectura cloud";
   if (solucionParam === 'workflows') {
-    defaultSolution = "Sistematización & Workflows";
+    defaultSolution = "Sistematización y workflows";
   }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -43,7 +43,7 @@ export default function Contacto() {
         body: JSON.stringify(data)
       });
       if (res.ok) {
-        alert('Briefing Enviado Exitosamente.');
+        alert('Briefing enviado con éxito.');
         form.reset();
       } else {
         alert('Error al procesar la solicitud.');
@@ -57,7 +57,7 @@ export default function Contacto() {
   return (
     <main className="main-content page-contacto">
       <SEO 
-        title="Agenda una Sesión Estratégica | Contacto Grupo Hormesis"
+        title="Agenda una sesión estratégica | Contacto Grupo Hormesis"
         description="Agenda una Discovery Call o envíanos un briefing técnico. Evaluamos tus cuellos de botella operativos y diseñamos tu plan de sistematización."
         canonical="/contacto"
       />
@@ -77,7 +77,7 @@ export default function Contacto() {
                 <Zap size={12} className="text-emerald" /> 
                 Briefing Center
               </div>
-              <h1 className="contact-title">Iniciemos la <span className="text-emerald">Transformación</span></h1>
+              <h1 className="contact-title">Iniciemos la <span className="text-emerald">transformación</span></h1>
               <p className="contact-subtitle">
                 Agenda una llamada de diagnóstico técnico (Discovery Call) o envíanos un briefing detallado. Nuestro equipo de ingenieros analizará tu arquitectura antes de la primera reunión.
               </p>
@@ -99,7 +99,7 @@ export default function Contacto() {
                 <div className="method-card">
                   <div className="method-icon"><Mail size={20} className="text-emerald" /></div>
                   <div className="method-text">
-                    <h3>Soporte & Consultas</h3>
+                    <h3>Soporte y consultas</h3>
                     <p>Respuesta en menos de 2 horas</p>
                     <a href="mailto:hello@hormesis.group" className="method-link">hello@hormesis.group</a>
                   </div>
@@ -108,7 +108,7 @@ export default function Contacto() {
 
               {/* Global Locations */}
               <div className="locations-wrapper">
-                <h4 className="locations-title"><Building2 size={16} /> Presencia Global</h4>
+                <h4 className="locations-title"><Building2 size={16} /> Presencia global</h4>
                 <div className="locations-list">
                   <div className="location-item">
                     <MapPin size={14} className="text-muted" />
@@ -130,18 +130,18 @@ export default function Contacto() {
             <div className="contact-form-col animate-fade-in-up" style={{animationDelay: '200ms'}}>
               <div id="contact-form" className="glass-form-wrapper">
                 <div className="form-header">
-                  <h3>Enviar Briefing Técnico</h3>
+                  <h3>Enviar briefing técnico</h3>
                   <p>Cuéntanos sobre tu infraestructura o desafío de negocio.</p>
                 </div>
                 
                 <form className="premium-form" onSubmit={handleSubmit}>
                   <div className="form-grid-2">
                     <div className="form-group">
-                      <label>Nombre Completo</label>
+                      <label>Nombre completo</label>
                       <input type="text" name="name" placeholder="Ej. Dra. Elena Vance" required />
                     </div>
                     <div className="form-group">
-                      <label>Email Corporativo</label>
+                      <label>Email corporativo</label>
                       <input type="email" name="email" placeholder="cto@enterprise.com" required />
                     </div>
                   </div>
@@ -152,30 +152,30 @@ export default function Contacto() {
                       <input type="text" name="businessName" placeholder="Nombre de tu compañía" required />
                     </div>
                     <div className="form-group">
-                      <label>Rol / Cargo</label>
+                      <label>Rol / cargo</label>
                       <input type="text" name="role" placeholder="Ej. Director IT, CEO" required />
                     </div>
                   </div>
                   
                   <div className="form-group" style={{ position: 'relative', zIndex: 10 }}>
-                    <label>Teléfono / WhatsApp (Opcional)</label>
+                    <label>Teléfono / WhatsApp (opcional)</label>
                     <CustomPhoneInput />
                   </div>
                   
                   <div className="form-group">
-                    <label>Tipo de Solución Requerida</label>
+                    <label>Tipo de solución requerida</label>
                     <select name="service" defaultValue={defaultSolution}>
-                      <option>Sistematización & Workflows</option>
-                      <option>Desarrollo a Medida (Apps)</option>
+                      <option>Sistematización y workflows</option>
+                      <option>Desarrollo a medida (apps)</option>
                       <option>Ecosistema B2B (CRM/ERP)</option>
                       <option>Integración con IA</option>
-                      <option>Modernización de Arquitectura Cloud</option>
-                      <option>Otro Desafío Técnico</option>
+                      <option>Modernización de arquitectura cloud</option>
+                      <option>Otro desafío técnico</option>
                     </select>
                   </div>
                   
                   <div className="form-group">
-                    <label>Presupuesto Estimado (USD)</label>
+                    <label>Presupuesto estimado (USD)</label>
                     <div className="form-radio-group">
                       <label className="radio-label">
                         <input type="radio" name="scale" value="< $10k" defaultChecked />
@@ -193,7 +193,7 @@ export default function Contacto() {
                   </div>
                   
                   <div className="form-group">
-                    <label>Contexto del Proyecto</label>
+                    <label>Contexto del proyecto</label>
                     <textarea name="context" rows={4} placeholder="Describe brevemente la situación actual, los cuellos de botella tecnológicos y lo que esperas lograr..."></textarea>
                   </div>
                   
@@ -221,7 +221,7 @@ export default function Contacto() {
                   <div className="form-footer">
                     <span className="security-badge"><Clock size={12} className="inline-icon"/> Respuesta garantizada hoy</span>
                     <button type="submit" className="btn-primary btn-lg btn-shadow submit-btn">
-                      Enviar Dossier <Send size={16} />
+                      Enviar dossier <Send size={16} />
                     </button>
                   </div>
                 </form>
@@ -236,7 +236,7 @@ export default function Contacto() {
       <section className="faq-section">
         <div className="container">
           <div className="faq-header text-center">
-            <h2 className="section-title">Preguntas Frecuentes</h2>
+            <h2 className="section-title">Preguntas frecuentes</h2>
             <p className="text-muted">Respuestas rápidas para acelerar nuestro primer contacto.</p>
           </div>
           

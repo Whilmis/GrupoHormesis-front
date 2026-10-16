@@ -103,7 +103,7 @@ export default function ColaboradorDashboard() {
               gap: '6px'
             }}
           >
-            Revisar Invitaciones <ArrowRight size={15} />
+            Revisar invitaciones <ArrowRight size={15} />
           </Link>
         </div>
       )}
@@ -114,7 +114,7 @@ export default function ColaboradorDashboard() {
         <Link to="/portal/colaborador/reuniones" style={{ textDecoration: 'none' }}>
           <div className="stat-card" style={{ cursor: 'pointer', transition: 'transform 0.15s ease' }}>
             <div className="stat-header">
-              <span className="stat-title">Invitaciones por Confirmar</span>
+              <span className="stat-title">Invitaciones por confirmar</span>
               <Calendar className="stat-icon" style={{ color: '#f59e0b', background: 'rgba(245, 158, 11, 0.1)' }} />
             </div>
             <span className="stat-value">{loading ? '...' : stats.pendingMeetings}</span>
@@ -128,7 +128,7 @@ export default function ColaboradorDashboard() {
         <Link to="/portal/colaborador/reuniones" style={{ textDecoration: 'none' }}>
           <div className="stat-card" style={{ cursor: 'pointer', transition: 'transform 0.15s ease' }}>
             <div className="stat-header">
-              <span className="stat-title">Reuniones Confirmadas</span>
+              <span className="stat-title">Reuniones confirmadas</span>
               <CheckCircle2 className="stat-icon" style={{ color: '#10b981', background: 'rgba(16, 185, 129, 0.1)' }} />
             </div>
             <span className="stat-value">{loading ? '...' : stats.confirmedMeetings}</span>
@@ -152,7 +152,7 @@ export default function ColaboradorDashboard() {
         <Link to="/portal/colaborador/forms" style={{ textDecoration: 'none' }}>
           <div className="stat-card" style={{ cursor: 'pointer', transition: 'transform 0.15s ease' }}>
             <div className="stat-header">
-              <span className="stat-title">Formularios Entrantes</span>
+              <span className="stat-title">Formularios entrantes</span>
               <FileText className="stat-icon" style={{ color: '#8b5cf6', background: 'rgba(139, 92, 246, 0.1)' }} />
             </div>
             <span className="stat-value">{loading ? '...' : stats.totalForms}</span>
@@ -169,7 +169,7 @@ export default function ColaboradorDashboard() {
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <Clock size={20} color="#2563eb" />
               <h3 style={{ margin: 0, fontSize: '1.15rem', color: '#0f172a', fontWeight: 700 }}>
-                Reuniones de Hoy ({stats.todayMeetings.length})
+                Reuniones de hoy ({stats.todayMeetings.length})
               </h3>
             </div>
             <Link to="/portal/colaborador/reuniones" style={{ color: '#2563eb', fontSize: '0.85rem', fontWeight: 600, textDecoration: 'none' }}>
@@ -238,7 +238,7 @@ export default function ColaboradorDashboard() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
           <div style={{ background: 'white', padding: '1.5rem', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
             <h3 style={{ margin: '0 0 1rem 0', fontSize: '1.1rem', color: '#0f172a', fontWeight: 700 }}>
-              Flujo de Trabajo Recomendado
+              Flujo de trabajo recomendado
             </h3>
             
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', fontSize: '0.85rem', color: '#475569' }}>
@@ -252,7 +252,7 @@ export default function ColaboradorDashboard() {
               </div>
               <div style={{ display: 'flex', gap: '10px' }}>
                 <span style={{ background: '#eff6ff', color: '#2563eb', fontWeight: 800, width: '22px', height: '22px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>3</span>
-                <span><strong>Registra acuerdos:</strong> Añade notas internas y actualiza el estado a <em>Propuesta Enviada</em> o <em>Ganado</em>.</span>
+                <span><strong>Registra acuerdos:</strong> Añade notas internas y actualiza el estado a <em>Propuesta enviada</em> o <em>Ganado</em>.</span>
               </div>
             </div>
           </div>
@@ -260,7 +260,7 @@ export default function ColaboradorDashboard() {
           <div style={{ background: 'linear-gradient(135deg, #1e293b, #0f172a)', padding: '1.5rem', borderRadius: '12px', color: 'white' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '0.5rem' }}>
               <Sparkles size={18} color="#38bdf8" />
-              <h4 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 700 }}>Herramienta de Cierre</h4>
+              <h4 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 700 }}>Herramienta de cierre</h4>
             </div>
             <p style={{ margin: '0 0 1rem 0', fontSize: '0.8rem', color: '#94a3b8', lineHeight: 1.4 }}>
               Recuerda que todas las maquetas generadas cuentan con enlaces directos para mostrarlas en pantalla completa durante la videollamada.
@@ -277,7 +277,7 @@ export default function ColaboradorDashboard() {
                 textDecoration: 'none'
               }}
             >
-              Explorar Empresas y Maquetas →
+              Explorar empresas y maquetas →
             </Link>
           </div>
         </div>

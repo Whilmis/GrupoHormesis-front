@@ -8,17 +8,17 @@ import './Navigation.css';
 
 const MEGA_MENUS = {
   soluciones: {
-    title: "Soluciones & Tecnologías",
+    title: "Soluciones y tecnologías",
     items: [
       {
         icon: <Zap size={20} />,
-        title: "Sistematización & Workflows",
+        title: "Sistematización y workflows",
         desc: "Automatiza procesos repetitivos",
         href: "/soluciones/workflows"
       },
       {
         icon: <Code size={20} />,
-        title: "Desarrollo a Medida",
+        title: "Desarrollo a medida",
         desc: "Apps exclusivas para tu negocio",
         href: "/soluciones/desarrollo"
       },
@@ -41,13 +41,13 @@ const MEGA_MENUS = {
     items: [
       {
         icon: <Users size={20} />,
-        title: "Cultura y Visión",
+        title: "Cultura y visión",
         desc: "Lo que nos mueve",
         href: "/nosotros#cultura"
       },
       {
         icon: <Map size={20} />,
-        title: "Presencia Corporativa",
+        title: "Presencia corporativa",
         desc: "Dónde estamos",
         href: "/nosotros#presencia"
       }
@@ -58,7 +58,7 @@ const MEGA_MENUS = {
     items: [
       {
         icon: <BookOpen size={20} />,
-        title: "Blog Técnico",
+        title: "Blog técnico",
         desc: "Últimas tendencias",
         href: "/insights"
       }

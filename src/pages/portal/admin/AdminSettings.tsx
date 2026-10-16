@@ -9,7 +9,7 @@ export default function AdminSettings() {
     <div>
       <h2 style={{ marginBottom: '1.5rem', color: '#0f172a', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
         <Settings size={24} color="#10b981" />
-        {t('admin_settings.management', 'Configuración del Sistema')}
+        {t('admin_settings.management', 'Configuración del sistema')}
       </h2>
       <p style={{ color: '#64748b' }}>{t('admin_settings.desc', 'Simulación: Opciones globales del portal, notificaciones y preferencias de la empresa.')}</p>
       

@@ -57,7 +57,7 @@ export default function ClienteDashboard() {
       
       {/* SECCIÓN AÑADIDA PARA PROBAR EL PROMPT EDITOR */}
       <div style={{ background: 'white', padding: '1.5rem', borderRadius: '12px', border: '1px solid #e2e8f0', marginBottom: '2rem' }}>
-        <h3 style={{ marginBottom: '1rem', color: '#0f172a' }}>Configurar Autorespuesta de IA</h3>
+        <h3 style={{ marginBottom: '1rem', color: '#0f172a' }}>Configurar autorespuesta con IA</h3>
         <PromptEditorField 
           label="Instrucciones para la IA (System Prompt)"
           description="Define cómo debe actuar la IA y redactar la respuesta a tus clientes."
@@ -71,11 +71,11 @@ export default function ClienteDashboard() {
           ]}
           templates={[
             {
-              title: 'Agradecimiento Formal',
+              title: 'Agradecimiento formal',
               content: "Eres un asistente de ventas. Un cliente llamado {{name}} de {{businessName}} pregunta lo siguiente: '{{message}}'. Responde agradeciendo formalmente y ofreciendo una reunión."
             },
             {
-              title: 'Respuesta Corta',
+              title: 'Respuesta corta',
               content: "Responde muy breve a {{name}} ({{email}}) diciendo que hemos recibido su mensaje: '{{message}}' y lo contactaremos pronto."
             }
           ]}
@@ -85,7 +85,7 @@ export default function ClienteDashboard() {
       <div className="dashboard-grid">
         <div className="stat-card">
           <div className="stat-header">
-            <span className="stat-title">{t('cliente_dashboard.status', 'Estado del Proyecto')}</span>
+            <span className="stat-title">{t('cliente_dashboard.status', 'Estado del proyecto')}</span>
             <Target className="stat-icon" style={{ color: '#3b82f6', background: 'rgba(59, 130, 246, 0.1)' }} />
           </div>
           <span className="stat-value">{t('cliente_dashboard.in_dev', 'En desarrollo')}</span>
@@ -94,7 +94,7 @@ export default function ClienteDashboard() {
 
         <div className="stat-card">
           <div className="stat-header">
-            <span className="stat-title">{t('cliente_dashboard.efficiency', 'Eficiencia Ganada')}</span>
+            <span className="stat-title">{t('cliente_dashboard.efficiency', 'Eficiencia ganada')}</span>
             <Zap className="stat-icon" />
           </div>
           <span className="stat-value">+35%</span>
@@ -103,7 +103,7 @@ export default function ClienteDashboard() {
 
         <div className="stat-card">
           <div className="stat-header">
-            <span className="stat-title">{t('cliente_dashboard.docs', 'Documentos Entregados')}</span>
+            <span className="stat-title">{t('cliente_dashboard.docs', 'Documentos entregados')}</span>
             <FileCheck className="stat-icon" style={{ color: '#8b5cf6', background: 'rgba(139, 92, 246, 0.1)' }} />
           </div>
           <span className="stat-value">4</span>
@@ -112,7 +112,7 @@ export default function ClienteDashboard() {
       </div>
 
       <div style={{ background: 'white', padding: '1.5rem', borderRadius: '12px', border: '1px solid #e2e8f0', marginTop: '2rem' }}>
-        <h3 style={{ marginBottom: '1rem', color: '#0f172a' }}>{t('cliente_dashboard.next_milestones', 'Próximos Hitos')}</h3>
+        <h3 style={{ marginBottom: '1rem', color: '#0f172a' }}>{t('cliente_dashboard.next_milestones', 'Próximos hitos')}</h3>
         <ul style={{ color: '#64748b', paddingLeft: '1.25rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
           <li>{t('cliente_dashboard.m1', 'Revisión de prototipo funcional (Semana próxima)')}</li>
           <li>{t('cliente_dashboard.m2', 'Integración de base de datos de producción')}</li>

@@ -147,7 +147,6 @@
   font-weight: 700;
   color: var(--on-surface, #1b1c19);
   margin-bottom: 1.5rem;
-  text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 .locations-list {
@@ -209,12 +208,11 @@
 
 .form-group label {
   display: block;
-  font-size: 0.8rem;
-  font-weight: 700;
+  font-size: 0.85rem;
+  font-weight: 600;
   color: #334155;
-  margin-bottom: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.01em;
 }
 
 .form-group input,
@@ -226,7 +224,7 @@
   border-radius: 16px;
   background-color: rgba(255, 255, 255, 0.5);
   border: 1px solid rgba(0, 0, 0, 0.05);
-  font-family: 'Inter', sans-serif;
+  font-family: inherit;
   font-size: 1rem;
   color: #1e293b;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);

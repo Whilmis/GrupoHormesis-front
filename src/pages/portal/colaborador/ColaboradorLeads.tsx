@@ -56,9 +56,9 @@ interface Activity {
 const STATUS_CONFIG: Record<string, { label: string; color: string; bg: string; border: string }> = {
   NUEVO: { label: 'Nuevo', color: '#3b82f6', bg: '#eff6ff', border: '#bfdbfe' },
   CONTACTADO: { label: 'Contactado', color: '#f59e0b', bg: '#fffbeb', border: '#fef3c7' },
-  'REUNIÓN AGENDADA': { label: 'Reunión Agendada', color: '#8b5cf6', bg: '#f5f3ff', border: '#ddd6fe' },
-  'PROPUESTA ENVIADA': { label: 'Propuesta Enviada', color: '#06b6d4', bg: '#ecfeff', border: '#a5f3fc' },
-  GANADO: { label: 'Ganado (Cliente)', color: '#10b981', bg: '#ecfdf5', border: '#a7f3d0' },
+  'REUNIÓN AGENDADA': { label: 'Reunión agendada', color: '#8b5cf6', bg: '#f5f3ff', border: '#ddd6fe' },
+  'PROPUESTA ENVIADA': { label: 'Propuesta enviada', color: '#06b6d4', bg: '#ecfeff', border: '#a5f3fc' },
+  GANADO: { label: 'Ganado (cliente)', color: '#10b981', bg: '#ecfdf5', border: '#a7f3d0' },
   PERDIDO: { label: 'Perdido', color: '#ef4444', bg: '#fef2f2', border: '#fecaca' }
 };
 
@@ -461,7 +461,7 @@ export default function ColaboradorLeads() {
             {/* Selector Rápido para Cambiar Estado */}
             <div style={{ background: '#f8fafc', padding: '1rem', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
               <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 700, color: '#334155', marginBottom: '0.5rem' }}>
-                Cambiar Estado del Lead:
+                Cambiar estado del lead:
               </label>
               <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap' }}>
                 {['NUEVO', 'CONTACTADO', 'REUNIÓN AGENDADA', 'PROPUESTA ENVIADA', 'GANADO', 'PERDIDO'].map(st => (
@@ -498,7 +498,7 @@ export default function ColaboradorLeads() {
                     <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                       <Sparkles size={18} color="#7c3aed" />
                       <h4 style={{ margin: 0, fontSize: '0.95rem', color: '#5b21b6', fontWeight: 700 }}>
-                        Auditoría Técnica & Maqueta Web
+                        Auditoría técnica y maqueta web
                       </h4>
                     </div>
                     <a
@@ -518,7 +518,7 @@ export default function ColaboradorLeads() {
                         gap: '4px'
                       }}
                     >
-                      <ExternalLink size={13} /> Abrir Maqueta
+                      <ExternalLink size={13} /> Abrir maqueta
                     </a>
                   </div>
 
@@ -531,7 +531,7 @@ export default function ColaboradorLeads() {
                       )}
                       {audit.technicalErrors && audit.technicalErrors.length > 0 && (
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '0.8rem', color: '#5b21b6' }}>
-                          <strong>Puntos de Fricción Detectados:</strong>
+                          <strong>Puntos de fricción detectados:</strong>
                           {audit.technicalErrors.slice(0, 3).map((err: any, i: number) => (
                             <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
                               <span>⚠️</span> <span>{typeof err === 'string' ? err : err.title || err.description}</span>
@@ -552,7 +552,7 @@ export default function ColaboradorLeads() {
             {/* Formulario para Añadir Nota Interna */}
             <form onSubmit={handleAddNote} style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
               <label style={{ fontSize: '0.85rem', fontWeight: 700, color: '#334155', display: 'flex', alignItems: 'center', gap: '5px' }}>
-                <MessageSquarePlus size={16} color="#059669" /> Añadir Nota Interna de Seguimiento:
+                <MessageSquarePlus size={16} color="#059669" /> Añadir nota interna de seguimiento:
               </label>
               <textarea
                 value={newNote}
@@ -588,14 +588,14 @@ export default function ColaboradorLeads() {
                   gap: '5px'
                 }}
               >
-                {savingNote ? <Loader2 size={14} className="spinner" /> : <CheckCircle2 size={14} />} Guardar Nota
+                {savingNote ? <Loader2 size={14} className="spinner" /> : <CheckCircle2 size={14} />} Guardar nota
               </button>
             </form>
 
             {/* Historial de Actividades & Correos */}
             <div>
               <h4 style={{ margin: '0 0 1rem 0', fontSize: '1rem', color: '#0f172a', fontWeight: 700 }}>
-                Línea de Tiempo & Actividades ({activities.length})
+                Línea de tiempo y actividades ({activities.length})
               </h4>
 
               {loadingActivities ? (

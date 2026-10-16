@@ -89,12 +89,12 @@
 .editor-title {
   color: rgba(255,255,255,0.5);
   font-size: 0.85rem;
-  font-family: monospace;
+  font-family: 'JetBrains Mono', monospace;
 }
 
 .editor-body {
   padding: 1.5rem;
-  font-family: 'Fira Code', 'Courier New', monospace;
+  font-family: 'JetBrains Mono', monospace;
   font-size: 0.9rem;
   line-height: 1.5;
   color: #e2e8f0;
@@ -295,7 +295,7 @@
   flex-direction: column;
   justify-content: space-between;
   opacity: 0.4;
-  font-family: 'Fira Code', 'Courier New', monospace;
+  font-family: 'JetBrains Mono', monospace;
   font-size: 0.65rem;
   z-index: 0;
 }

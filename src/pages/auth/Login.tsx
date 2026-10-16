@@ -56,7 +56,7 @@ export default function Login() {
 
   return (
     <div className="login-page">
-      <SEO title="Iniciar Sesión | Grupo Hormesis" noIndex={true} />
+      <SEO title="Iniciar sesión | Grupo Hormesis" noIndex={true} />
       {/* Left Branding Panel */}
       <div className="login-branding">
         <div className="login-orbs">
@@ -73,7 +73,7 @@ export default function Login() {
         >
           <img src="/logo.png" alt="Grupo Hormesis" className="login-logo" />
           <h2 className="login-branding-title">
-            Portal de Gestión <span className="text-emerald">Empresarial</span>
+            Portal de gestión <span className="text-emerald">empresarial</span>
           </h2>
           <p className="login-branding-subtitle">
             Accede a tus proyectos, métricas en tiempo real, workflows automatizados y herramientas de gestión desde un solo lugar.
@@ -116,7 +116,7 @@ export default function Login() {
           transition={{ duration: 0.5, delay: 0.1 }}
         >
           <div className="login-card-header">
-            <h1>Iniciar Sesión</h1>
+            <h1>Iniciar sesión</h1>
             <p>Ingresa tus credenciales para acceder al portal</p>
           </div>
 
@@ -129,7 +129,7 @@ export default function Login() {
 
             {/* Email */}
             <div className="login-field">
-              <label htmlFor="login-email">Email Corporativo</label>
+              <label htmlFor="login-email">Email corporativo</label>
               <div className="login-input-wrapper">
                 <Mail size={17} className="field-icon" />
                 <input
@@ -183,7 +183,7 @@ export default function Login() {
             {/* Submit */}
             <button type="submit" className="login-submit" disabled={isLoading}>
               <LogIn size={18} />
-              {isLoading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
+              {isLoading ? 'Iniciando sesión...' : 'Iniciar sesión'}
             </button>
 
             {/* Divider */}

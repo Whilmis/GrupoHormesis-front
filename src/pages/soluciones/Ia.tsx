@@ -11,7 +11,7 @@ export default function Ia() {
   return (
     <div className="ia-page page-transition">
       <SEO 
-        title="Inteligencia Artificial Aplicada para Negocios | Grupo Hormesis"
+        title="Inteligencia artificial aplicada para negocios | Grupo Hormesis"
         description="Soluciones de inteligencia artificial generativa, LLMs privados, agentes autónomos y análisis predictivo integrados en tus procesos empresariales."
         canonical="/soluciones/ia"
         ogImage="https://grupohormesis.com/ai_workflow_mockup.jpg"
@@ -156,17 +156,17 @@ export default function Ia() {
           <div className="ia-timeline">
             <div className="ia-step" data-aos="zoom-in" data-aos-delay="0">
               <div className="ia-step-number">1</div>
-              <h4>Auditoría de Datos</h4>
+              <h4>Auditoría de datos</h4>
               <p>Evaluamos la viabilidad y preparamos tu ecosistema de información.</p>
             </div>
             <div className="ia-step" data-aos="zoom-in" data-aos-delay="150">
               <div className="ia-step-number">2</div>
-              <h4>Entrenamiento y Fine-Tuning</h4>
+              <h4>Entrenamiento y fine-tuning</h4>
               <p>Ajustamos modelos avanzados con tu contexto privado (RAG).</p>
             </div>
             <div className="ia-step" data-aos="zoom-in" data-aos-delay="300">
               <div className="ia-step-number">3</div>
-              <h4>Despliegue y Escalado</h4>
+              <h4>Despliegue y escalado</h4>
               <p>Implementación segura en producción monitorizando el rendimiento.</p>
             </div>
           </div>

@@ -123,17 +123,17 @@ export default function ArticlePage() {
             {/* Sidebar (Desktop only) */}
             <aside className="article-share-sidebar animate-fade-in" style={{ animationDelay: '300ms' }}>
               <div className="share-buttons">
-                <span className="text-xs font-semibold text-slate-400 mb-2 uppercase tracking-wider">Share</span>
-                <button className="share-btn" title="Share via Web"><Globe size={22} /></button>
-                <button className="share-btn" title="Share via Email"><Mail size={22} /></button>
-                <button className="share-btn" title="Copy Link"><LinkIcon size={22} /></button>
+                <span className="text-xs font-semibold text-slate-400 mb-2 tracking-wider">Compartir</span>
+                <button className="share-btn" title="Compartir vía web"><Globe size={22} /></button>
+                <button className="share-btn" title="Compartir por correo"><Mail size={22} /></button>
+                <button className="share-btn" title="Copiar enlace"><LinkIcon size={22} /></button>
               </div>
             </aside>
 
             {/* Main Content */}
             <div className="article-body-content">
               <Link to="/insights" className="back-to-insights animate-fade-in">
-                <ArrowLeft size={16} className="mr-2" /> Volver a Insights
+                <ArrowLeft size={16} className="mr-2" /> Volver a insights
               </Link>
               
               <div className="article-lead animate-fade-in-up" style={{ animationDelay: '200ms' }}>

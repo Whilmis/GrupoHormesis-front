@@ -52,7 +52,7 @@ export const PromptEditorField: React.FC<PromptEditorProps> = ({
             className="btn-templates"
             onClick={() => setShowTemplates(!showTemplates)}
           >
-            {showTemplates ? "Ocultar Plantillas" : "Ver Plantillas"}
+            {showTemplates ? "Ocultar plantillas" : "Ver plantillas"}
           </button>
         )}
       </div>
@@ -61,7 +61,7 @@ export const PromptEditorField: React.FC<PromptEditorProps> = ({
 
       {showTemplates && (
         <div className="prompt-templates-panel">
-          <h4>Plantillas de Ejemplo</h4>
+          <h4>Plantillas de ejemplo</h4>
           <div className="templates-list">
             {templates.map((tpl, i) => (
               <div key={i} className="template-card">
@@ -75,7 +75,7 @@ export const PromptEditorField: React.FC<PromptEditorProps> = ({
       )}
 
       <div className="prompt-variables">
-        <span className="variables-title">Variables Disponibles (clic para insertar):</span>
+        <span className="variables-title">Variables disponibles (clic para insertar):</span>
         <div className="variables-list">
           {variables.map((v, i) => (
             <button 

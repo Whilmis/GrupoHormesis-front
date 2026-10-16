@@ -28,9 +28,9 @@ export const articlesData: Record<string, ArticleData> = {
   "el-estado-de-la-ia": {
     id: "1",
     slug: "el-estado-de-la-ia",
-    title: "El Estado de la IA en Ecosistemas B2B",
+    title: "El estado de la IA en ecosistemas B2B",
     subtitle: "Descubre cómo los Modelos de Lenguaje Grandes (LLMs) están redefiniendo la arquitectura de software empresarial y la automatización de procesos a escala global.",
-    category: "Reporte Anual",
+    category: "Reporte anual",
     readTime: "15 min lectura",
     date: "Septiembre 2026",
     author: {
@@ -47,7 +47,7 @@ export const articlesData: Record<string, ArticleData> = {
       { type: 'paragraph', content: "Uno de los hallazgos más sorprendentes del reporte es la transición de las interfaces gráficas tradicionales (GUIs) hacia interfaces conversacionales híbridas (CUIs). Los usuarios corporativos ahora interactúan con sus ERPs mediante lenguaje natural, reduciendo drásticamente la curva de aprendizaje de nuevo software complejo." },
       { type: 'image', src: "/ai_workflow_mockup.jpg", alt: "Flujo de trabajo de IA" },
       { type: 'quote', content: "Para 2028, el 80% de las interfaces B2B serán invisibles. El usuario describirá su objetivo, y el sistema orquestará los módulos necesarios para cumplirlo." },
-      { type: 'heading', content: "Seguridad y Privacidad" },
+      { type: 'heading', content: "Seguridad y privacidad" },
       { type: 'paragraph', content: "La adopción empresarial de la IA trae consigo nuevos retos. El 78% de los CTOs encuestados citan la privacidad de los datos como su principal preocupación. En Grupo Hormesis, hemos abordado esto integrando capas de 'Zero-Trust' donde los modelos se ejecutan en entornos privados aislados (On-Premise o VPCs), garantizando que la propiedad intelectual nunca abandone la red corporativa." },
       { type: 'paragraph', content: "Conclusión: La ventana de oportunidad se está cerrando. Las empresas que no inicien su transformación hacia la IA Autónoma este año, enfrentarán un rezago tecnológico irrecuperable." }
     ]
@@ -55,7 +55,7 @@ export const articlesData: Record<string, ArticleData> = {
   "toma-de-decisiones-datos": {
     id: "2",
     slug: "toma-de-decisiones-datos",
-    title: "Toma de decisiones impulsada por Datos",
+    title: "Toma de decisiones impulsada por datos",
     subtitle: "Por qué los cuadros de mando interactivos están reemplazando a los reportes estáticos en las empresas líderes.",
     category: "Data Analytics",
     readTime: "5 min lectura",
@@ -80,9 +80,9 @@ export const articlesData: Record<string, ArticleData> = {
   "el-fin-de-los-monolitos": {
     id: "3",
     slug: "el-fin-de-los-monolitos",
-    title: "El fin de los Monolitos",
+    title: "El fin de los monolitos",
     subtitle: "Cómo migrar de un ERP tradicional a un ecosistema de software modular sin interrumpir operaciones.",
-    category: "Arquitectura Cloud",
+    category: "Arquitectura cloud",
     readTime: "8 min lectura",
     date: "Julio 2026",
     author: {
@@ -110,7 +110,7 @@ export const articlesData: Record<string, ArticleData> = {
   "seguridad-ia-autonoma": {
     id: "4",
     slug: "seguridad-ia-autonoma",
-    title: "La seguridad en la Era de la IA Autónoma",
+    title: "La seguridad en la era de la IA autónoma",
     subtitle: "Protocolos de confianza cero (Zero-Trust) aplicados a agentes de IA que operan sobre bases de datos sensibles.",
     category: "Ciberseguridad",
     readTime: "6 min lectura",

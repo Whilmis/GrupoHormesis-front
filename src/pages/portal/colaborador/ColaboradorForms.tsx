@@ -79,7 +79,7 @@ export default function ColaboradorForms() {
         <div>
           <h2 style={{ fontSize: '1.6rem', fontWeight: 800, color: '#0f172a', margin: '0 0 0.25rem 0', display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
             <FileText size={26} color="#6366f1" />
-            Formularios & Respuestas Entrantes
+            Formularios y respuestas entrantes
           </h2>
           <p style={{ color: '#64748b', fontSize: '0.9rem', margin: 0 }}>
             Revisa las respuestas enviadas por empresas a través de los formularios de contacto y respuestas al correo automatizado.
@@ -206,7 +206,7 @@ export default function ColaboradorForms() {
                       cursor: 'pointer'
                     }}
                   >
-                    Ver Todo el Envío
+                    Ver todo el envío
                   </button>
 
                   {phone && (
@@ -268,7 +268,7 @@ export default function ColaboradorForms() {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', borderBottom: '1px solid #e2e8f0', paddingBottom: '1rem' }}>
               <div>
                 <h3 style={{ margin: 0, fontSize: '1.3rem', color: '#0f172a', fontWeight: 800 }}>
-                  Detalle del Envío
+                  Detalle del envío
                 </h3>
                 <span style={{ fontSize: '0.8rem', color: '#64748b' }}>
                   {new Date(selectedSubmission.createdAt).toLocaleString('es-ES')}
@@ -284,17 +284,17 @@ export default function ColaboradorForms() {
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               <div style={{ background: '#f8fafc', padding: '1rem', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
-                <strong style={{ display: 'block', fontSize: '0.85rem', color: '#64748b', marginBottom: '0.4rem' }}>Datos Principales:</strong>
+                <strong style={{ display: 'block', fontSize: '0.85rem', color: '#64748b', marginBottom: '0.4rem' }}>Datos principales:</strong>
                 <p style={{ margin: '0 0 0.25rem 0', color: '#0f172a' }}><strong>Nombre:</strong> {selectedSubmission.name || 'N/A'}</p>
                 <p style={{ margin: '0 0 0.25rem 0', color: '#0f172a' }}><strong>Email:</strong> {selectedSubmission.email || 'N/A'}</p>
                 {selectedSubmission.workflow && (
-                  <p style={{ margin: 0, color: '#0f172a' }}><strong>Workflow Origen:</strong> {selectedSubmission.workflow.name}</p>
+                  <p style={{ margin: 0, color: '#0f172a' }}><strong>Workflow de origen:</strong> {selectedSubmission.workflow.name}</p>
                 )}
               </div>
 
               <div>
                 <strong style={{ display: 'block', fontSize: '0.85rem', color: '#64748b', marginBottom: '0.5rem' }}>
-                  Campos y Respuestas Completas (JSON Payload):
+                  Campos y respuestas completas (payload JSON):
                 </strong>
                 <pre style={{
                   background: '#0f172a',

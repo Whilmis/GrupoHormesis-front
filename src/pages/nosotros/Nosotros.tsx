@@ -25,7 +25,7 @@ export default function NosotrosPage() {
   return (
     <main className="b2b-page">
       <SEO 
-        title="Sobre Grupo Hormesis | Nuestra Visión y Equipo de Ingeniería"
+        title="Sobre Grupo Hormesis | Nuestra visión y equipo de ingeniería"
         description="Conoce al equipo de ingenieros y estrategas detrás de Grupo Hormesis. Creamos sistemas y arquitecturas de software que escalan negocios de alto impacto."
         canonical="/nosotros"
         ogImage="https://grupohormesis.com/hormesis_team_mockup.jpg"

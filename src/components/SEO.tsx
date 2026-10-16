@@ -10,7 +10,7 @@ export interface SEOProps {
   schema?: Record<string, any> | Record<string, any>[];
 }
 
-const DEFAULT_TITLE = 'Grupo Hormesis | Sistematización Empresarial e Inteligencia Artificial';
+const DEFAULT_TITLE = 'Grupo Hormesis | Sistematización empresarial e inteligencia artificial';
 const DEFAULT_DESCRIPTION = 'Transformamos operaciones de negocio con arquitecturas de software a medida, automatización con IA y sistematización de procesos para maximizar tu rentabilidad.';
 const DEFAULT_URL = 'https://grupohormesis.com';
 const DEFAULT_IMAGE = 'https://grupohormesis.com/ai_workflow_mockup.jpg';

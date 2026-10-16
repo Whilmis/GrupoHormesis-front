@@ -12,7 +12,7 @@ export default function InsightsPage() {
   return (
     <main className="b2b-page">
       <SEO 
-        title="Insights & Tendencias Tecnológicas | Grupo Hormesis"
+        title="Insights y tendencias tecnológicas | Grupo Hormesis"
         description="Artículos, análisis y guías estratégicas sobre inteligencia artificial aplicada, optimización operativa y arquitectura de software para empresas."
         canonical="/insights"
         ogImage="https://grupohormesis.com/insights_hero_mockup.jpg"

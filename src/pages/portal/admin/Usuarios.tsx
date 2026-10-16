@@ -119,7 +119,7 @@ export default function Usuarios() {
         <div>
           <h2 style={{ color: '#0f172a', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <Users size={24} color="#10b981" />
-            {t('admin_users.management', 'Gestión de Usuarios')}
+            {t('admin_users.management', 'Gestión de usuarios')}
           </h2>
           <p style={{ color: '#64748b', fontSize: '0.875rem', marginTop: '0.25rem' }}>
             {t('admin_users.admin_desc', 'Administra los accesos y roles de la plataforma.')}
@@ -128,7 +128,7 @@ export default function Usuarios() {
         
         <button className="btn-primary-sm" onClick={() => openModal()}>
           <Plus size={16} />
-          {t('admin_users.new_user', 'Nuevo Usuario')}
+          {t('admin_users.new_user', 'Nuevo usuario')}
         </button>
       </div>
 
@@ -143,7 +143,7 @@ export default function Usuarios() {
                 <th>{t('admin_users.email', 'Email')}</th>
                 <th>{t('admin_users.company', 'Empresa')}</th>
                 <th>{t('admin_users.role', 'Rol')}</th>
-                <th>{t('admin_users.referral_code', 'Código Referido')}</th>
+                <th>{t('admin_users.referral_code', 'Código de referido')}</th>
                 <th style={{ textAlign: 'right' }}>{t('admin_users.actions', 'Acciones')}</th>
               </tr>
             </thead>
@@ -211,7 +211,7 @@ export default function Usuarios() {
         <div className="modal-overlay" onClick={closeModal}>
           <div className="modal-content" onClick={e => e.stopPropagation()}>
             <div className="modal-header">
-              <h3 className="modal-title">{editingUser ? t('admin_users.edit_user', 'Editar Usuario') : t('admin_users.create_user', 'Crear Nuevo Usuario')}</h3>
+              <h3 className="modal-title">{editingUser ? t('admin_users.edit_user', 'Editar usuario') : t('admin_users.create_user', 'Crear nuevo usuario')}</h3>
               <button className="btn-icon" onClick={closeModal}><X size={20} /></button>
             </div>
             
@@ -224,7 +224,7 @@ export default function Usuarios() {
               
               <form id="user-form" onSubmit={handleSubmit}>
                 <div className="form-group">
-                  <label>{t('admin_users.full_name', 'Nombre Completo')}</label>
+                  <label>{t('admin_users.full_name', 'Nombre completo')}</label>
                   <input 
                     type="text" 
                     className="form-input" 
@@ -236,7 +236,7 @@ export default function Usuarios() {
                 </div>
                 
                 <div className="form-group">
-                  <label>{t('admin_users.email', 'Correo Electrónico')}</label>
+                  <label>{t('admin_users.email', 'Correo electrónico')}</label>
                   <input 
                     type="email" 
                     className="form-input" 
@@ -259,21 +259,21 @@ export default function Usuarios() {
                 </div>
 
                 <div className="form-group">
-                  <label>{t('admin_users.user_role', 'Rol de Usuario')}</label>
+                  <label>{t('admin_users.user_role', 'Rol de usuario')}</label>
                   <select 
                     className="form-select"
                     value={formData.role}
                     onChange={(e) => setFormData({...formData, role: e.target.value})}
                   >
-                    <option value="cliente">{t('admin_users.role_client', 'Cliente (Vista limitada)')}</option>
-                    <option value="colaborador">{t('admin_users.role_colab', 'Colaborador (Vista operativa)')}</option>
-                    <option value="admin">{t('admin_users.role_admin', 'Administrador (Acceso total)')}</option>
+                    <option value="cliente">{t('admin_users.role_client', 'Cliente (vista limitada)')}</option>
+                    <option value="colaborador">{t('admin_users.role_colab', 'Colaborador (vista operativa)')}</option>
+                    <option value="admin">{t('admin_users.role_admin', 'Administrador (acceso total)')}</option>
                   </select>
                 </div>
 
                 {!editingUser && (
                   <div className="form-group">
-                    <label>{t('admin_users.temp_pass', 'Contraseña Temporal')}</label>
+                    <label>{t('admin_users.temp_pass', 'Contraseña temporal')}</label>
                     <input 
                       type="password" 
                       className="form-input" 
@@ -291,7 +291,7 @@ export default function Usuarios() {
             <div className="modal-footer">
               <button type="button" className="btn-secondary" onClick={closeModal}>{t('admin_users.cancel', 'Cancelar')}</button>
               <button type="submit" form="user-form" className="btn-primary-sm">
-                {editingUser ? t('admin_users.save_changes', 'Guardar Cambios') : t('admin_users.create_user', 'Crear Usuario')}
+                {editingUser ? t('admin_users.save_changes', 'Guardar cambios') : t('admin_users.create_user', 'Crear usuario')}
               </button>
             </div>
           </div>

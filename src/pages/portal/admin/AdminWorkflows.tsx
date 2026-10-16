@@ -7,12 +7,12 @@ import '../portal.css';
 const fixEncoding = (str: string) => {
   if (!str) return str;
   return str
-    .replace(/Gestin/g, 'GestiÃ³n')
-    .replace(/Gesti\ufffdn/g, 'GestiÃ³n')
-    .replace(/basndose/g, 'basÃ¡ndose')
-    .replace(/bas\ufffdndose/g, 'basÃ¡ndose')
-    .replace(/enva/g, 'envÃ­a')
-    .replace(/env\ufffda/g, 'envÃ­a');
+    .replace(/Gestin/g, 'Gestión')
+    .replace(/Gesti\ufffdn/g, 'Gestión')
+    .replace(/basndose/g, 'basándose')
+    .replace(/bas\ufffdndose/g, 'basándose')
+    .replace(/enva/g, 'envía')
+    .replace(/env\ufffda/g, 'envía');
 };
 
 const formatSchedule = (cronStr?: string) => {
@@ -139,15 +139,15 @@ export default function AdminWorkflows() {
   const getScreenshotLabel = (type: string) => {
     switch (type) {
       case 'desktop_home':
-        return { label: 'Hero Escritorio', icon: '🖥️' };
+        return { label: 'Hero escritorio', icon: '🖥️' };
       case 'desktop_footer':
-        return { label: 'Pie de Página (Footer)', icon: '📑' };
+        return { label: 'Pie de página (footer)', icon: '📑' };
       case 'mobile_home':
-        return { label: 'Móvil (UX / Responsive)', icon: '📱' };
+        return { label: 'Móvil (UX / responsive)', icon: '📱' };
       case 'services_page':
-        return { label: 'Página de Servicios', icon: '💼' };
+        return { label: 'Página de servicios', icon: '💼' };
       case 'contact_page':
-        return { label: 'Página de Contacto', icon: '✉️' };
+        return { label: 'Página de contacto', icon: '✉️' };
       default:
         return { label: type || 'Captura', icon: '📸' };
     }
@@ -194,7 +194,7 @@ export default function AdminWorkflows() {
 
   const handleRefineTemplates = async (wf: UserWorkflow, service?: string) => {
     const prompt = refinementPrompts[wf.id];
-    if (!prompt) return alert('Escribe qu� deseas cambiar.');
+    if (!prompt) return alert('Escribe qué deseas cambiar.');
     setIsRefining(wf.id);
     try {
       const res = await apiClient(`/workflows/${wf.id}/refine-templates`, {
@@ -205,7 +205,7 @@ export default function AdminWorkflows() {
       const updatedWfs = workflows.map(w => w.id === wf.id ? { ...w, config: { ...w.config, generated_responses: res.generated_responses } } : w);
       setWorkflows(updatedWfs);
       setRefinementPrompts({ ...refinementPrompts, [wf.id]: '' });
-      alert('�Correos refinados con �xito!');
+      alert('¡Correos refinados con éxito!');
     } catch (error: any) {
       alert('Error refinando plantillas: ' + (error.response?.data?.error || error.message));
     } finally {
@@ -555,7 +555,7 @@ export default function AdminWorkflows() {
                           const subj = (document.getElementById(`subj-${wf.id}-${service}`) as HTMLInputElement).value;
                           const body = (document.getElementById(`body-${wf.id}-${service}`) as HTMLTextAreaElement).value;
                           handleManualEdit(wf, service, subj, body);
-                        }} style={{ background: '#0f172a', color: 'white', padding: '0.75rem', borderRadius: '6px', border: 'none', cursor: 'pointer', alignSelf: 'flex-start', fontWeight: '600' }}>Guardar Cambios</button>
+                        }} style={{ background: '#0f172a', color: 'white', padding: '0.75rem', borderRadius: '6px', border: 'none', cursor: 'pointer', alignSelf: 'flex-start', fontWeight: '600' }}>Guardar cambios</button>
                       </div>
                     ) : (
                       <div>
@@ -971,7 +971,7 @@ export default function AdminWorkflows() {
                         className="auth-input"
                         style={{ backgroundColor: 'white' }}
                       >
-                        <option value="">-- Seleccionar Empresa --</option>
+                        <option value="">-- Seleccionar empresa --</option>
                         {projects.map(p => (
                           <option key={p.id} value={p.id}>{p.name}</option>
                         ))}
@@ -979,7 +979,7 @@ export default function AdminWorkflows() {
                     </div>
                     {activeTemplate.typeIdentifier === 'form_contact_handler' && (
                     <div className="input-group" style={{ background: '#f8fafc', padding: '1rem', border: '1px solid #e2e8f0', borderRadius: '6px' }}>
-                        <h5 style={{ margin: '0 0 0.5rem 0', color: '#0f172a' }}>Estructura y Mapeo Dinámico de Formulario</h5>
+                        <h5 style={{ margin: '0 0 0.5rem 0', color: '#0f172a' }}>Estructura y mapeo dinámico de formulario</h5>
                         <p style={{ margin: '0 0 1rem 0', fontSize: '0.75rem', color: '#64748b' }}>Define los campos esperados del formulario y mapea los que cumplen funciones especiales.</p>
                         
                         <label>Estructura esperada del formulario (variables separadas por coma)</label>
@@ -1035,7 +1035,7 @@ export default function AdminWorkflows() {
                     ))}
                     {activeTemplate.configSchema?.properties?.calendarId && (
                       <div className="input-group">
-                        <label>Calendario Asignado para Reuniones</label>
+                        <label>Calendario asignado para reuniones</label>
                         <p style={{ fontSize: '0.7rem', color: '#64748b', margin: '0 0 0.5rem 0' }}>Selecciona el calendario al que el cliente será dirigido en el correo</p>
                         <select
                           required={activeTemplate.configSchema.required?.includes('calendarId')}
@@ -1067,7 +1067,7 @@ export default function AdminWorkflows() {
                           </div>
                           
                           <div className="input-group" style={{ marginBottom: '1rem' }}>
-                            <label>Servicios Ofrecidos (separados por comas)</label>
+                            <label>Servicios ofrecidos (separados por comas)</label>
                             <input 
                               type="text" 
                               value={servicesInput} 
@@ -1094,7 +1094,7 @@ export default function AdminWorkflows() {
                           </button>
                           {generatedTemplates && (
                             <div style={{ marginTop: '1.5rem' }}>
-                              <h5 style={{ margin: '0 0 1rem 0', color: '#0f172a' }}>Plantillas Generadas (Revisa y edita)</h5>
+                              <h5 style={{ margin: '0 0 1rem 0', color: '#0f172a' }}>Plantillas generadas (revisa y edita)</h5>
                               {Object.entries(generatedTemplates).map(([service, template]: [string, any]) => (
                                 <div key={service} style={{ background: 'white', padding: '1rem', borderRadius: '6px', marginBottom: '1rem', border: '1px solid #e2e8f0' }}>
                                   <strong style={{ display: 'block', marginBottom: '0.5rem', color: '#10b981' }}>Servicio: {service}</strong>
@@ -1124,7 +1124,7 @@ export default function AdminWorkflows() {
 
                       {activeTemplate.typeIdentifier === 'lead_collector' && (
                         <div style={{ background: '#f1f5f9', padding: '1.5rem', borderRadius: '8px', border: '1px dashed #cbd5e1', marginBottom: '1rem' }}>
-                          <h4 style={{ margin: '0 0 1rem 0', color: '#0f172a' }}>🗺️ Configuración Multi-Búsqueda</h4>
+                          <h4 style={{ margin: '0 0 1rem 0', color: '#0f172a' }}>🗺️ Configuración multibúsqueda</h4>
                           <p style={{ fontSize: '0.8rem', color: '#64748b', marginBottom: '1rem' }}>
                             Ingresa múltiples nichos y lugares. En cada ejecución, el sistema cruzará un nicho con un lugar de forma automática para encontrar leads.
                           </p>
@@ -1199,13 +1199,13 @@ export default function AdminWorkflows() {
 
                       {activeTemplate.typeIdentifier === 'auto_outreach_google_maps' && (
                         <div style={{ background: '#f1f5f9', padding: '1.5rem', borderRadius: '8px', border: '1px dashed #cbd5e1', marginBottom: '1rem' }}>
-                          <h4 style={{ margin: '0 0 1rem 0', color: '#0f172a' }}>⚙️ Configuración de Auto Outreach</h4>
+                          <h4 style={{ margin: '0 0 1rem 0', color: '#0f172a' }}>⚙️ Configuración de auto-outreach</h4>
                           <p style={{ fontSize: '0.8rem', color: '#64748b', marginBottom: '1rem' }}>
                             Envía correos personalizados con diagnóstico web, GIF conceptual Antes vs. Línea de Diseño, resolución de problemas técnicos del nicho y botones de agendamiento y respuesta directa.
                           </p>
                       
                           <div className="input-group" style={{ marginBottom: '1rem' }}>
-                            <label>Fuente de Leads (Campaña Google Maps)</label>
+                            <label>Fuente de leads (campaña Google Maps)</label>
                             <select 
                               required
                               value={newWfConfig.sourceWorkflowId || ''} 
@@ -1244,7 +1244,7 @@ export default function AdminWorkflows() {
                           </div>
                       
                           <div className="input-group" style={{ marginBottom: '1rem' }}>
-                            <label>Límite de Envío Diario</label>
+                            <label>Límite de envío diario</label>
                             <input 
                               required
                               type="number"
@@ -1307,7 +1307,7 @@ export default function AdminWorkflows() {
 
                             {newWfConfig.generated_outreach_email && (
                               <div style={{ background: 'white', padding: '1rem', borderRadius: '6px', border: '1px solid #e2e8f0' }}>
-                                <label style={{ display: 'block', fontSize: '0.75rem', color: '#64748b', marginBottom: '0.25rem', fontWeight: 'bold' }}>Asunto Generado</label>
+                                <label style={{ display: 'block', fontSize: '0.75rem', color: '#64748b', marginBottom: '0.25rem', fontWeight: 'bold' }}>Asunto generado</label>
                                 <input 
                                   type="text" 
                                   value={newWfConfig.generated_outreach_email.subject} 
@@ -1346,7 +1346,7 @@ export default function AdminWorkflows() {
                           </p>
 
                           <div className="input-group" style={{ marginBottom: '1rem' }}>
-                            <label>Campaña Fuente (Recolector de Leads)</label>
+                            <label>Campaña fuente (recolector de leads)</label>
                             <select 
                               required
                               value={newWfConfig.sourceWorkflowId || ''} 
@@ -1361,15 +1361,15 @@ export default function AdminWorkflows() {
                           </div>
 
                           <div className="input-group" style={{ marginBottom: '1rem' }}>
-                            <label>Estilo Visual de Maquetación</label>
+                            <label>Estilo visual de maquetación</label>
                             <select 
                               value={newWfConfig.designStyle || 'modern_clean'} 
                               onChange={e => setNewWfConfig({...newWfConfig, designStyle: e.target.value})} 
                               className="auth-input" 
                             >
-                              <option value="modern_clean">✨ Moderno y Limpio (Recomendado - Conversión Alta)</option>
-                              <option value="minimalist">🌿 Minimalista y Elegante (Servicios Premium)</option>
-                              <option value="bold_vibrant">🔥 Bold y Llamativo (Gran Impacto Visual)</option>
+                              <option value="modern_clean">✨ Moderno y limpio (recomendado - conversión alta)</option>
+                              <option value="minimalist">🌿 Minimalista y elegante (servicios premium)</option>
+                              <option value="bold_vibrant">🔥 Bold y llamativo (gran impacto visual)</option>
                               <option value="corporate">🏢 Corporativo y Tecnológico</option>
                             </select>
                           </div>
@@ -1470,7 +1470,7 @@ export default function AdminWorkflows() {
                       </div>
                     ))}
 
-                    <button type="submit" className="submit-button" style={{ alignSelf: 'flex-start' }}>{t('portal.save_instance', 'Guardar Instancia')}</button>
+                    <button type="submit" className="submit-button" style={{ alignSelf: 'flex-start' }}>{t('portal.save_instance', 'Guardar instancia')}</button>
                   </form>
                 </div>
               )}
@@ -1522,7 +1522,7 @@ export default function AdminWorkflows() {
                               </span>
                               {!hasCred && (
                                 <button onClick={() => setCredModal({ isOpen: true, wfId: wf.id, type: reqCred })} style={{ background: 'none', border: 'none', color: '#3b82f6', cursor: 'pointer', fontSize: '0.75rem' }}>
-                                  {t('portal.add', 'AÃ±adir')}
+                                  {t('portal.add', 'Añadir')}
                                 </button>
                               )}
                             </div>
@@ -1563,7 +1563,7 @@ export default function AdminWorkflows() {
                             <button 
                               onClick={() => {
                                 navigator.clipboard.writeText(`http://localhost:3000/api/workflows/webhook/${wf.id}`);
-                                alert('Â¡URL copiada al portapapeles!');
+                                alert('¡URL copiada al portapapeles!');
                               }}
                               style={{ background: '#1e293b', color: 'white', border: 'none', padding: '4px 8px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.7rem' }}
                             >
@@ -1580,7 +1580,7 @@ export default function AdminWorkflows() {
                             onClick={() => setActiveWorkflowEditor(wf)}
                             style={{ width: '100%', background: viewingEmailsWfId === wf.id ? '#e2e8f0' : '#f1f5f9', border: '1px solid #cbd5e1', color: '#0f172a', padding: '0.75rem', borderRadius: '6px', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontWeight: '500' }}
                           >
-                            <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Mail size={16} /> Ver y Mejorar Correos Generados</span>
+                            <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Mail size={16} /> Ver y mejorar correos generados</span>
                             <ChevronRight size={16} style={{ transform: viewingEmailsWfId === wf.id ? 'rotate(90deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }} />
                           </button>
                           
@@ -1619,7 +1619,7 @@ export default function AdminWorkflows() {
                                             const subj = (document.getElementById(`subj-${wf.id}-${service}`) as HTMLInputElement).value;
                                             const body = (document.getElementById(`body-${wf.id}-${service}`) as HTMLTextAreaElement).value;
                                             handleManualEdit(wf, service, subj, body);
-                                          }} style={{ background: '#0f172a', color: 'white', padding: '0.5rem', borderRadius: '4px', border: 'none', cursor: 'pointer' }}>Guardar Cambios</button>
+                                          }} style={{ background: '#0f172a', color: 'white', padding: '0.5rem', borderRadius: '4px', border: 'none', cursor: 'pointer' }}>Guardar cambios</button>
                                         </div>
                                       ) : (
                                         <div>
@@ -1701,9 +1701,9 @@ export default function AdminWorkflows() {
                                     <th style={{ padding: '0.75rem 1rem', borderBottom: '1px solid #e2e8f0' }}>Empresa</th>
                                     <th style={{ padding: '0.75rem 1rem', borderBottom: '1px solid #e2e8f0' }}>Dirección</th>
                                     <th style={{ padding: '0.75rem 1rem', borderBottom: '1px solid #e2e8f0' }}>Teléfono</th>
-                                    <th style={{ padding: '0.75rem 1rem', borderBottom: '1px solid #e2e8f0' }}>Sitio Web</th>
+                                    <th style={{ padding: '0.75rem 1rem', borderBottom: '1px solid #e2e8f0' }}>Sitio web</th>
                                     <th style={{ padding: '0.75rem 1rem', borderBottom: '1px solid #e2e8f0' }}>Rating</th>
-                                    <th style={{ padding: '0.75rem 1rem', borderBottom: '1px solid #e2e8f0' }}>Análisis Web</th>
+                                    <th style={{ padding: '0.75rem 1rem', borderBottom: '1px solid #e2e8f0' }}>Análisis web</th>
                                   </tr>
                                 </thead>
                                 <tbody>
@@ -1732,7 +1732,7 @@ export default function AdminWorkflows() {
                                       </td>
                                       <td style={{ padding: '0.75rem 1rem', color: '#64748b' }}>
                                         {lead.website && lead.website !== 'No disponible' ? (
-                                          <a href={lead.website} target="_blank" rel="noreferrer" style={{ color: '#3b82f6', textDecoration: 'none', fontWeight: 500 }}>🌐 Visitar Web</a>
+                                          <a href={lead.website} target="_blank" rel="noreferrer" style={{ color: '#3b82f6', textDecoration: 'none', fontWeight: 500 }}>🌐 Visitar web</a>
                                         ) : (
                                           <span style={{ color: '#94a3b8' }}>{lead.website || '-'}</span>
                                         )}
@@ -1827,7 +1827,7 @@ export default function AdminWorkflows() {
       {credModal.isOpen && (
         <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 50 }}>
           <div style={{ background: 'white', padding: '2rem', borderRadius: '12px', width: '90%', maxWidth: '400px' }}>
-            <h3 style={{ margin: '0 0 1.5rem 0' }}>{credModal.type ? `${t('portal.add', 'AÃ±adir')}: ${credModal.type}` : t('portal.new_credential', 'Nueva Credencial')}</h3>
+            <h3 style={{ margin: '0 0 1.5rem 0' }}>{credModal.type ? `${t('portal.add', 'Añadir')}: ${credModal.type}` : t('portal.new_credential', 'Nueva credencial')}</h3>
             <form onSubmit={handleSaveCredential}>
               {!credModal.type && (
                 <div className="input-group" style={{ marginBottom: '1rem' }}>
@@ -1841,11 +1841,11 @@ export default function AdminWorkflows() {
               </div>
               <div className="input-group" style={{ marginBottom: '1.5rem' }}>
                 <label>{t('portal.secret_value', 'Valor (Secreto)')}</label>
-                <input type="password" required value={credValue} onChange={e => setCredValue(e.target.value)} className="auth-input" placeholder="Pega el secreto aquÃ­..." />
+                <input type="password" required value={credValue} onChange={e => setCredValue(e.target.value)} className="auth-input" placeholder="Pega el secreto aquí..." />
               </div>
               <div style={{ display: 'flex', gap: '1rem' }}>
                 <button type="button" className="submit-button" style={{ background: '#e2e8f0', color: '#475569' }} onClick={() => setCredModal({ isOpen: false })}>{t('portal.cancel', 'Cancelar')}</button>
-                <button type="submit" className="submit-button">{t('portal.save_secure', 'Guardar Seguro')}</button>
+                <button type="submit" className="submit-button">{t('portal.save_secure', 'Guardar seguro')}</button>
               </div>
             </form>
           </div>
@@ -1882,7 +1882,7 @@ export default function AdminWorkflows() {
                       <th style={{ padding: '1rem', borderBottom: '2px solid #e2e8f0' }}>Empresa</th>
                       <th style={{ padding: '1rem', borderBottom: '2px solid #e2e8f0' }}>Dirección</th>
                       <th style={{ padding: '1rem', borderBottom: '2px solid #e2e8f0' }}>Contacto</th>
-                      <th style={{ padding: '1rem', borderBottom: '2px solid #e2e8f0' }}>Análisis Web</th>
+                      <th style={{ padding: '1rem', borderBottom: '2px solid #e2e8f0' }}>Análisis web</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -1912,7 +1912,7 @@ export default function AdminWorkflows() {
                               <span style={{ color: '#94a3b8' }}>{lead.phone || '-'}</span>
                             )}
                             {lead.website && lead.website !== 'No disponible' ? (
-                              <a href={lead.website} target="_blank" rel="noreferrer" style={{ color: '#3b82f6', textDecoration: 'none', fontWeight: 500 }}>🌐 Visitar Web</a>
+                              <a href={lead.website} target="_blank" rel="noreferrer" style={{ color: '#3b82f6', textDecoration: 'none', fontWeight: 500 }}>🌐 Visitar web</a>
                             ) : (
                               <span style={{ color: '#94a3b8' }}>{lead.website || '-'}</span>
                             )}
@@ -1990,7 +1990,7 @@ export default function AdminWorkflows() {
         </div>
       )}
 
-      {/* Modal de Auditoría Completa de Lead con IA & Galería de Capturas */}
+      {/* Modal de Auditoría Completa de Lead con IA & Galería de capturas */}
       {selectedAuditLead && (() => {
         const lead = selectedAuditLead;
         const audit = parseLeadAudit(lead);
@@ -2114,7 +2114,7 @@ ${audit.detailedAnalysis || 'Análisis en proceso.'}
                       boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
                     }}
                   >
-                    <Copy size={15} /> Copiar Propuesta
+                    <Copy size={15} /> Copiar propuesta
                   </button>
                   <button 
                     onClick={() => setSelectedAuditLead(null)}
@@ -2143,7 +2143,7 @@ ${audit.detailedAnalysis || 'Análisis en proceso.'}
                     <AlertTriangle size={20} />
                   </div>
                   <div>
-                    <div style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 500 }}>Errores Técnicos</div>
+                    <div style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 500 }}>Errores técnicos</div>
                     <div style={{ fontSize: '1.1rem', fontWeight: 700, color: '#dc2626' }}>{audit.technicalErrors.length} detectados</div>
                   </div>
                 </div>
@@ -2153,7 +2153,7 @@ ${audit.detailedAnalysis || 'Análisis en proceso.'}
                     <Smartphone size={20} />
                   </div>
                   <div>
-                    <div style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 500 }}>Errores Visuales/UX</div>
+                    <div style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 500 }}>Errores visuales/UX</div>
                     <div style={{ fontSize: '1.1rem', fontWeight: 700, color: '#ea580c' }}>{audit.visualErrors.length} detectados</div>
                   </div>
                 </div>
@@ -2163,7 +2163,7 @@ ${audit.detailedAnalysis || 'Análisis en proceso.'}
                     <Clock size={20} />
                   </div>
                   <div>
-                    <div style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 500 }}>Tiempo de Carga</div>
+                    <div style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 500 }}>Tiempo de carga</div>
                     <div style={{ fontSize: '1.1rem', fontWeight: 700, color: '#059669' }}>
                       {audit.technicalAnalysis?.loadTimeMs ? `${audit.technicalAnalysis.loadTimeMs}ms` : 'Rápido (<1s)'}
                     </div>
@@ -2177,7 +2177,7 @@ ${audit.detailedAnalysis || 'Análisis en proceso.'}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <h4 style={{ margin: 0, color: '#0f172a', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1rem' }}>
-                      <Layers size={18} color="#2563eb" /> Galería de Capturas ({screenshots.length})
+                      <Layers size={18} color="#2563eb" /> Galería de capturas ({screenshots.length})
                     </h4>
                     {currentShot && (
                       <a 
@@ -2277,7 +2277,7 @@ ${audit.detailedAnalysis || 'Análisis en proceso.'}
                       )}
                       {audit.technicalAnalysis.metaDescription && (
                         <div>
-                          <strong style={{ color: '#0f172a' }}>Meta Description:</strong> {audit.technicalAnalysis.metaDescription}
+                          <strong style={{ color: '#0f172a' }}>Meta descripción:</strong> {audit.technicalAnalysis.metaDescription}
                         </div>
                       )}
                     </div>
@@ -2290,7 +2290,7 @@ ${audit.detailedAnalysis || 'Análisis en proceso.'}
                   <div style={{ background: '#fff5f5', border: '1px solid #fecaca', borderRadius: '12px', padding: '1.25rem' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem', color: '#991b1b', fontWeight: 700, fontSize: '0.95rem' }}>
                       <AlertTriangle size={18} />
-                      Errores Técnicos y SEO ({audit.technicalErrors.length})
+                      Errores técnicos y SEO ({audit.technicalErrors.length})
                     </div>
                     {audit.technicalErrors.length > 0 ? (
                       <ul style={{ margin: 0, paddingLeft: '1.25rem', display: 'flex', flexDirection: 'column', gap: '0.5rem', color: '#7f1d1d', fontSize: '0.85rem', lineHeight: 1.5 }}>

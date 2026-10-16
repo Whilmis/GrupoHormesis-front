@@ -80,13 +80,13 @@ export default function Register() {
             <div style={{ display: 'inline-flex', justifyContent: 'center', alignItems: 'center', width: '64px', height: '64px', borderRadius: '50%', background: 'rgba(16, 185, 129, 0.1)', color: '#10b981', marginBottom: '1.5rem' }}>
               <Mail size={32} />
             </div>
-            <h2 style={{ fontSize: '1.5rem', color: '#0f172a', marginBottom: '1rem' }}>¡Registro Exitoso!</h2>
+            <h2 style={{ fontSize: '1.5rem', color: '#0f172a', marginBottom: '1rem' }}>¡Registro exitoso!</h2>
             <p style={{ color: '#64748b', marginBottom: '2rem' }}>
               Hemos enviado un enlace de confirmación a <strong>{email}</strong>.
               Por favor, revisa tu bandeja de entrada (y la carpeta de spam) para activar tu cuenta.
             </p>
             <Link to="/login" className="login-submit" style={{ display: 'inline-flex', justifyContent: 'center', alignItems: 'center', textDecoration: 'none' }}>
-              Ir al Login
+              Ir a iniciar sesión
             </Link>
           </motion.div>
         </div>
@@ -96,7 +96,7 @@ export default function Register() {
 
   return (
     <div className="login-page">
-      <SEO title="Crear Cuenta | Grupo Hormesis" noIndex={true} />
+      <SEO title="Crear cuenta | Grupo Hormesis" noIndex={true} />
       {/* Left Branding Panel — reuses login branding layout */}
       <div className="login-branding">
         <div className="login-orbs">
@@ -156,7 +156,7 @@ export default function Register() {
           transition={{ duration: 0.5, delay: 0.1 }}
         >
           <div className="login-card-header">
-            <h1>{isColaboradorRef ? 'Registro de Colaborador' : 'Crear Cuenta'}</h1>
+            <h1>{isColaboradorRef ? 'Registro de colaborador' : 'Crear cuenta'}</h1>
             <p>{isColaboradorRef ? 'Únete a nuestro sistema de referidos y gana comisiones' : 'Completa tus datos para unirte al portal'}</p>
           </div>
 
@@ -176,7 +176,7 @@ export default function Register() {
               </div>
               <div style={{ fontSize: '0.82rem', color: '#334155', lineHeight: 1.4 }}>
                 <strong style={{ display: 'block', color: '#0f172a', fontSize: '0.9rem', marginBottom: '2px' }}>
-                  Sistema de Referidos & Afiliados
+                  Sistema de referidos y afiliados
                 </strong>
                 Al registrarte obtendrás tu enlace y código único para referir clientes, dar seguimiento en el portal y monetizar con Grupo Hormesis.
               </div>
@@ -269,7 +269,7 @@ export default function Register() {
             {/* Email + Phone row */}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
               <div className="login-field">
-                <label htmlFor="reg-email">Email Corporativo</label>
+                <label htmlFor="reg-email">Email corporativo</label>
                 <div className="login-input-wrapper">
                   <Mail size={17} className="field-icon" />
                   <input
@@ -284,7 +284,7 @@ export default function Register() {
                 </div>
               </div>
               <div className="login-field">
-                <label htmlFor="reg-phone">Teléfono <span style={{ color: '#64748b', fontSize: '0.75rem', fontWeight: 400 }}>(Opcional)</span></label>
+                <label htmlFor="reg-phone">Teléfono <span style={{ color: '#64748b', fontSize: '0.75rem', fontWeight: 400 }}>(opcional)</span></label>
                 <div className="login-input-wrapper">
                   <input
                     id="reg-phone"
@@ -373,27 +373,27 @@ export default function Register() {
                 onChange={(e) => setJoinWhatsapp(e.target.checked)}
               />
               <label htmlFor="whatsapp">
-                Quiero unirme a la comunidad de WhatsApp de Grupo Hormesis <span style={{ color: '#64748b', fontSize: '0.75rem' }}>(Opcional)</span>
+                Quiero unirme a la comunidad de WhatsApp de Grupo Hormesis <span style={{ color: '#64748b', fontSize: '0.75rem' }}>(opcional)</span>
               </label>
             </div>
             <div className="terms-check">
               <input type="checkbox" id="terms" required />
               <label htmlFor="terms">
-                Acepto los <a href="#">Términos de Servicio</a> y la <a href="#">Política de Privacidad</a> de Grupo Hormesis.
+                Acepto los <a href="#">términos de servicio</a> y la <a href="#">política de privacidad</a> de Grupo Hormesis.
               </label>
             </div>
 
             {/* Submit */}
             <button type="submit" className="login-submit" disabled={isLoading}>
               <UserPlus size={18} />
-              {isLoading ? 'Creando cuenta...' : 'Crear Cuenta'}
+              {isLoading ? 'Creando cuenta...' : 'Crear cuenta'}
             </button>
           </form>
         </motion.div>
 
         <div className="login-footer">
           ¿Ya tienes cuenta?{' '}
-          <Link to="/login">Iniciar Sesión</Link>
+          <Link to="/login">Iniciar sesión</Link>
         </div>
       </div>
     </div>

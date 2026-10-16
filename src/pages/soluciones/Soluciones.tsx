@@ -10,7 +10,7 @@ export default function SolucionesB2B() {
   return (
     <main className="b2b-page">
       <SEO 
-        title="Soluciones de Automatización & Software B2B | Grupo Hormesis"
+        title="Soluciones de automatización y software B2B | Grupo Hormesis"
         description="Descubre nuestras soluciones de automatización de ventas, integraciones API avanzadas y desarrollo de software empresarial a medida."
         canonical="/soluciones"
         ogImage="https://grupohormesis.com/private_app_store_mockup.jpg"
@@ -113,7 +113,7 @@ export default function SolucionesB2B() {
             </div>
             <div className="cta-dark-action">
               <Link to="/contacto" className="btn-primary btn-lg">
-                Iniciar Proyecto <ArrowRight size={18} />
+                Iniciar proyecto <ArrowRight size={18} />
               </Link>
             </div>
           </div>

@@ -6,7 +6,14 @@
   width: 100vw;
   overflow: hidden;
   background-color: #f8fafc;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-portal, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
+}
+
+.portal-container button,
+.portal-container input,
+.portal-container select,
+.portal-container textarea {
+  font-family: inherit;
 }
 
 /* Sidebar */
@@ -236,7 +243,6 @@
   padding: 1rem 1.5rem;
   font-size: 0.75rem;
   font-weight: 600;
-  text-transform: uppercase;
   color: #64748b;
   border-bottom: 1px solid #e2e8f0;
 }

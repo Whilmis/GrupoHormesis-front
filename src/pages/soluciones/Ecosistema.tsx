@@ -11,7 +11,7 @@ export default function Ecosistema() {
   return (
     <main className="ecosistema-page b2b-page">
       <SEO 
-        title="Ecosistema & Integraciones Empresariales | Grupo Hormesis"
+        title="Ecosistema e integraciones empresariales | Grupo Hormesis"
         description="Unifica tus bases de datos, CRMs, ERPs y canales de comunicación en un solo ecosistema integrado y automatizado."
         canonical="/soluciones/ecosistema"
         ogImage="https://grupohormesis.com/b2b_mockup.jpg"
@@ -155,21 +155,21 @@ export default function Ecosistema() {
                 <li>
                   <div className="s-icon"><Share2 size={20} className="text-emerald" /></div>
                   <div className="s-text">
-                    <strong>Conectores Nativos</strong>
+                    <strong>Conectores nativos</strong>
                     <span>Enlazamos con más de 100 plataformas líderes del mercado B2B de forma inmediata.</span>
                   </div>
                 </li>
                 <li>
                   <div className="s-icon"><Database size={20} className="text-emerald" /></div>
                   <div className="s-text">
-                    <strong>ETL y Data Warehousing</strong>
+                    <strong>ETL y data warehousing</strong>
                     <span>Extraemos, transformamos y cargamos tus datos en almacenes centralizados y limpios.</span>
                   </div>
                 </li>
                 <li>
                   <div className="s-icon"><LayoutDashboard size={20} className="text-emerald" /></div>
                   <div className="s-text">
-                    <strong>Visualización PowerBI / Tableau</strong>
+                    <strong>Visualización con PowerBI / Tableau</strong>
                     <span>Tus datos listos para ser consumidos por los tomadores de decisiones en tiempo real.</span>
                   </div>
                 </li>

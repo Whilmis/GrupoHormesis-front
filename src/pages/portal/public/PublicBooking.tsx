@@ -289,7 +289,7 @@ export default function PublicBooking() {
             <h1 style={{ margin: '0 0 1rem 0', fontSize: '2.5rem', fontWeight: 800, color: '#0f172a', letterSpacing: '-0.02em' }}>{calendar.name}</h1>
             <div style={{ display: 'flex', justifyContent: 'center', gap: '2rem', color: '#475569', fontSize: '1rem', fontWeight: 500 }}>
               <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'white', padding: '0.5rem 1rem', borderRadius: '20px', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}><Clock size={18} color="#10b981" /> Duración: {calendar.duration} min</span>
-              <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'white', padding: '0.5rem 1rem', borderRadius: '20px', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>🌍 Zona Horaria: {calendar.timezone}</span>
+              <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'white', padding: '0.5rem 1rem', borderRadius: '20px', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>🌍 Zona horaria: {calendar.timezone}</span>
             </div>
             {calendar.description && <p style={{ color: '#64748b', margin: '1.5rem auto 0 auto', maxWidth: '600px', fontSize: '1.1rem', lineHeight: 1.6 }}>{calendar.description}</p>}
           </div>
@@ -331,7 +331,7 @@ export default function PublicBooking() {
           <div style={{ background: 'white', padding: '2.5rem', borderRadius: '16px', width: '90%', maxWidth: '450px', boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
               <div>
-                <h2 style={{ margin: '0 0 0.5rem 0', fontSize: '1.5rem', color: '#0f172a' }}>Confirmar Cita</h2>
+                <h2 style={{ margin: '0 0 0.5rem 0', fontSize: '1.5rem', color: '#0f172a' }}>Confirmar cita</h2>
                 <p style={{ margin: 0, color: '#10b981', fontWeight: 500 }}>
                   {bookingModal.start.toLocaleDateString()} | {bookingModal.start.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
                 </p>
@@ -350,26 +350,26 @@ export default function PublicBooking() {
 
             <form onSubmit={handleBook} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
               <div>
-                <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem', marginBottom: '0.5rem', fontWeight: 600, color: '#475569' }}>Nombre Completo {isSecureToken && <Lock size={14} color="#10b981" />}</label>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem', marginBottom: '0.5rem', fontWeight: 600, color: '#475569' }}>Nombre completo {isSecureToken && <Lock size={14} color="#10b981" />}</label>
                 <div style={{ position: 'relative' }}>
                   <User size={18} color="#94a3b8" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
                   <input required type="text" value={formData.guestName} onChange={e => setFormData({...formData, guestName: e.target.value})} style={{ width: '100%', padding: '0.75rem 0.75rem 0.75rem 2.5rem', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '1rem', background: 'white', cursor: 'text', color: 'inherit' }} />
                 </div>
               </div>
               <div>
-                <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem', marginBottom: '0.5rem', fontWeight: 600, color: '#475569' }}>Correo Electrónico {isSecureToken && <Lock size={14} color="#10b981" />}</label>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem', marginBottom: '0.5rem', fontWeight: 600, color: '#475569' }}>Correo electrónico {isSecureToken && <Lock size={14} color="#10b981" />}</label>
                 <div style={{ position: 'relative' }}>
                   <Mail size={18} color="#94a3b8" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
                   <input required type="email" value={formData.guestEmail} onChange={e => setFormData({...formData, guestEmail: e.target.value})} style={{ width: '100%', padding: '0.75rem 0.75rem 0.75rem 2.5rem', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '1rem', background: 'white', cursor: 'text', color: 'inherit' }} />
                 </div>
               </div>
               <div>
-                <label style={{ display: 'block', fontSize: '0.9rem', marginBottom: '0.5rem', fontWeight: 600, color: '#475569' }}>Notas Adicionales (Opcional)</label>
+                <label style={{ display: 'block', fontSize: '0.9rem', marginBottom: '0.5rem', fontWeight: 600, color: '#475569' }}>Notas adicionales (opcional)</label>
                 <textarea value={formData.notes} onChange={e => setFormData({...formData, notes: e.target.value})} style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #cbd5e1', minHeight: '80px' }} />
               </div>
               
               <button type="submit" disabled={isSubmitting} style={{ width: '100%', padding: '1rem', background: '#10b981', color: 'white', borderRadius: '8px', border: 'none', fontWeight: 600, cursor: isSubmitting ? 'not-allowed' : 'pointer', fontSize: '1rem' }}>
-                {isSubmitting ? 'Agendando...' : 'Confirmar Reunión'}
+                {isSubmitting ? 'Agendando...' : 'Confirmar reunión'}
               </button>
             </form>
           </div>
@@ -381,7 +381,7 @@ export default function PublicBooking() {
         <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(15, 23, 42, 0.6)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 3000 }}>
           <div style={{ background: 'white', padding: '3rem 2rem', borderRadius: '16px', width: '90%', maxWidth: '450px', textAlign: 'center', boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)' }}>
             <CheckCircle size={64} color="#10b981" style={{ margin: '0 auto 1.5rem auto' }} />
-            <h2 style={{ color: '#0f172a', margin: '0 0 1rem 0' }}>¡Reunión Agendada con Éxito!</h2>
+            <h2 style={{ color: '#0f172a', margin: '0 0 1rem 0' }}>¡Reunión agendada con éxito!</h2>
             <p style={{ color: '#475569', lineHeight: 1.5, marginBottom: '0.5rem' }}>
               Te hemos enviado la invitación al calendario de <strong>{formData.guestEmail}</strong>.
             </p>
@@ -391,13 +391,13 @@ export default function PublicBooking() {
             
             {successModal.meetLink && (
               <div style={{ background: '#f8fafc', border: '1px dashed #cbd5e1', padding: '1.5rem', borderRadius: '12px', marginBottom: '2rem' }}>
-                <p style={{ margin: '0 0 0.5rem 0', fontSize: '0.9rem', color: '#64748b', fontWeight: 600 }}>ENLACE DE GOOGLE MEET</p>
+                <p style={{ margin: '0 0 0.5rem 0', fontSize: '0.9rem', color: '#64748b', fontWeight: 600 }}>Enlace de Google Meet</p>
                 <a href={successModal.meetLink} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block', color: '#10b981', fontWeight: 600, wordBreak: 'break-all', textDecoration: 'none', marginBottom: '1rem' }}>
                   {successModal.meetLink}
                 </a>
                 <div>
                   <button onClick={() => navigator.clipboard.writeText(successModal.meetLink || '')} style={{ padding: '0.5rem 1rem', background: 'white', border: '1px solid #e2e8f0', borderRadius: '6px', fontSize: '0.85rem', fontWeight: 500, cursor: 'pointer', color: '#475569' }}>
-                    📋 Copiar Enlace
+                    📋 Copiar enlace
                   </button>
                 </div>
               </div>
