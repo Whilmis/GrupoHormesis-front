@@ -1,4 +1,19 @@
-export const BASE_URL = (import.meta as any).env?.VITE_API_URL || 'http://localhost:3000/api';
+const getBaseUrl = (): string => {
+  const envUrl = (import.meta as any).env?.VITE_API_URL;
+  if (envUrl) return envUrl;
+
+  // En producción (cuando el navegador no está en localhost), usar el backend de Railway
+  if (typeof window !== 'undefined') {
+    const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    if (!isLocal) {
+      return 'https://hormesis-back-production.up.railway.app/api';
+    }
+  }
+
+  return 'http://localhost:3000/api';
+};
+
+export const BASE_URL = getBaseUrl();
 
 export class ApiError extends Error {
   constructor(public status: number, message: string) {
