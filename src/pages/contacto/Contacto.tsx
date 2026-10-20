@@ -15,6 +15,7 @@ export default function Contacto() {
   const DEFAULT_WORKFLOW_ID = '757c17df-73ea-4427-9ba0-88396360b457';
   const workflowId = searchParams.get('wid') || searchParams.get('workflowId') || DEFAULT_WORKFLOW_ID;
   const [showCoupon, setShowCoupon] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   let defaultSolution = "Modernización de arquitectura cloud";
   if (solucionParam === 'workflows') {
@@ -23,6 +24,8 @@ export default function Contacto() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (isSubmitting) return;
+    setIsSubmitting(true);
     const form = e.currentTarget;
     const formData = new FormData(form);
     const data = Object.fromEntries(formData.entries());
@@ -50,6 +53,8 @@ export default function Contacto() {
     } catch (err) {
       console.error(err);
       alert('Error de red al enviar el formulario.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -219,8 +224,8 @@ export default function Contacto() {
 
                   <div className="form-footer">
                     <span className="security-badge"><Clock size={12} className="inline-icon"/> Respuesta garantizada hoy</span>
-                    <button type="submit" className="btn-primary btn-lg btn-shadow submit-btn">
-                      Enviar dossier <Send size={16} />
+                    <button type="submit" disabled={isSubmitting} className="btn-primary btn-lg btn-shadow submit-btn" style={{ opacity: isSubmitting ? 0.7 : 1, cursor: isSubmitting ? 'not-allowed' : 'pointer' }}>
+                      {isSubmitting ? 'Enviando dossier...' : (<>Enviar dossier <Send size={16} /></>)}
                     </button>
                   </div>
                 </form>
