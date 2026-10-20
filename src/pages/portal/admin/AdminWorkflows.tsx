@@ -389,7 +389,7 @@ export default function AdminWorkflows() {
       });
       setExecutionResult({ wfId: id, result: res.result });
     } catch (error: any) {
-      alert(error.response?.data?.error || 'Error ejecutando el workflow');
+      alert(error.message || error.response?.data?.error || 'Error ejecutando el workflow');
     } finally {
       setExecuting(null);
     }
