@@ -12,10 +12,8 @@ export default function Contacto() {
   const solucionParam = searchParams.get('solucion');
   
   // 1. Configurar el ID de desarrollo (Fallback)
-  let workflowId = searchParams.get('wid') || searchParams.get('workflowId');
-  if (!workflowId && (import.meta as any).env?.DEV) {
-    workflowId = '757c17df-73ea-4427-9ba0-88396360b457';
-  }
+  const DEFAULT_WORKFLOW_ID = '757c17df-73ea-4427-9ba0-88396360b457';
+  const workflowId = searchParams.get('wid') || searchParams.get('workflowId') || DEFAULT_WORKFLOW_ID;
   const [showCoupon, setShowCoupon] = useState(false);
 
   let defaultSolution = "Modernización de arquitectura cloud";
@@ -30,13 +28,12 @@ export default function Contacto() {
     const data = Object.fromEntries(formData.entries());
 
     try {
-      if (!workflowId) {
-        alert('Falta el ID del workflow en la URL (?wid=xyz). Por favor, usa un enlace válido.');
-        return;
-      }
+      // 2. Apuntar al Endpoint del Backend en Railway
+      const endpoint = workflowId
+        ? `${BASE_URL}/forms/${workflowId}/submit`
+        : `${BASE_URL}/forms/submit`;
 
-      // 2. Apuntar al Endpoint Correcto
-      const res = await fetch(`${BASE_URL}/forms/${workflowId}/submit`, {
+      const res = await fetch(endpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -47,11 +44,12 @@ export default function Contacto() {
         alert('Briefing enviado con éxito.');
         form.reset();
       } else {
-        alert('Error al procesar la solicitud.');
+        const errorData = await res.json().catch(() => null);
+        alert(errorData?.message || 'Error al procesar la solicitud.');
       }
     } catch (err) {
       console.error(err);
-      alert('Error de red.');
+      alert('Error de red al enviar el formulario.');
     }
   };
 
