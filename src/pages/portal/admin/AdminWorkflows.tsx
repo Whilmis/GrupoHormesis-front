@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Clock, FolderKanban, Play, Key, Plus, Loader2, Database, KeySquare, ChevronRight, Trash2, Mail, Eye, EyeOff, Copy, Edit2, Check, X, Edit3, Sparkles, Users, Maximize, ExternalLink, Image, AlertTriangle, CheckCircle2, Layers, AlertCircle, FileText, Smartphone, Monitor } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { apiClient, BASE_URL } from '../../../api/client';
@@ -122,6 +122,88 @@ export default function AdminWorkflows() {
   const [isGeneratingOutreach, setIsGeneratingOutreach] = useState(false);
   const [generatedTemplates, setGeneratedTemplates] = useState<Record<string, {subject: string, body: string}> | null>(null);
     const [executionResult, setExecutionResult] = useState<{ wfId: string; result: any } | null>(null);
+  const [backgroundPollingWfId, setBackgroundPollingWfId] = useState<string | null>(null);
+  const [backgroundStatusText, setBackgroundStatusText] = useState<string>('');
+  const pollingIntervalRef = useRef<any>(null);
+
+  useEffect(() => {
+    return () => {
+      if (pollingIntervalRef.current) clearInterval(pollingIntervalRef.current);
+    };
+  }, []);
+
+  const checkExecutionNow = async (wfId: string) => {
+    try {
+      const execs = await apiClient<any[]>(`/workflows/${wfId}/executions`);
+      const list = Array.isArray(execs) ? execs : (execs as any)?.data || [];
+      const latest = list.find((e: any) => e.type === 'execution' || e.userWorkflowId === wfId);
+      if (latest) {
+        if (latest.logs && latest.logs.length > 0) {
+          const lastLog = latest.logs[latest.logs.length - 1];
+          setBackgroundStatusText(lastLog.replace(/^\[.*?\]\s*/, ''));
+        }
+
+        if (latest.status === 'success' && latest.resultData) {
+          if (pollingIntervalRef.current) {
+            clearInterval(pollingIntervalRef.current);
+            pollingIntervalRef.current = null;
+          }
+          setBackgroundPollingWfId(null);
+          setBackgroundStatusText('');
+          setExecutionResult({
+            wfId: wfId,
+            result: latest.resultData
+          });
+          fetchData();
+          return true;
+        }
+
+        if (latest.status === 'error') {
+          if (pollingIntervalRef.current) {
+            clearInterval(pollingIntervalRef.current);
+            pollingIntervalRef.current = null;
+          }
+          setBackgroundPollingWfId(null);
+          setBackgroundStatusText('');
+          setExecutionResult({
+            wfId: wfId,
+            result: {
+              message: `Error en la ejecución: ${latest.logs ? latest.logs[latest.logs.length - 1] : 'Error en el servidor'}`,
+              leads: []
+            }
+          });
+          return true;
+        }
+      }
+    } catch (e) {
+      console.warn('Error comprobando estado de ejecución:', e);
+    }
+    return false;
+  };
+
+  const startPollingExecution = (wfId: string) => {
+    if (pollingIntervalRef.current) {
+      clearInterval(pollingIntervalRef.current);
+    }
+    setBackgroundPollingWfId(wfId);
+    setBackgroundStatusText('Iniciando recolección y auditoría con IA en segundo plano...');
+
+    let attempts = 0;
+    pollingIntervalRef.current = setInterval(async () => {
+      attempts++;
+      const done = await checkExecutionNow(wfId);
+      if (done || attempts >= 80) {
+        if (pollingIntervalRef.current) {
+          clearInterval(pollingIntervalRef.current);
+          pollingIntervalRef.current = null;
+        }
+        if (attempts >= 80) {
+          setBackgroundPollingWfId(null);
+          fetchData();
+        }
+      }
+    }, 3500);
+  };
     const [showFullScreenResults, setShowFullScreenResults] = useState<{ wfId: string; result: any } | null>(null);
 
   // Email viewing and refining states
@@ -383,17 +465,28 @@ export default function AdminWorkflows() {
   const handleExecute = async (id: string) => {
     setExecuting(id);
     setExecutionResult(null);
+    setBackgroundPollingWfId(null);
+    setBackgroundStatusText('');
     try {
-      const res = await apiClient<{ message: string; result?: any; runningInBackground?: boolean }>(`/workflows/${id}/execute`, {
+      const res = await apiClient<{ message: string; result?: any; runningInBackground?: boolean; executionId?: string }>(`/workflows/${id}/execute`, {
         method: 'POST'
       });
+
+      const isBg = res.runningInBackground || res.result?.isRunningInBackground;
       setExecutionResult({
         wfId: id,
         result: res.result || {
+          isRunningInBackground: isBg,
           message: res.message || 'El workflow se está ejecutando en segundo plano.',
           leads: []
         }
       });
+
+      if (isBg) {
+        startPollingExecution(id);
+      } else {
+        fetchData();
+      }
     } catch (error: any) {
       alert(error.message || error.response?.data?.error || 'Error ejecutando el workflow');
     } finally {
@@ -1813,11 +1906,39 @@ export default function AdminWorkflows() {
                               </table>
                             </div>
                           ) : (
-                            <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', padding: '1.25rem', borderRadius: '8px', color: '#334155', fontSize: '0.9rem' }}>
-                              <p style={{ margin: '0 0 0.5rem 0', fontWeight: 600, color: '#0f172a' }}>ℹ️ Estado de la ejecución:</p>
-                              <p style={{ margin: 0, color: '#64748b' }}>
-                                {executionResult.result?.message || 'El workflow se está ejecutando en segundo plano en el servidor. Los nuevos leads calificados aparecerán automáticamente en tu sección de Leads.'}
+                            <div style={{ background: backgroundPollingWfId === wf.id ? '#f0fdf4' : '#f8fafc', border: `1px solid ${backgroundPollingWfId === wf.id ? '#86efac' : '#e2e8f0'}`, padding: '1.25rem', borderRadius: '8px', color: '#334155', fontSize: '0.9rem' }}>
+                              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                  {backgroundPollingWfId === wf.id ? (
+                                    <>
+                                      <Loader2 size={18} className="animate-spin" color="#16a34a" />
+                                      <strong style={{ color: '#15803d' }}>Procesando y auditando en segundo plano (en vivo)...</strong>
+                                    </>
+                                  ) : (
+                                    <>
+                                      <span>ℹ️</span>
+                                      <strong style={{ color: '#0f172a' }}>Estado de la ejecución:</strong>
+                                    </>
+                                  )}
+                                </div>
+                                {backgroundPollingWfId === wf.id && (
+                                  <button
+                                    onClick={() => checkExecutionNow(wf.id)}
+                                    style={{ background: '#16a34a', color: 'white', border: 'none', padding: '0.3rem 0.75rem', borderRadius: '6px', fontSize: '0.75rem', cursor: 'pointer', fontWeight: 500 }}
+                                  >
+                                    Actualizar ahora
+                                  </button>
+                                )}
+                              </div>
+                              <p style={{ margin: '0 0 0.5rem 0', color: backgroundPollingWfId === wf.id ? '#166534' : '#64748b', fontSize: '0.85rem' }}>
+                                {backgroundStatusText || executionResult.result?.message || 'El servidor está buscando sitios web en Google Maps, capturando pantallas y generando auditorías con IA. Esta vista se actualizará automáticamente.'}
                               </p>
+                              {backgroundPollingWfId === wf.id && (
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem', fontSize: '0.75rem', color: '#15803d' }}>
+                                  <span style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', background: '#22c55e' }}></span>
+                                  Sincronizando automáticamente cada 3.5 segundos...
+                                </div>
+                              )}
                             </div>
                           )}
                         </div>
