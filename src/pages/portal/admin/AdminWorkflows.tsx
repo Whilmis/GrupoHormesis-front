@@ -384,10 +384,16 @@ export default function AdminWorkflows() {
     setExecuting(id);
     setExecutionResult(null);
     try {
-      const res = await apiClient<{ message: string; result: any }>(`/workflows/${id}/execute`, {
+      const res = await apiClient<{ message: string; result?: any; runningInBackground?: boolean }>(`/workflows/${id}/execute`, {
         method: 'POST'
       });
-      setExecutionResult({ wfId: id, result: res.result });
+      setExecutionResult({
+        wfId: id,
+        result: res.result || {
+          message: res.message || 'El workflow se está ejecutando en segundo plano.',
+          leads: []
+        }
+      });
     } catch (error: any) {
       alert(error.message || error.response?.data?.error || 'Error ejecutando el workflow');
     } finally {
@@ -1677,9 +1683,9 @@ export default function AdminWorkflows() {
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
                               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                                 <Database size={18} color="#10b981" /> 
-                                {executionResult.result.leads ? `Cosecha Exitosa: ${executionResult.result.total_found || executionResult.result.leads.length} Leads Encontrados` : 'Resultado de Ejecución'}
+                                {executionResult.result?.leads && executionResult.result.leads.length > 0 ? `Cosecha Exitosa: ${executionResult.result.total_found || executionResult.result.leads.length} Leads Encontrados` : 'Resultado de Ejecución'}
                               </div>
-                              {executionResult.result.leads && (
+                              {executionResult.result?.leads && executionResult.result.leads.length > 0 && (
                                 <button
                                   onClick={() => setShowFullScreenResults(executionResult)}
                                   style={{ background: '#3b82f6', color: 'white', padding: '0.5rem 1rem', borderRadius: '6px', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 500 }}
@@ -1690,10 +1696,10 @@ export default function AdminWorkflows() {
                             </div>
                           </h4>
                           
-                          {executionResult.result.leads ? (
+                          {executionResult.result?.leads && executionResult.result.leads.length > 0 ? (
                             <div style={{ overflowX: 'auto' }}>
                               <p style={{ fontSize: '0.8rem', color: '#64748b', marginBottom: '1rem' }}>
-                                Término buscado: <strong>{executionResult.result.searchQuery || 'Búsqueda por defecto'}</strong>
+                                Término buscado: <strong>{executionResult.result?.searchQuery || 'Búsqueda por defecto'}</strong>
                               </p>
                               <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
                                 <thead>
@@ -1807,8 +1813,11 @@ export default function AdminWorkflows() {
                               </table>
                             </div>
                           ) : (
-                            <div style={{ background: '#0f172a', color: '#10b981', padding: '1rem', borderRadius: '6px', fontSize: '0.75rem', overflowX: 'auto' }}>
-                              <pre style={{ margin: 0 }}>{JSON.stringify(executionResult.result, null, 2)}</pre>
+                            <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', padding: '1.25rem', borderRadius: '8px', color: '#334155', fontSize: '0.9rem' }}>
+                              <p style={{ margin: '0 0 0.5rem 0', fontWeight: 600, color: '#0f172a' }}>ℹ️ Estado de la ejecución:</p>
+                              <p style={{ margin: 0, color: '#64748b' }}>
+                                {executionResult.result?.message || 'El workflow se está ejecutando en segundo plano en el servidor. Los nuevos leads calificados aparecerán automáticamente en tu sección de Leads.'}
+                              </p>
                             </div>
                           )}
                         </div>
@@ -1862,7 +1871,7 @@ export default function AdminWorkflows() {
                 Cosecha de Leads - Vista Completa
               </h2>
               <p style={{ margin: '0.5rem 0 0 0', color: '#64748b' }}>
-                Término buscado: <strong>{showFullScreenResults.result.searchQuery || 'Búsqueda por defecto'}</strong> ({showFullScreenResults.result.total_found || showFullScreenResults.result.leads?.length} leads encontrados)
+                Término buscado: <strong>{showFullScreenResults.result?.searchQuery || 'Búsqueda por defecto'}</strong> ({showFullScreenResults.result?.total_found || showFullScreenResults.result?.leads?.length || 0} leads encontrados)
               </p>
             </div>
             <button
@@ -1874,7 +1883,7 @@ export default function AdminWorkflows() {
           </div>
           
           <div style={{ padding: '2rem', flex: 1 }}>
-            {showFullScreenResults.result.leads ? (
+            {showFullScreenResults.result?.leads ? (
               <div style={{ background: 'white', borderRadius: '12px', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)', overflowX: 'auto' }}>
                 <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.95rem' }}>
                   <thead>
