@@ -26,6 +26,7 @@ import AdminSettings from './pages/portal/admin/AdminSettings';
 import AdminWorkflows from './pages/portal/admin/AdminWorkflows';
 import AdminCalendars from './pages/portal/admin/AdminCalendars';
 import PublicBooking from './pages/portal/public/PublicBooking';
+import PublicProposal from './pages/portal/public/PublicProposal';
 
 import ColaboradorDashboard from './pages/portal/colaborador/ColaboradorDashboard';
 import ColaboradorReuniones from './pages/portal/colaborador/ColaboradorReuniones';
@@ -38,7 +39,10 @@ const HIDDEN_NAV_ROUTES = ['/login', '/registro'];
 
 function App() {
   const location = useLocation();
-  const hideNav = HIDDEN_NAV_ROUTES.includes(location.pathname) || location.pathname.startsWith('/portal');
+  const hideNav =
+    HIDDEN_NAV_ROUTES.includes(location.pathname) ||
+    location.pathname.startsWith('/portal') ||
+    location.pathname.startsWith('/propuesta');
 
   return (
     <>
@@ -61,6 +65,7 @@ function App() {
         
         {/* Portal (Protected Routes) */}
         <Route path="/book/:id" element={<PublicBooking />} />
+        <Route path="/propuesta/:leadId" element={<PublicProposal />} />
         <Route path="/portal" element={<ProtectedRoute />}>
           <Route element={<PortalLayout />}>
             <Route index element={<PortalRedirect />} />

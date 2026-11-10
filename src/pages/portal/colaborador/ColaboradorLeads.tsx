@@ -376,7 +376,7 @@ export default function ColaboradorLeads() {
                   </button>
 
                   <a
-                    href={`${BASE_URL}/leads/public/${lead.id}/mockup`}
+                    href={`/propuesta/${lead.id}?internal=1`}
                     target="_blank"
                     rel="noreferrer"
                     style={{
@@ -502,7 +502,7 @@ export default function ColaboradorLeads() {
                       </h4>
                     </div>
                     <a
-                      href={`${BASE_URL}/leads/public/${selectedLead.id}/mockup`}
+                      href={`/propuesta/${selectedLead.id}?internal=1`}
                       target="_blank"
                       rel="noreferrer"
                       style={{
