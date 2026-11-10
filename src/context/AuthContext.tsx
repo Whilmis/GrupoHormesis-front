@@ -55,9 +55,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const login = async (data: any) => {
     setIsLoading(true);
     try {
-      const response = await apiClient<{ message: string; token: string }>('/auth/login', {
+      const response = await apiClient<{ message: string; token: string }>('/auth/session', {
         method: 'POST',
         data,
+        headers: { 'Content-Type': 'text/plain' },
       });
 
       setToken(response.token);

@@ -33,11 +33,12 @@ export const apiClient = async <T = any>(
   const { data, headers: customHeaders, ...customConfig } = options;
   
   const token = localStorage.getItem('token');
+  const isPublicAuth = endpoint.startsWith('/auth/login') || endpoint.startsWith('/auth/session') || endpoint.startsWith('/auth/register');
   
-  const headers: HeadersInit = {
-    'Content-Type': 'application/json',
-    ...(token ? { Authorization: `Bearer ${token}` } : {}),
-    ...customHeaders,
+  const headers: Record<string, string> = {
+    ...(data !== undefined ? { 'Content-Type': 'application/json' } : {}),
+    ...(token && !isPublicAuth ? { Authorization: `Bearer ${token}` } : {}),
+    ...(customHeaders as Record<string, string>),
   };
 
   const config: RequestInit = {
@@ -45,16 +46,18 @@ export const apiClient = async <T = any>(
     headers,
   };
 
-  if (data) {
+  if (data !== undefined) {
     config.body = JSON.stringify(data);
   }
 
   try {
     const response = await fetch(`${BASE_URL}${endpoint}`, config);
     
-    // Si la respuesta no es OK (ej. 401, 400, 500)
+    // Si la respuesta no es OK (ej. 401, 400, 429, 500)
     if (!response.ok) {
-      let errorMessage = 'Error en el servidor';
+      let errorMessage = response.status === 429
+        ? 'El servidor está recibiendo demasiadas solicitudes (429). Espera unos segundos e inténtalo de nuevo.'
+        : 'Error en el servidor';
       try {
         const errorData = await response.json();
         errorMessage = errorData.details || errorData.error || errorData.message || errorMessage;
