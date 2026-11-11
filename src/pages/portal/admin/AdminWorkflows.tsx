@@ -117,6 +117,8 @@ export default function AdminWorkflows() {
   // Execution state
     const [executing, setExecuting] = useState<string | null>(null);
   const [businessContext, setBusinessContext] = useState('');
+  const [businessName, setBusinessName] = useState('');
+  const [brandVoice, setBrandVoice] = useState('');
   const [servicesInput, setServicesInput] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [isGeneratingOutreach, setIsGeneratingOutreach] = useState(false);
@@ -390,6 +392,8 @@ export default function AdminWorkflows() {
         const autoSavedConfig = {
           ...newWfConfig,
           generated_responses: res,
+          businessName,
+          brandVoice,
           businessContext,
           servicesInput
         };
@@ -419,6 +423,8 @@ export default function AdminWorkflows() {
       if (generatedTemplates && Object.keys(generatedTemplates).length > 0) {
         finalConfig.generated_responses = generatedTemplates;
       }
+      if (businessName) finalConfig.businessName = businessName;
+      if (brandVoice) finalConfig.brandVoice = brandVoice;
       if (businessContext) finalConfig.businessContext = businessContext;
       if (servicesInput) finalConfig.servicesInput = servicesInput;
       
@@ -445,6 +451,10 @@ export default function AdminWorkflows() {
       setShowNewWfForm(false);
       setEditingWorkflowId(null);
       setNewWfName('');
+      setBusinessName('');
+      setBrandVoice('');
+      setBusinessContext('');
+      setServicesInput('');
       setNewWfConfig({});
       setNewWfCreds({});
       fetchData();
@@ -1170,7 +1180,29 @@ export default function AdminWorkflows() {
                     )}
                       {activeTemplate.typeIdentifier === 'form_contact_handler' && (
                         <div style={{ background: '#f1f5f9', padding: '1.5rem', borderRadius: '8px', border: '1px dashed #cbd5e1', marginBottom: '1rem' }}>
-                          <h4 style={{ margin: '0 0 1rem 0', color: '#0f172a' }}>✨ Asistente de Plantillas IA</h4>
+                          <h4 style={{ margin: '0 0 1rem 0', color: '#0f172a' }}>✨ Asistente de Plantillas IA para este Negocio</h4>
+                          
+                          <div className="input-group" style={{ marginBottom: '1rem' }}>
+                            <label>Nombre de la Empresa / Negocio de esta instancia</label>
+                            <input 
+                              type="text" 
+                              value={businessName} 
+                              onChange={e => setBusinessName(e.target.value)} 
+                              className="auth-input" 
+                              placeholder="Ej. Clínica Dental Sonrisas, Inmobiliaria Mediterráneo..." 
+                            />
+                          </div>
+
+                          <div className="input-group" style={{ marginBottom: '1rem' }}>
+                            <label>Línea de Color / Tono de Marca</label>
+                            <input 
+                              type="text" 
+                              value={brandVoice} 
+                              onChange={e => setBrandVoice(e.target.value)} 
+                              className="auth-input" 
+                              placeholder="Ej. Colores azul marino (#0f2a4a) y dorado (#eab308), tono formal y cercano" 
+                            />
+                          </div>
                           
                           <div className="input-group" style={{ marginBottom: '1rem' }}>
                             <label>Contexto del Negocio</label>
@@ -1621,6 +1653,8 @@ export default function AdminWorkflows() {
                               setNewWfName(wf.name);
                               setNewWfProjectId(wf.projectId || '');
                               setNewWfConfig(wf.config || {});
+                              setBusinessName(wf.config?.businessName || '');
+                              setBrandVoice(wf.config?.brandVoice || '');
                               setBusinessContext(wf.config?.businessContext || '');
                               setServicesInput(wf.config?.servicesInput || '');
                               setGeneratedTemplates(wf.config?.generated_responses || null);
