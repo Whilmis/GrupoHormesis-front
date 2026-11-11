@@ -126,6 +126,7 @@ export default function AdminWorkflows() {
     const [executionResult, setExecutionResult] = useState<{ wfId: string; result: any } | null>(null);
   const [backgroundPollingWfId, setBackgroundPollingWfId] = useState<string | null>(null);
   const [backgroundStatusText, setBackgroundStatusText] = useState<string>('');
+  const [regeneratingMockupLeadId, setRegeneratingMockupLeadId] = useState<string | null>(null);
   const pollingIntervalRef = useRef<any>(null);
 
   useEffect(() => {
@@ -925,11 +926,16 @@ export default function AdminWorkflows() {
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '0.75rem' }}>
         <h2 style={{ color: '#0f172a', display: 'flex', alignItems: 'center', gap: '0.5rem', margin: 0 }}>
           <FolderKanban size={24} color="#10b981" />
           {t('portal.automations', 'Automatizaciones')}
         </h2>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: '#ecfdf5', color: '#047857', border: '1px solid #a7f3d0', padding: '4px 12px', borderRadius: '9999px', fontSize: '0.75rem', fontWeight: 700 }}>
+            <Sparkles size={12} color="#059669" /> Motor Gastronómico 2026 v1.0.18 Activo
+          </span>
+        </div>
       </div>
 
             <div style={{ display: 'flex', gap: '2rem', alignItems: 'flex-start' }}>
@@ -1549,6 +1555,19 @@ export default function AdminWorkflows() {
                             </p>
                           </div>
 
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem', background: '#f8fafc', padding: '0.75rem', borderRadius: '6px', border: '1px solid #e2e8f0' }}>
+                            <input 
+                              type="checkbox"
+                              id="forceRegenerate"
+                              checked={!!newWfConfig.forceRegenerate}
+                              onChange={e => setNewWfConfig({...newWfConfig, forceRegenerate: e.target.checked})}
+                              style={{ cursor: 'pointer' }}
+                            />
+                            <label htmlFor="forceRegenerate" style={{ fontSize: '0.82rem', color: '#334155', cursor: 'pointer', fontWeight: '500' }}>
+                              🔄 Forzar regeneración (re-diseña los leads del lote con el nuevo estilo e imágenes reales)
+                            </label>
+                          </div>
+
                           <div className="input-group" style={{ marginBottom: '1rem' }}>
                             <label>Frecuencia de Maquetación (Automatizada)</label>
                             <select 
@@ -1707,6 +1726,25 @@ export default function AdminWorkflows() {
                                 )}
                               </div>
                             </div>
+                          </div>
+                        )}
+
+                        {/* ESTILO VISUAL ACTIVO PARA GOOGLE STITCH */}
+                        {wf.template.typeIdentifier === 'google_stitch_designer' && (
+                          <div style={{ marginBottom: '1rem', padding: '0.6rem 0.85rem', background: '#f5f3ff', border: '1px solid #ddd6fe', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                              <Layers size={16} color="#7c3aed" />
+                              <span style={{ fontSize: '0.75rem', fontWeight: 600, color: '#5b21b6' }}>
+                                Estilo Configurado:
+                              </span>
+                            </div>
+                            <span style={{ fontSize: '0.75rem', fontWeight: 700, padding: '3px 8px', borderRadius: '12px', background: wf.config?.designStyle === 'culinary_hospitality' ? '#dcfce7' : '#ede9fe', color: wf.config?.designStyle === 'culinary_hospitality' ? '#166534' : '#6b21a8', border: wf.config?.designStyle === 'culinary_hospitality' ? '1px solid #86efac' : '1px solid #c4b5fd' }}>
+                              {wf.config?.designStyle === 'culinary_hospitality' 
+                                ? '🍽️ Alta Gastronomía & Hotelería' 
+                                : wf.config?.designStyle === 'modern_clean' 
+                                ? '✨ Vanguardia 2026' 
+                                : (wf.config?.designStyle || '✨ Vanguardia 2026')}
+                            </span>
                           </div>
                         )}
 
@@ -2537,21 +2575,81 @@ ${audit.detailedAnalysis || 'Análisis en proceso.'}
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#6d28d9', fontWeight: 700, fontSize: '0.95rem' }}>
                           🎨 Maqueta Diseñada con Google Stitch
                         </div>
-                        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                        <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
+                          <button
+                            type="button"
+                            disabled={regeneratingMockupLeadId === lead.id}
+                            onClick={async () => {
+                              try {
+                                setRegeneratingMockupLeadId(lead.id);
+                                const res = await apiClient<any>(`/leads/${lead.id}/regenerate-mockup`, {
+                                  method: 'POST',
+                                  data: { designStyle: 'culinary_hospitality' }
+                                });
+                                if (res?.mockup?.previewHtml) {
+                                  setSelectedAuditLead((prev: any) => {
+                                    if (!prev) return prev;
+                                    return {
+                                      ...prev,
+                                      metadata: {
+                                        ...(prev.metadata || {}),
+                                        generatedMockup: res.mockup.previewHtml,
+                                        designStyle: 'culinary_hospitality',
+                                        creativeAssets: {
+                                          ...(prev.metadata?.creativeAssets || {}),
+                                          mockup: res.mockup
+                                        }
+                                      }
+                                    };
+                                  });
+                                  alert('✅ ¡Propuesta regenerada con éxito con fotos reales de Google Maps y el motor gastronómico!');
+                                } else {
+                                  alert('Aviso: Se solicitó la regeneración pero la respuesta no incluyó maqueta.');
+                                }
+                              } catch (err: any) {
+                                alert('Error regenerando propuesta: ' + (err.response?.data?.error || err.message));
+                              } finally {
+                                setRegeneratingMockupLeadId(null);
+                              }
+                            }}
+                            style={{
+                              background: '#059669',
+                              color: 'white',
+                              border: 'none',
+                              padding: '5px 12px',
+                              borderRadius: '8px',
+                              fontSize: '0.75rem',
+                              fontWeight: 700,
+                              cursor: regeneratingMockupLeadId === lead.id ? 'wait' : 'pointer',
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '4px',
+                              boxShadow: '0 2px 6px rgba(5, 150, 105, 0.3)'
+                            }}
+                            title="Vuelve a descargar fotos reales de Google Maps y rediseña la propuesta con el motor culinario"
+                          >
+                            {regeneratingMockupLeadId === lead.id ? (
+                              <>
+                                <Loader2 size={13} className="spinner" /> ⏳ Generando fotos reales...
+                              </>
+                            ) : (
+                              <>
+                                <Sparkles size={13} /> 🔄 Regenerar con Fotos Reales (Gastronomía)
+                              </>
+                            )}
+                          </button>
+
                           <button
                             type="button"
                             onClick={() => {
-                              const newTab = window.open();
-                              if (newTab) {
-                                newTab.document.write(audit.mockup.previewHtml);
-                                newTab.document.close();
-                              }
+                              const directUrl = `${BASE_URL}/leads/public/${lead.id}/mockup`;
+                              window.open(directUrl, '_blank');
                             }}
                             style={{
                               background: '#7c3aed',
                               color: 'white',
                               border: 'none',
-                              padding: '4px 10px',
+                              padding: '5px 12px',
                               borderRadius: '8px',
                               fontSize: '0.75rem',
                               fontWeight: 700,
@@ -2561,11 +2659,12 @@ ${audit.detailedAnalysis || 'Análisis en proceso.'}
                               gap: '4px',
                               boxShadow: '0 2px 6px rgba(124, 58, 237, 0.3)'
                             }}
+                            title="Abrir en pestaña nueva con la URL pública oficial"
                           >
-                            🖥️ Pantalla Completa
+                            <ExternalLink size={13} /> 🖥️ Pantalla Completa
                           </button>
                           <span style={{ background: '#ede9fe', color: '#5b21b6', fontSize: '0.75rem', fontWeight: 600, padding: '3px 8px', borderRadius: '12px' }}>
-                            Estilo: {audit.mockup.designStyle || 'Vanguardia 2026'}
+                            Estilo: {audit.mockup.designStyle === 'culinary_hospitality' ? '🍽️ Alta Gastronomía' : (audit.mockup.designStyle || 'Vanguardia 2026')}
                           </span>
                         </div>
                       </div>
