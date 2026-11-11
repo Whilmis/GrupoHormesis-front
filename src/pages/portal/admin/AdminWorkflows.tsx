@@ -275,13 +275,12 @@ export default function AdminWorkflows() {
   };
 
   const handleRefineTemplates = async (wf: UserWorkflow, service?: string) => {
-    const prompt = refinementPrompts[wf.id];
-    if (!prompt) return alert('Escribe qué deseas cambiar.');
-    setIsRefining(wf.id);
+    const prompt = (refinementPrompts[wf.id] || '').trim() || 'Transforma y enriquece el diseño HTML y el copywriting para que sea un correo ejecutivo completo de alta conversión, con cabecera corporativa #0f172a, bloques de beneficios con iconos, hoja de ruta de 3 pasos y botones de llamada a la acción.';
+    setIsRefining(service || wf.id);
     try {
       const res = await apiClient(`/workflows/${wf.id}/refine-templates`, {
         method: 'POST',
-        data: { refinement_prompt: prompt }
+        data: { refinement_prompt: prompt, ...(service ? { service } : {}) }
       });
       // Update local state
       const updatedWfs = workflows.map(w => w.id === wf.id ? { ...w, config: { ...w.config, generated_responses: res.generated_responses } } : w);
