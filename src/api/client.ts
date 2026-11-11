@@ -57,30 +57,34 @@ export const apiClient = async <T = any>(
     if (!response.ok) {
       let errorMessage = response.status === 429
         ? 'El servidor está recibiendo demasiadas solicitudes (429). Espera unos segundos e inténtalo de nuevo.'
-        : 'Error en el servidor';
+        : 'Error en el servidor (' + response.status + ')';
       try {
-        const errorData = await response.json();
-        errorMessage = errorData.details || errorData.error || errorData.message || errorMessage;
-      } catch (e) {
-        // Fallback si no es JSON
-      }
+        const errText = await response.text();
+        if (errText && errText.trim()) {
+          try {
+            const errorData = JSON.parse(errText.trim());
+            errorMessage = errorData.details || errorData.error || errorData.message || errorMessage;
+          } catch (pe) {
+            if (errText.length < 150) errorMessage = errText.trim();
+          }
+        }
+      } catch (e) {}
       throw new ApiError(response.status, errorMessage);
     }
 
-    // Si hay cuerpo en la respuesta, parsearlo de forma segura
-    const isJson = response.headers.get('content-type')?.includes('application/json');
-    if (isJson) {
+    // Si hay cuerpo en la respuesta, parsearlo de forma segura sin excepciones no capturadas
+    try {
       const rawText = await response.text();
-      const trimmed = rawText.trim();
+      const trimmed = (rawText || '').trim();
       if (!trimmed) return {} as T;
       try {
         return JSON.parse(trimmed);
       } catch (e) {
-        throw new ApiError(500, 'La respuesta del servidor se interrumpió antes de completarse. Por favor inténtalo de nuevo.');
+        return { message: trimmed } as unknown as T;
       }
+    } catch (readErr) {
+      return {} as T;
     }
-    
-    return {} as T;
   } catch (error) {
     if (error instanceof ApiError) {
       throw error;
