@@ -386,6 +386,25 @@ export default function AdminWorkflows() {
         }
       });
       setGeneratedTemplates(res);
+      if (editingWorkflowId && res && Object.keys(res).length > 0) {
+        const autoSavedConfig = {
+          ...newWfConfig,
+          generated_responses: res,
+          businessContext,
+          servicesInput
+        };
+        setNewWfConfig(autoSavedConfig);
+        await apiClient(`/workflows/${editingWorkflowId}`, {
+          method: 'PUT',
+          data: {
+            name: newWfName,
+            config: autoSavedConfig,
+            credentialIds: Object.values(newWfCreds),
+            ...(newWfProjectId ? { projectId: newWfProjectId } : {})
+          }
+        }).catch(() => {});
+        fetchData();
+      }
     } catch (error: any) {
       alert('Error generando plantillas con IA: ' + (error.message || 'Asegúrate de tener la credencial groq_api_key'));
     } finally {
