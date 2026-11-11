@@ -67,10 +67,17 @@ export const apiClient = async <T = any>(
       throw new ApiError(response.status, errorMessage);
     }
 
-    // Si hay cuerpo en la respuesta, parsearlo
+    // Si hay cuerpo en la respuesta, parsearlo de forma segura
     const isJson = response.headers.get('content-type')?.includes('application/json');
     if (isJson) {
-      return await response.json();
+      const rawText = await response.text();
+      const trimmed = rawText.trim();
+      if (!trimmed) return {} as T;
+      try {
+        return JSON.parse(trimmed);
+      } catch (e) {
+        throw new ApiError(500, 'La respuesta del servidor se interrumpió antes de completarse. Por favor inténtalo de nuevo.');
+      }
     }
     
     return {} as T;

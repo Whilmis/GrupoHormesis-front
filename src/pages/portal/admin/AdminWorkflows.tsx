@@ -1184,7 +1184,7 @@ export default function AdminWorkflows() {
                             {isGenerating ? (
                               <>
                                 <Loader2 size={16} className="spinner" /> 
-                                Creando plantillas (Puede tardar 1 min)...
+                                Generando plantillas ejecutivas con IA (3–6 seg)...
                               </>
                             ) : (
                               'Generar Plantillas Mágicamente 🪄'
@@ -1192,10 +1192,10 @@ export default function AdminWorkflows() {
                           </button>
                           {generatedTemplates && (
                             <div style={{ marginTop: '1.5rem' }}>
-                              <h5 style={{ margin: '0 0 1rem 0', color: '#0f172a' }}>Plantillas generadas (revisa y edita)</h5>
+                              <h5 style={{ margin: '0 0 1rem 0', color: '#0f172a' }}>Plantillas generadas (Vista Previa y Editor)</h5>
                               {Object.entries(generatedTemplates).map(([service, template]: [string, any]) => (
-                                <div key={service} style={{ background: 'white', padding: '1rem', borderRadius: '6px', marginBottom: '1rem', border: '1px solid #e2e8f0' }}>
-                                  <strong style={{ display: 'block', marginBottom: '0.5rem', color: '#10b981' }}>Servicio: {service}</strong>
+                                <div key={service} style={{ background: 'white', padding: '1rem', borderRadius: '8px', marginBottom: '1.25rem', border: '1px solid #e2e8f0' }}>
+                                  <strong style={{ display: 'block', marginBottom: '0.5rem', color: '#10b981', fontSize: '0.95rem' }}>Servicio: {service}</strong>
                                   
                                   <label style={{ display: 'block', fontSize: '0.75rem', color: '#64748b', marginBottom: '0.25rem' }}>Asunto</label>
                                   <input 
@@ -1203,16 +1203,26 @@ export default function AdminWorkflows() {
                                     value={template.subject} 
                                     onChange={e => setGeneratedTemplates({...generatedTemplates, [service]: {...template, subject: e.target.value}})} 
                                     className="auth-input" 
-                                    style={{ marginBottom: '0.5rem' }} 
+                                    style={{ marginBottom: '0.75rem' }} 
                                   />
                                   
-                                  <label style={{ display: 'block', fontSize: '0.75rem', color: '#64748b', marginBottom: '0.25rem' }}>Cuerpo del correo (HTML)</label>
-                                  <textarea 
-                                    value={template.body} 
-                                    onChange={e => setGeneratedTemplates({...generatedTemplates, [service]: {...template, body: e.target.value}})} 
-                                    className="auth-input" 
-                                    style={{ minHeight: '150px', resize: 'vertical' }} 
+                                  <label style={{ display: 'block', fontSize: '0.75rem', color: '#64748b', marginBottom: '0.35rem' }}>Vista Previa Visual del Correo</label>
+                                  <div
+                                    style={{ border: '1px solid #cbd5e1', borderRadius: '8px', padding: '1rem', background: '#f8fafc', maxHeight: '380px', overflowY: 'auto', marginBottom: '0.75rem' }}
+                                    dangerouslySetInnerHTML={{ __html: template.body }}
                                   />
+
+                                  <details>
+                                    <summary style={{ fontSize: '0.75rem', color: '#475569', cursor: 'pointer', fontWeight: 600, marginBottom: '0.35rem' }}>
+                                      Editar código HTML manualmente
+                                    </summary>
+                                    <textarea 
+                                      value={template.body} 
+                                      onChange={e => setGeneratedTemplates({...generatedTemplates, [service]: {...template, body: e.target.value}})} 
+                                      className="auth-input" 
+                                      style={{ minHeight: '150px', resize: 'vertical', fontFamily: 'monospace', fontSize: '0.8rem' }} 
+                                    />
+                                  </details>
                                 </div>
                               ))}
                             </div>
