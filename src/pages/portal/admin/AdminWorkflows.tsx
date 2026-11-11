@@ -1527,6 +1527,7 @@ export default function AdminWorkflows() {
                               className="auth-input" 
                             >
                               <option value="modern_clean">✨ Moderno y limpio (recomendado - conversión alta)</option>
+                              <option value="culinary_hospitality">🍽️ Alta Gastronomía & Hotelería Boutique (Carta, Reservas, Experiencia y Suites)</option>
                               <option value="minimalist">🌿 Minimalista y elegante (servicios premium)</option>
                               <option value="bold_vibrant">🔥 Bold y llamativo (gran impacto visual)</option>
                               <option value="corporate">🏢 Corporativo y Tecnológico</option>
