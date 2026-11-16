@@ -1381,7 +1381,7 @@ export default function AdminWorkflows() {
                           </p>
                       
                           <div className="input-group" style={{ marginBottom: '1rem' }}>
-                            <label>Fuente de leads (campaña Google Maps)</label>
+                            <label>Fuente de leads (campaña Google Maps o Startup Radar)</label>
                             <select 
                               required
                               value={newWfConfig.sourceWorkflowId || ''} 
@@ -1389,8 +1389,8 @@ export default function AdminWorkflows() {
                               className="auth-input" 
                             >
                               <option value="">Selecciona una campaña...</option>
-                              {workflows.filter(w => w.template?.typeIdentifier === 'lead_collector').map(w => (
-                                <option key={w.id} value={w.id}>{w.name}</option>
+                              {workflows.filter(w => ['lead_collector', 'startup_ideation_radar'].includes(w.template?.typeIdentifier)).map(w => (
+                                <option key={w.id} value={w.id}>{w.name} ({w.template?.typeIdentifier === 'startup_ideation_radar' ? 'Startup Radar' : 'Google Maps'})</option>
                               ))}
                             </select>
                           </div>
@@ -1620,9 +1620,226 @@ export default function AdminWorkflows() {
                           </div>
                         </div>
                       )}
+
+                      {activeTemplate.typeIdentifier === 'startup_ideation_radar' && (
+                        <div style={{ background: '#f8fafc', padding: '1.5rem', borderRadius: '8px', border: '1px dashed #cbd5e1', marginBottom: '1rem' }}>
+                          <h4 style={{ margin: '0 0 0.5rem 0', color: '#0f172a', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                            🚀 Pipeline: Product Hunt + Reddit + LinkedIn (Fase de Ideación)
+                          </h4>
+                          <p style={{ fontSize: '0.8rem', color: '#64748b', marginBottom: '1.25rem' }}>
+                            Extrae fundadores en etapa semilla o ideación que buscan socios técnicos o reportan necesidades de MVP, descartando automáticamente productos ya avanzados, y envía correos personalizados.
+                          </p>
+
+                          <div style={{ background: 'white', padding: '1rem', borderRadius: '8px', border: '1px solid #e2e8f0', marginBottom: '1rem' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                              <strong style={{ fontSize: '0.85rem', color: '#0f172a' }}>😺 1. Product Hunt (Etiquetas de Ideación & Filtro de Madurez)</strong>
+                              <button
+                                type="button"
+                                onClick={() => setCredModal({ isOpen: true, type: 'producthunt_token' })}
+                                style={{ background: 'none', border: 'none', color: '#10b981', cursor: 'pointer', fontSize: '0.75rem', fontWeight: 'bold' }}
+                              >
+                                + Token API GraphQL (Opcional)
+                              </button>
+                            </div>
+                            <div className="input-group" style={{ marginBottom: '0.75rem' }}>
+                              <label>Etiquetas / Topics de Ideación (separados por comas)</label>
+                              <input
+                                type="text"
+                                value={newWfConfig.productHuntTags ?? 'pre-launch, ideation, mvp, saas, artificial-intelligence, developer-tools'}
+                                onChange={e => setNewWfConfig({ ...newWfConfig, productHuntTags: e.target.value })}
+                                className="auth-input"
+                                placeholder="pre-launch, ideation, mvp, saas, artificial-intelligence"
+                              />
+                            </div>
+                            <div className="input-group">
+                              <label>Umbral máximo de Upvotes (Descartar productos consolidados con más de X votos)</label>
+                              <input
+                                type="number"
+                                min="10"
+                                max="1000"
+                                value={newWfConfig.maxUpvotesThreshold ?? 120}
+                                onChange={e => setNewWfConfig({ ...newWfConfig, maxUpvotesThreshold: parseInt(e.target.value, 10) })}
+                                className="auth-input"
+                              />
+                            </div>
+                          </div>
+
+                          <div style={{ background: 'white', padding: '1rem', borderRadius: '8px', border: '1px solid #e2e8f0', marginBottom: '1rem' }}>
+                            <strong style={{ display: 'block', fontSize: '0.85rem', color: '#0f172a', marginBottom: '0.5rem' }}>
+                              💬 2. Reddit API (Subreddits de Startups & Palabras Clave de Validación)
+                            </strong>
+                            <div className="input-group" style={{ marginBottom: '0.75rem' }}>
+                              <label>Subreddits a monitorear (separados por comas)</label>
+                              <input
+                                type="text"
+                                value={newWfConfig.redditSubreddits ?? 'cofounder, startups, SaaS, SideProject, Entrepreneur, indiehackers'}
+                                onChange={e => setNewWfConfig({ ...newWfConfig, redditSubreddits: e.target.value })}
+                                className="auth-input"
+                                placeholder="cofounder, startups, SaaS, SideProject"
+                              />
+                            </div>
+                            <div className="input-group">
+                              <label>Palabras clave de validación y búsqueda de socio técnico</label>
+                              <textarea
+                                value={newWfConfig.validationKeywords ?? 'looking for technical cofounder, need developer, validating idea, building MVP, non-technical founder, seeking CTO'}
+                                onChange={e => setNewWfConfig({ ...newWfConfig, validationKeywords: e.target.value })}
+                                className="auth-input"
+                                style={{ minHeight: '60px', resize: 'vertical' }}
+                              />
+                            </div>
+                          </div>
+
+                          <div style={{ background: 'white', padding: '1rem', borderRadius: '8px', border: '1px solid #e2e8f0', marginBottom: '1rem' }}>
+                            <strong style={{ display: 'block', fontSize: '0.85rem', color: '#0f172a', marginBottom: '0.5rem' }}>
+                              💼 3. LinkedIn Búsqueda Avanzada (Perfiles Fundadores en Etapa Semilla)
+                            </strong>
+                            <div className="input-group" style={{ marginBottom: '0.75rem' }}>
+                              <label>Keywords de perfil de fundador (Stealth / Pre-Seed / MVP)</label>
+                              <input
+                                type="text"
+                                value={newWfConfig.linkedinKeywords ?? 'Stealth Startup, Pre-Seed Founder, Looking for Technical Co-Founder, Building MVP'}
+                                onChange={e => setNewWfConfig({ ...newWfConfig, linkedinKeywords: e.target.value })}
+                                className="auth-input"
+                              />
+                            </div>
+                            <div className="input-group">
+                              <label>Región / Idioma objetivo</label>
+                              <input
+                                type="text"
+                                value={newWfConfig.targetGeoOrLanguage ?? 'Spain OR Europe OR Remote OR Latam'}
+                                onChange={e => setNewWfConfig({ ...newWfConfig, targetGeoOrLanguage: e.target.value })}
+                                className="auth-input"
+                              />
+                            </div>
+                          </div>
+
+                          <div style={{ background: 'white', padding: '1rem', borderRadius: '8px', border: '1px solid #e2e8f0', marginBottom: '1rem' }}>
+                            <strong style={{ display: 'block', fontSize: '0.85rem', color: '#0f172a', marginBottom: '0.75rem' }}>
+                              ✉️ 4. Identidad de Marca & Envío Automático de Propuesta a Fundadores
+                            </strong>
+
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem', background: '#f0fdf4', padding: '0.75rem', borderRadius: '6px', border: '1px solid #bbf7d0' }}>
+                              <input
+                                type="checkbox"
+                                id="autoSendStartupEmails"
+                                checked={newWfConfig.autoSendEmails !== false}
+                                onChange={e => setNewWfConfig({ ...newWfConfig, autoSendEmails: e.target.checked })}
+                                style={{ cursor: 'pointer' }}
+                              />
+                              <label htmlFor="autoSendStartupEmails" style={{ fontSize: '0.82rem', color: '#166534', cursor: 'pointer', fontWeight: 600 }}>
+                                Enviar automáticamente correo ejecutivo personalizado a los fundadores calificados con email válido
+                              </label>
+                            </div>
+
+                            <div className="input-group" style={{ marginBottom: '0.75rem' }}>
+                              <label>Nombre de tu Empresa / Venture Builder</label>
+                              <input
+                                type="text"
+                                value={newWfConfig.businessName || businessName || ''}
+                                onChange={e => {
+                                  setBusinessName(e.target.value);
+                                  setNewWfConfig({ ...newWfConfig, businessName: e.target.value });
+                                }}
+                                className="auth-input"
+                                placeholder="Ej. Grupo Hormesis · Venture & MVP Studio"
+                              />
+                            </div>
+
+                            <div className="input-group" style={{ marginBottom: '0.75rem' }}>
+                              <label>Contexto y Propuesta de Valor para Startups en Ideación</label>
+                              <textarea
+                                required
+                                value={newWfConfig.businessContext || ''}
+                                onChange={e => setNewWfConfig({ ...newWfConfig, businessContext: e.target.value })}
+                                className="auth-input"
+                                placeholder="Ej. Ayudamos a fundadores en etapa semilla como socio tecnológico a construir su MVP en 4 semanas, integrar IA y preparar su arquitectura técnica."
+                                style={{ minHeight: '65px', resize: 'vertical' }}
+                              />
+                            </div>
+
+                            <div className="input-group" style={{ marginBottom: '0.75rem' }}>
+                              <label>Línea de Color / Tono de la Marca</label>
+                              <input
+                                required
+                                type="text"
+                                value={newWfConfig.brandVoice || ''}
+                                onChange={e => setNewWfConfig({ ...newWfConfig, brandVoice: e.target.value })}
+                                className="auth-input"
+                                placeholder="Ej. Estética Dark Mode futurista basada en negro obsidiana con acentos en rojo cyber (#e50914)"
+                              />
+                            </div>
+
+                            <div className="input-group" style={{ marginBottom: '0.75rem' }}>
+                              <label>Leads calificados por ejecución (Lote)</label>
+                              <input
+                                type="number"
+                                min="1"
+                                max="15"
+                                value={newWfConfig.batchLimit ?? 6}
+                                onChange={e => setNewWfConfig({ ...newWfConfig, batchLimit: parseInt(e.target.value, 10) })}
+                                className="auth-input"
+                              />
+                            </div>
+
+                            <div className="input-group" style={{ marginBottom: '1rem' }}>
+                              <label>Horario de Ejecución Automática (Cron)</label>
+                              <select
+                                value={
+                                  ['0 8,12 * * 1-5', '0 9,13 * * 1-5', '0 10,14 * * 1-5', '0 9 * * 1-5', '0 10 * * 1-5'].includes(newWfConfig.schedule || '0 9,13 * * 1-5')
+                                    ? (newWfConfig.schedule || '0 9,13 * * 1-5')
+                                    : 'custom'
+                                }
+                                onChange={e => {
+                                  if (e.target.value === 'custom') {
+                                    setNewWfConfig({ ...newWfConfig, schedule: '' });
+                                  } else {
+                                    setNewWfConfig({ ...newWfConfig, schedule: e.target.value });
+                                  }
+                                }}
+                                className="auth-input"
+                              >
+                                <option value="0 9,13 * * 1-5">🔥 Lunes a Viernes 2 veces al día (9:00 AM y 1:00 PM)</option>
+                                <option value="0 8,12 * * 1-5">Lunes a Viernes 2 veces al día (8:00 AM y 12:00 PM)</option>
+                                <option value="0 10,14 * * 1-5">Lunes a Viernes 2 veces al día (10:00 AM y 2:00 PM)</option>
+                                <option value="0 9 * * 1-5">Lunes a Viernes a las 9:00 AM</option>
+                                <option value="0 10 * * 1-5">Lunes a Viernes a las 10:00 AM</option>
+                                <option value="custom">Personalizado (Avanzado)</option>
+                              </select>
+                            </div>
+
+                            <button
+                              type="button"
+                              onClick={handleGenerateOutreachTemplate}
+                              disabled={isGeneratingOutreach}
+                              style={{ width: '100%', padding: '0.75rem', background: isGeneratingOutreach ? '#94a3b8' : '#0f172a', color: 'white', border: 'none', borderRadius: '6px', cursor: isGeneratingOutreach ? 'not-allowed' : 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem', fontWeight: '500', marginBottom: '0.75rem' }}
+                            >
+                              {isGeneratingOutreach ? <Loader2 size={16} className="spinner" /> : <Sparkles size={16} />}
+                              {isGeneratingOutreach ? 'Generando Pitch de Fundador...' : 'Pre-generar Plantilla Base para Fundadores (Opcional)'}
+                            </button>
+
+                            {newWfConfig.generated_outreach_email && (
+                              <div style={{ background: '#f8fafc', padding: '1rem', borderRadius: '6px', border: '1px solid #e2e8f0' }}>
+                                <label style={{ display: 'block', fontSize: '0.75rem', color: '#64748b', marginBottom: '0.25rem', fontWeight: 'bold' }}>Asunto base</label>
+                                <input
+                                  type="text"
+                                  value={newWfConfig.generated_outreach_email.subject}
+                                  onChange={e => setNewWfConfig({ ...newWfConfig, generated_outreach_email: { ...newWfConfig.generated_outreach_email, subject: e.target.value } })}
+                                  className="auth-input"
+                                  style={{ marginBottom: '0.75rem' }}
+                                />
+                                <label style={{ display: 'block', fontSize: '0.75rem', color: '#64748b', marginBottom: '0.35rem', fontWeight: 'bold' }}>Previsualización</label>
+                                <div
+                                  style={{ border: '1px solid #cbd5e1', borderRadius: '6px', padding: '1rem', background: newWfConfig.generated_outreach_email.body?.includes('#09090b') ? '#020617' : '#ffffff', maxHeight: '380px', overflowY: 'auto' }}
+                                  dangerouslySetInnerHTML={{ __html: newWfConfig.generated_outreach_email.body }}
+                                />
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      )}
                       
                       {/* Mostrar campos dinamicos basados en configSchema */}
-                      {activeTemplate.configSchema && activeTemplate.configSchema.properties && !['auto_outreach_google_maps', 'google_stitch_designer'].includes(activeTemplate.typeIdentifier) && Object.entries(activeTemplate.configSchema.properties).filter(([key]) => key !== 'calendarId').map(([key, prop]: [string, any]) => (
+                      {activeTemplate.configSchema && activeTemplate.configSchema.properties && !['auto_outreach_google_maps', 'google_stitch_designer', 'startup_ideation_radar'].includes(activeTemplate.typeIdentifier) && Object.entries(activeTemplate.configSchema.properties).filter(([key]) => key !== 'calendarId').map(([key, prop]: [string, any]) => (
                       <div className="input-group" key={key}>
                         <label>{prop.title ? fixEncoding(prop.title) : key}</label>
                         {prop.description && <p style={{ fontSize: '0.7rem', color: '#64748b', margin: '0 0 0.5rem 0' }}>{fixEncoding(prop.description).replace('ser', 'será').replace('ser\ufffd', 'será')}</p>}
@@ -1723,8 +1940,8 @@ export default function AdminWorkflows() {
                       </div>
 
                       
-                        {/* PROGRAMACION DE EJECUCIONES (LEAD COLLECTOR, STITCH DESIGNER, AUTO OUTREACH) */}
-                        {['lead_collector', 'google_stitch_designer', 'auto_outreach_google_maps'].includes(wf.template.typeIdentifier) && (wf.config?.schedule || wf.template.typeIdentifier === 'auto_outreach_google_maps') && (
+                        {/* PROGRAMACION DE EJECUCIONES (LEAD COLLECTOR, STITCH DESIGNER, AUTO OUTREACH, STARTUP RADAR) */}
+                        {['lead_collector', 'google_stitch_designer', 'auto_outreach_google_maps', 'startup_ideation_radar'].includes(wf.template.typeIdentifier) && (wf.config?.schedule || wf.template.typeIdentifier === 'auto_outreach_google_maps' || wf.template.typeIdentifier === 'startup_ideation_radar') && (
                           <div style={{ marginBottom: '1rem', padding: '0.75rem', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: '6px', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                             <Clock size={20} color="#16a34a" />
                             <div>
@@ -1733,10 +1950,22 @@ export default function AdminWorkflows() {
                                 {formatSchedule(
                                   wf.config?.schedule || 
                                   (wf.template.typeIdentifier === 'auto_outreach_google_maps' ? '0 10,14 * * 1-5' : 
-                                   wf.template.typeIdentifier === 'google_stitch_designer' ? '0 9,13 * * 1-5' : '0 8,12 * * 1-5')
+                                   wf.template.typeIdentifier === 'google_stitch_designer' || wf.template.typeIdentifier === 'startup_ideation_radar' ? '0 9,13 * * 1-5' : '0 8,12 * * 1-5')
                                 )}
                               </div>
                             </div>
+                          </div>
+                        )}
+
+                        {/* FUENTES ACTIVAS PARA STARTUP IDEATION RADAR */}
+                        {wf.template.typeIdentifier === 'startup_ideation_radar' && (
+                          <div style={{ marginBottom: '1rem', padding: '0.6rem 0.85rem', background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem' }}>
+                            <span style={{ fontSize: '0.75rem', fontWeight: 600, color: '#1e40af' }}>
+                              🚀 Fuentes: Product Hunt + Reddit + LinkedIn Seed
+                            </span>
+                            <span style={{ fontSize: '0.7rem', fontWeight: 700, padding: '2px 8px', borderRadius: '12px', background: wf.config?.autoSendEmails !== false ? '#dcfce7' : '#e2e8f0', color: wf.config?.autoSendEmails !== false ? '#166534' : '#475569' }}>
+                              {wf.config?.autoSendEmails !== false ? '✉️ Auto-Email Activo' : '📥 Solo Captura CRM'}
+                            </span>
                           </div>
                         )}
 
@@ -1850,7 +2079,7 @@ export default function AdminWorkflows() {
                         <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1rem' }}>
                           
                         {/* CRM BUTTON */}
-                        {(wf.template.typeIdentifier === 'form_contact_handler' || wf.template.typeIdentifier === 'lead_collector') && (
+                        {['form_contact_handler', 'lead_collector', 'startup_ideation_radar'].includes(wf.template.typeIdentifier) && (
                           <button 
                             onClick={() => handleViewLeads(wf.id)}
                             style={{ 
