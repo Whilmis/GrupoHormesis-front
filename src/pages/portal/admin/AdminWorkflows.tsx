@@ -1381,7 +1381,7 @@ export default function AdminWorkflows() {
                           </p>
                       
                           <div className="input-group" style={{ marginBottom: '1rem' }}>
-                            <label>Fuente de leads (campaña Google Maps o Startup Radar)</label>
+                            <label>Fuente de leads (campaña Google Maps)</label>
                             <select 
                               required
                               value={newWfConfig.sourceWorkflowId || ''} 
@@ -1389,8 +1389,8 @@ export default function AdminWorkflows() {
                               className="auth-input" 
                             >
                               <option value="">Selecciona una campaña...</option>
-                              {workflows.filter(w => ['lead_collector', 'startup_ideation_radar'].includes(w.template?.typeIdentifier)).map(w => (
-                                <option key={w.id} value={w.id}>{w.name} ({w.template?.typeIdentifier === 'startup_ideation_radar' ? 'Startup Radar' : 'Google Maps'})</option>
+                              {workflows.filter(w => w.template?.typeIdentifier === 'lead_collector').map(w => (
+                                <option key={w.id} value={w.id}>{w.name}</option>
                               ))}
                             </select>
                           </div>
@@ -1624,10 +1624,10 @@ export default function AdminWorkflows() {
                       {activeTemplate.typeIdentifier === 'startup_ideation_radar' && (
                         <div style={{ background: '#f8fafc', padding: '1.5rem', borderRadius: '8px', border: '1px dashed #cbd5e1', marginBottom: '1rem' }}>
                           <h4 style={{ margin: '0 0 0.5rem 0', color: '#0f172a', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                            🚀 Pipeline: Product Hunt + Reddit + LinkedIn (Fase de Ideación)
+                            🚀 Recolector de Startups en Ideación (Product Hunt + Reddit + LinkedIn)
                           </h4>
                           <p style={{ fontSize: '0.8rem', color: '#64748b', marginBottom: '1.25rem' }}>
-                            Extrae fundadores en etapa semilla o ideación que buscan socios técnicos o reportan necesidades de MVP, descartando automáticamente productos ya avanzados, y envía correos personalizados.
+                            Extrae fundadores en etapa semilla o ideación que buscan socios técnicos o reportan necesidades de MVP, descartando activamente productos con desarrollo avanzado y guardando los prospectos calificados en el CRM.
                           </p>
 
                           <div style={{ background: 'white', padding: '1rem', borderRadius: '8px', border: '1px solid #e2e8f0', marginBottom: '1rem' }}>
@@ -1713,64 +1713,13 @@ export default function AdminWorkflows() {
                             </div>
                           </div>
 
-                          <div style={{ background: 'white', padding: '1rem', borderRadius: '8px', border: '1px solid #e2e8f0', marginBottom: '1rem' }}>
+                          <div style={{ background: 'white', padding: '1rem', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
                             <strong style={{ display: 'block', fontSize: '0.85rem', color: '#0f172a', marginBottom: '0.75rem' }}>
-                              ✉️ 4. Identidad de Marca & Envío Automático de Propuesta a Fundadores
+                              ⚙️ 4. Volumen por Ejecución y Programación
                             </strong>
 
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem', background: '#f0fdf4', padding: '0.75rem', borderRadius: '6px', border: '1px solid #bbf7d0' }}>
-                              <input
-                                type="checkbox"
-                                id="autoSendStartupEmails"
-                                checked={newWfConfig.autoSendEmails !== false}
-                                onChange={e => setNewWfConfig({ ...newWfConfig, autoSendEmails: e.target.checked })}
-                                style={{ cursor: 'pointer' }}
-                              />
-                              <label htmlFor="autoSendStartupEmails" style={{ fontSize: '0.82rem', color: '#166534', cursor: 'pointer', fontWeight: 600 }}>
-                                Enviar automáticamente correo ejecutivo personalizado a los fundadores calificados con email válido
-                              </label>
-                            </div>
-
                             <div className="input-group" style={{ marginBottom: '0.75rem' }}>
-                              <label>Nombre de tu Empresa / Venture Builder</label>
-                              <input
-                                type="text"
-                                value={newWfConfig.businessName || businessName || ''}
-                                onChange={e => {
-                                  setBusinessName(e.target.value);
-                                  setNewWfConfig({ ...newWfConfig, businessName: e.target.value });
-                                }}
-                                className="auth-input"
-                                placeholder="Ej. Grupo Hormesis · Venture & MVP Studio"
-                              />
-                            </div>
-
-                            <div className="input-group" style={{ marginBottom: '0.75rem' }}>
-                              <label>Contexto y Propuesta de Valor para Startups en Ideación</label>
-                              <textarea
-                                required
-                                value={newWfConfig.businessContext || ''}
-                                onChange={e => setNewWfConfig({ ...newWfConfig, businessContext: e.target.value })}
-                                className="auth-input"
-                                placeholder="Ej. Ayudamos a fundadores en etapa semilla como socio tecnológico a construir su MVP en 4 semanas, integrar IA y preparar su arquitectura técnica."
-                                style={{ minHeight: '65px', resize: 'vertical' }}
-                              />
-                            </div>
-
-                            <div className="input-group" style={{ marginBottom: '0.75rem' }}>
-                              <label>Línea de Color / Tono de la Marca</label>
-                              <input
-                                required
-                                type="text"
-                                value={newWfConfig.brandVoice || ''}
-                                onChange={e => setNewWfConfig({ ...newWfConfig, brandVoice: e.target.value })}
-                                className="auth-input"
-                                placeholder="Ej. Estética Dark Mode futurista basada en negro obsidiana con acentos en rojo cyber (#e50914)"
-                              />
-                            </div>
-
-                            <div className="input-group" style={{ marginBottom: '0.75rem' }}>
-                              <label>Leads calificados por ejecución (Lote)</label>
+                              <label>Startups calificadas por tanda (Lote)</label>
                               <input
                                 type="number"
                                 min="1"
@@ -1781,8 +1730,8 @@ export default function AdminWorkflows() {
                               />
                             </div>
 
-                            <div className="input-group" style={{ marginBottom: '1rem' }}>
-                              <label>Horario de Ejecución Automática (Cron)</label>
+                            <div className="input-group">
+                              <label>Horario de Búsqueda Automática (Cron)</label>
                               <select
                                 value={
                                   ['0 8,12 * * 1-5', '0 9,13 * * 1-5', '0 10,14 * * 1-5', '0 9 * * 1-5', '0 10 * * 1-5'].includes(newWfConfig.schedule || '0 9,13 * * 1-5')
@@ -1806,30 +1755,145 @@ export default function AdminWorkflows() {
                                 <option value="custom">Personalizado (Avanzado)</option>
                               </select>
                             </div>
+                          </div>
+                        </div>
+                      )}
 
+                      {activeTemplate.typeIdentifier === 'startup_outreach_sender' && (
+                        <div style={{ background: '#f1f5f9', padding: '1.5rem', borderRadius: '8px', border: '1px dashed #cbd5e1', marginBottom: '1rem' }}>
+                          <h4 style={{ margin: '0 0 0.5rem 0', color: '#0f172a' }}>
+                            ✉️ Configuración de Auto-Outreach para Startups & Fundadores
+                          </h4>
+                          <p style={{ fontSize: '0.8rem', color: '#64748b', marginBottom: '1rem' }}>
+                            Envía correos ejecutivos personalizados a los fundadores recolectados en Product Hunt, Reddit y LinkedIn, abordando su necesidad técnica primaria y ofreciendo una llamada estratégica de 15 minutos.
+                          </p>
+
+                          <div className="input-group" style={{ marginBottom: '1rem' }}>
+                            <label>Fuente de leads (Campaña Recolector de Startups en Ideación)</label>
+                            <select
+                              required
+                              value={newWfConfig.sourceWorkflowId || ''}
+                              onChange={e => setNewWfConfig({ ...newWfConfig, sourceWorkflowId: e.target.value })}
+                              className="auth-input"
+                            >
+                              <option value="">Selecciona una campaña de Startups...</option>
+                              {workflows.filter(w => w.template?.typeIdentifier === 'startup_ideation_radar').map(w => (
+                                <option key={w.id} value={w.id}>{w.name}</option>
+                              ))}
+                            </select>
+                          </div>
+
+                          <div className="input-group" style={{ marginBottom: '1rem' }}>
+                            <label>Nombre de tu Empresa / Venture Builder</label>
+                            <input
+                              type="text"
+                              value={newWfConfig.businessName || businessName || ''}
+                              onChange={e => {
+                                setBusinessName(e.target.value);
+                                setNewWfConfig({ ...newWfConfig, businessName: e.target.value });
+                              }}
+                              className="auth-input"
+                              placeholder="Ej. Grupo Hormesis · Venture & MVP Studio"
+                            />
+                          </div>
+
+                          <div className="input-group" style={{ marginBottom: '1rem' }}>
+                            <label>Contexto y Propuesta de Valor para Fundadores en Etapa Semilla</label>
+                            <textarea
+                              required
+                              value={newWfConfig.businessContext || ''}
+                              onChange={e => setNewWfConfig({ ...newWfConfig, businessContext: e.target.value })}
+                              className="auth-input"
+                              placeholder="Ej. Acompañamos a fundadores en fase de ideación como socio tecnológico para construir su MVP escalable, arquitectura IA y validación de producto."
+                              style={{ minHeight: '65px', resize: 'vertical' }}
+                            />
+                          </div>
+
+                          <div className="input-group" style={{ marginBottom: '1rem' }}>
+                            <label>Línea de Color / Tono de la Marca</label>
+                            <input
+                              required
+                              type="text"
+                              value={newWfConfig.brandVoice || ''}
+                              onChange={e => setNewWfConfig({ ...newWfConfig, brandVoice: e.target.value })}
+                              className="auth-input"
+                              placeholder="Ej. Estética Dark Mode futurista basada en negro obsidiana con acentos en rojo cyber (#e50914)"
+                            />
+                          </div>
+
+                          <div className="input-group" style={{ marginBottom: '1rem' }}>
+                            <label>Límite de envío diario</label>
+                            <input
+                              required
+                              type="number"
+                              min="1"
+                              max="500"
+                              value={newWfConfig.maxEmailsPerDay || 30}
+                              onChange={e => setNewWfConfig({ ...newWfConfig, maxEmailsPerDay: parseInt(e.target.value, 10) })}
+                              className="auth-input"
+                            />
+                          </div>
+
+                          <div className="input-group" style={{ marginBottom: '1rem' }}>
+                            <label>Horario de Envío (Cron)</label>
+                            <select
+                              value={
+                                ['0 10,14 * * 1-5', '0 14 * * 1-5', '0 8 * * 1-5', '0 10 * * 1-5', '0 12 * * 1-5', '0 9 * * 1-5'].includes(newWfConfig.schedule || '0 10,14 * * 1-5')
+                                  ? (newWfConfig.schedule || '0 10,14 * * 1-5')
+                                  : 'custom'
+                              }
+                              onChange={e => {
+                                if (e.target.value === 'custom') {
+                                  setNewWfConfig({ ...newWfConfig, schedule: '' });
+                                } else {
+                                  setNewWfConfig({ ...newWfConfig, schedule: e.target.value });
+                                }
+                              }}
+                              className="auth-input"
+                              style={{ marginBottom: '0.5rem' }}
+                            >
+                              <option value="0 10,14 * * 1-5">🔥 Lunes a Viernes 2 veces al día (10:00 AM y 2:00 PM)</option>
+                              <option value="0 14 * * 1-5">Lunes a Viernes 1 vez al día (2:00 PM)</option>
+                              <option value="0 9 * * 1-5">Lunes a Viernes a las 9:00 AM</option>
+                              <option value="0 10 * * 1-5">Lunes a Viernes a las 10:00 AM</option>
+                              <option value="0 12 * * 1-5">Lunes a Viernes a las 12:00 PM</option>
+                              <option value="custom">Personalizado (Avanzado)</option>
+                            </select>
+                          </div>
+
+                          <div style={{ marginTop: '1rem', borderTop: '1px solid #cbd5e1', paddingTop: '1rem' }}>
                             <button
                               type="button"
                               onClick={handleGenerateOutreachTemplate}
                               disabled={isGeneratingOutreach}
-                              style={{ width: '100%', padding: '0.75rem', background: isGeneratingOutreach ? '#94a3b8' : '#0f172a', color: 'white', border: 'none', borderRadius: '6px', cursor: isGeneratingOutreach ? 'not-allowed' : 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem', fontWeight: '500', marginBottom: '0.75rem' }}
+                              style={{ width: '100%', padding: '0.75rem', background: isGeneratingOutreach ? '#94a3b8' : '#0f172a', color: 'white', border: 'none', borderRadius: '6px', cursor: isGeneratingOutreach ? 'not-allowed' : 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem', fontWeight: '500', marginBottom: '1rem' }}
                             >
                               {isGeneratingOutreach ? <Loader2 size={16} className="spinner" /> : <Sparkles size={16} />}
-                              {isGeneratingOutreach ? 'Generando Pitch de Fundador...' : 'Pre-generar Plantilla Base para Fundadores (Opcional)'}
+                              {isGeneratingOutreach ? 'Generando Plantilla para Fundadores...' : 'Generar Correo Base para Startups con IA'}
                             </button>
 
                             {newWfConfig.generated_outreach_email && (
-                              <div style={{ background: '#f8fafc', padding: '1rem', borderRadius: '6px', border: '1px solid #e2e8f0' }}>
-                                <label style={{ display: 'block', fontSize: '0.75rem', color: '#64748b', marginBottom: '0.25rem', fontWeight: 'bold' }}>Asunto base</label>
+                              <div style={{ background: 'white', padding: '1rem', borderRadius: '6px', border: '1px solid #e2e8f0' }}>
+                                <label style={{ display: 'block', fontSize: '0.75rem', color: '#64748b', marginBottom: '0.25rem', fontWeight: 'bold' }}>Asunto generado</label>
                                 <input
                                   type="text"
                                   value={newWfConfig.generated_outreach_email.subject}
                                   onChange={e => setNewWfConfig({ ...newWfConfig, generated_outreach_email: { ...newWfConfig.generated_outreach_email, subject: e.target.value } })}
                                   className="auth-input"
-                                  style={{ marginBottom: '0.75rem' }}
+                                  style={{ marginBottom: '1rem' }}
                                 />
-                                <label style={{ display: 'block', fontSize: '0.75rem', color: '#64748b', marginBottom: '0.35rem', fontWeight: 'bold' }}>Previsualización</label>
+
+                                <label style={{ display: 'block', fontSize: '0.75rem', color: '#64748b', marginBottom: '0.25rem', fontWeight: 'bold' }}>Cuerpo del Correo (HTML)</label>
+                                <textarea
+                                  value={newWfConfig.generated_outreach_email.body}
+                                  onChange={e => setNewWfConfig({ ...newWfConfig, generated_outreach_email: { ...newWfConfig.generated_outreach_email, body: e.target.value } })}
+                                  className="auth-input"
+                                  style={{ minHeight: '220px', resize: 'vertical', marginBottom: '1rem' }}
+                                />
+
+                                <label style={{ display: 'block', fontSize: '0.75rem', color: '#64748b', marginBottom: '0.5rem', fontWeight: 'bold' }}>Previsualización</label>
                                 <div
-                                  style={{ border: '1px solid #cbd5e1', borderRadius: '6px', padding: '1rem', background: newWfConfig.generated_outreach_email.body?.includes('#09090b') ? '#020617' : '#ffffff', maxHeight: '380px', overflowY: 'auto' }}
+                                  style={{ border: '1px solid #cbd5e1', borderRadius: '6px', padding: '1rem', background: newWfConfig.generated_outreach_email.body?.includes('#09090b') ? '#020617' : '#f8fafc', maxHeight: '420px', overflowY: 'auto' }}
                                   dangerouslySetInnerHTML={{ __html: newWfConfig.generated_outreach_email.body }}
                                 />
                               </div>
@@ -1839,7 +1903,7 @@ export default function AdminWorkflows() {
                       )}
                       
                       {/* Mostrar campos dinamicos basados en configSchema */}
-                      {activeTemplate.configSchema && activeTemplate.configSchema.properties && !['auto_outreach_google_maps', 'google_stitch_designer', 'startup_ideation_radar'].includes(activeTemplate.typeIdentifier) && Object.entries(activeTemplate.configSchema.properties).filter(([key]) => key !== 'calendarId').map(([key, prop]: [string, any]) => (
+                      {activeTemplate.configSchema && activeTemplate.configSchema.properties && !['auto_outreach_google_maps', 'google_stitch_designer', 'startup_ideation_radar', 'startup_outreach_sender'].includes(activeTemplate.typeIdentifier) && Object.entries(activeTemplate.configSchema.properties).filter(([key]) => key !== 'calendarId').map(([key, prop]: [string, any]) => (
                       <div className="input-group" key={key}>
                         <label>{prop.title ? fixEncoding(prop.title) : key}</label>
                         {prop.description && <p style={{ fontSize: '0.7rem', color: '#64748b', margin: '0 0 0.5rem 0' }}>{fixEncoding(prop.description).replace('ser', 'será').replace('ser\ufffd', 'será')}</p>}
@@ -1940,8 +2004,8 @@ export default function AdminWorkflows() {
                       </div>
 
                       
-                        {/* PROGRAMACION DE EJECUCIONES (LEAD COLLECTOR, STITCH DESIGNER, AUTO OUTREACH, STARTUP RADAR) */}
-                        {['lead_collector', 'google_stitch_designer', 'auto_outreach_google_maps', 'startup_ideation_radar'].includes(wf.template.typeIdentifier) && (wf.config?.schedule || wf.template.typeIdentifier === 'auto_outreach_google_maps' || wf.template.typeIdentifier === 'startup_ideation_radar') && (
+                        {/* PROGRAMACION DE EJECUCIONES (LEAD COLLECTOR, STITCH DESIGNER, AUTO OUTREACH, STARTUP RADAR, STARTUP OUTREACH) */}
+                        {['lead_collector', 'google_stitch_designer', 'auto_outreach_google_maps', 'startup_ideation_radar', 'startup_outreach_sender'].includes(wf.template.typeIdentifier) && (wf.config?.schedule || wf.template.typeIdentifier === 'auto_outreach_google_maps' || wf.template.typeIdentifier === 'startup_ideation_radar' || wf.template.typeIdentifier === 'startup_outreach_sender') && (
                           <div style={{ marginBottom: '1rem', padding: '0.75rem', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: '6px', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                             <Clock size={20} color="#16a34a" />
                             <div>
@@ -1949,7 +2013,7 @@ export default function AdminWorkflows() {
                               <div style={{ fontSize: '0.85rem', color: '#14532d', fontWeight: '600' }}>
                                 {formatSchedule(
                                   wf.config?.schedule || 
-                                  (wf.template.typeIdentifier === 'auto_outreach_google_maps' ? '0 10,14 * * 1-5' : 
+                                  (wf.template.typeIdentifier === 'auto_outreach_google_maps' || wf.template.typeIdentifier === 'startup_outreach_sender' ? '0 10,14 * * 1-5' : 
                                    wf.template.typeIdentifier === 'google_stitch_designer' || wf.template.typeIdentifier === 'startup_ideation_radar' ? '0 9,13 * * 1-5' : '0 8,12 * * 1-5')
                                 )}
                               </div>
@@ -1963,8 +2027,8 @@ export default function AdminWorkflows() {
                             <span style={{ fontSize: '0.75rem', fontWeight: 600, color: '#1e40af' }}>
                               🚀 Fuentes: Product Hunt + Reddit + LinkedIn Seed
                             </span>
-                            <span style={{ fontSize: '0.7rem', fontWeight: 700, padding: '2px 8px', borderRadius: '12px', background: wf.config?.autoSendEmails !== false ? '#dcfce7' : '#e2e8f0', color: wf.config?.autoSendEmails !== false ? '#166534' : '#475569' }}>
-                              {wf.config?.autoSendEmails !== false ? '✉️ Auto-Email Activo' : '📥 Solo Captura CRM'}
+                            <span style={{ fontSize: '0.7rem', fontWeight: 700, padding: '2px 8px', borderRadius: '12px', background: '#dcfce7', color: '#166534' }}>
+                              📥 Filtro IA & Captura al CRM
                             </span>
                           </div>
                         )}
