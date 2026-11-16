@@ -261,8 +261,36 @@ export default function AdminWorkflows() {
     const visualErrors: string[] = Array.isArray(aiAuditReport?.visualErrors) ? aiAuditReport.visualErrors : [];
     const detailedAnalysis: string = aiAuditReport?.detailedAnalysis || '';
 
+    const isStartupRadar = Boolean(
+      meta?.startupRadar ||
+      lead?.startupStage ||
+      lead?.primaryTechnicalNeed ||
+      (lead?.source && String(lead.source).includes('Startup Radar'))
+    );
+
+    const startupStage: string = meta?.startupStage || lead?.startupStage || '💡 Fase de Ideación';
+    const primaryTechnicalNeed: string = meta?.primaryTechnicalNeed || lead?.primaryTechnicalNeed || 'Desarrollo de MVP & Socio Técnico';
+    const recommendedStack: string = meta?.recommendedStack || lead?.recommendedStack || 'Next.js + Node.js + PostgreSQL + IA';
+    const signalSnippet: string = meta?.signalSnippet || lead?.signalSnippet || detailedAnalysis || '';
+    const founderName: string = meta?.founderName || lead?.contactName || 'Fundador';
+    const founderHandleOrRole: string = meta?.founderHandleOrRole || lead?.founderHandleOrRole || 'Fundador / Pre-Seed';
+    const communityUrl: string = meta?.communityUrl || lead?.communityUrl || lead?.website || '';
+    const sourcePlatform: string = meta?.sourcePlatform || lead?.sourcePlatform || 'Reddit / Product Hunt';
+    const sourceDetail: string = meta?.sourceDetail || lead?.address || '';
+    const painPoints: string[] = Array.isArray(meta?.painPoints) ? meta.painPoints : technicalErrors;
+    const aiSubjectLine: string = meta?.aiSubjectLine || `Sobre ${lead?.businessName || lead?.name || 'tu proyecto'} · Socio Técnico / MVP`;
+    const aiCustomPitch: string = meta?.aiCustomPitch || '';
+    const qualificationScore: number = Number(meta?.qualificationScore || 92);
+
     const mockup = meta?.creativeAssets?.mockup || lead?.mockup || null;
-    const hasAudit = screenshots.length > 0 || technicalErrors.length > 0 || visualErrors.length > 0 || Boolean(detailedAnalysis) || Boolean(technicalAnalysis) || Boolean(mockup);
+    const hasAudit =
+      isStartupRadar ||
+      screenshots.length > 0 ||
+      technicalErrors.length > 0 ||
+      visualErrors.length > 0 ||
+      Boolean(detailedAnalysis) ||
+      Boolean(technicalAnalysis) ||
+      Boolean(mockup);
 
     return {
       meta,
@@ -273,7 +301,21 @@ export default function AdminWorkflows() {
       visualErrors,
       detailedAnalysis,
       hasAudit,
-      mockup
+      mockup,
+      isStartupRadar,
+      startupStage,
+      primaryTechnicalNeed,
+      recommendedStack,
+      signalSnippet,
+      founderName,
+      founderHandleOrRole,
+      communityUrl,
+      sourcePlatform,
+      sourceDetail,
+      painPoints,
+      aiSubjectLine,
+      aiCustomPitch,
+      qualificationScore
     };
   };
 
@@ -835,7 +877,35 @@ export default function AdminWorkflows() {
                             </div>
                           </td>
                           <td style={{ padding: '1rem', verticalAlign: 'top' }}>
-                            {audit.hasAudit ? (
+                            {audit.isStartupRadar ? (
+                              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem', minWidth: '190px' }}>
+                                <span style={{ display: 'inline-block', background: '#eff6ff', color: '#1d4ed8', border: '1px solid #bfdbfe', padding: '3px 8px', borderRadius: '6px', fontSize: '0.72rem', fontWeight: 700 }}>
+                                  {audit.startupStage}
+                                </span>
+                                <span style={{ display: 'inline-block', background: '#f0fdf4', color: '#15803d', border: '1px solid #bbf7d0', padding: '3px 8px', borderRadius: '6px', fontSize: '0.72rem', fontWeight: 600 }}>
+                                  ⚙️ {audit.primaryTechnicalNeed}
+                                </span>
+                                <button
+                                  onClick={() => { setSelectedAuditLead(item); setActiveScreenshotIdx(0); }}
+                                  style={{
+                                    background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
+                                    color: 'white',
+                                    border: 'none',
+                                    padding: '0.45rem 0.7rem',
+                                    borderRadius: '6px',
+                                    fontSize: '0.75rem',
+                                    fontWeight: 600,
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    gap: '5px'
+                                  }}
+                                >
+                                  <Sparkles size={12} color="#38bdf8" /> Ver Ficha de Ideación & Pitch
+                                </button>
+                              </div>
+                            ) : audit.hasAudit ? (
                               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', minWidth: '170px' }}>
                                 {audit.screenshots.length > 0 && (
                                   <div 
@@ -2199,6 +2269,103 @@ export default function AdminWorkflows() {
                               <p style={{ fontSize: '0.8rem', color: '#64748b', marginBottom: '1rem' }}>
                                 Término buscado: <strong>{executionResult.result?.searchQuery || 'Búsqueda por defecto'}</strong>
                               </p>
+                              {wf.template.typeIdentifier === 'startup_ideation_radar' ? (
+                                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
+                                  <thead>
+                                    <tr style={{ background: '#0f172a', color: '#f8fafc', textAlign: 'left' }}>
+                                      <th style={{ padding: '0.8rem 1rem', borderBottom: '1px solid #1e293b' }}>Proyecto / Idea & Fundador</th>
+                                      <th style={{ padding: '0.8rem 1rem', borderBottom: '1px solid #1e293b' }}>Señal Detectada & Comunidad</th>
+                                      <th style={{ padding: '0.8rem 1rem', borderBottom: '1px solid #1e293b' }}>Correo del Fundador</th>
+                                      <th style={{ padding: '0.8rem 1rem', borderBottom: '1px solid #1e293b' }}>Fase & Viabilidad</th>
+                                      <th style={{ padding: '0.8rem 1rem', borderBottom: '1px solid #1e293b' }}>Necesidad Técnica & Pitch IA</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {executionResult.result.leads.map((lead: any, i: number) => {
+                                      const audit = parseLeadAudit(lead);
+                                      return (
+                                        <tr key={i} style={{ borderBottom: '1px solid #e2e8f0' }}>
+                                          <td style={{ padding: '0.85rem 1rem', verticalAlign: 'top' }}>
+                                            <div style={{ fontWeight: 700, color: '#0f172a', fontSize: '0.95rem', marginBottom: '4px' }}>
+                                              🚀 {lead.businessName || lead.name}
+                                            </div>
+                                            <div style={{ fontSize: '0.78rem', color: '#475569', fontWeight: 500 }}>
+                                              👤 {audit.founderName} · <span style={{ color: '#64748b' }}>{audit.founderHandleOrRole}</span>
+                                            </div>
+                                          </td>
+                                          <td style={{ padding: '0.85rem 1rem', verticalAlign: 'top', maxWidth: '280px' }}>
+                                            <div style={{ display: 'inline-block', background: '#f1f5f9', color: '#334155', padding: '2px 8px', borderRadius: '6px', fontSize: '0.72rem', fontWeight: 700, marginBottom: '6px' }}>
+                                              📡 {audit.sourcePlatform} ({audit.sourceDetail})
+                                            </div>
+                                            {audit.signalSnippet && (
+                                              <div style={{ fontSize: '0.76rem', color: '#475569', fontStyle: 'italic', lineHeight: 1.4, marginBottom: '6px', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                                                {audit.signalSnippet}
+                                              </div>
+                                            )}
+                                            <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap', fontSize: '0.75rem' }}>
+                                              {audit.communityUrl && (
+                                                <a href={audit.communityUrl} target="_blank" rel="noreferrer" style={{ color: '#4f46e5', textDecoration: 'none', fontWeight: 600 }}>
+                                                  🔗 Ver Post / Señal
+                                                </a>
+                                              )}
+                                              {lead.website && lead.website !== audit.communityUrl && (
+                                                <a href={lead.website} target="_blank" rel="noreferrer" style={{ color: '#0284c7', textDecoration: 'none', fontWeight: 600 }}>
+                                                  🌐 Ver MVP / Landing
+                                                </a>
+                                              )}
+                                            </div>
+                                          </td>
+                                          <td style={{ padding: '0.85rem 1rem', verticalAlign: 'top' }}>
+                                            {lead.email && lead.email.includes('@') ? (
+                                              <a href={`mailto:${lead.email}`} style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', background: '#eff6ff', color: '#1d4ed8', border: '1px solid #bfdbfe', padding: '4px 10px', borderRadius: '6px', textDecoration: 'none', fontWeight: 600, fontSize: '0.78rem' }}>
+                                                ✉️ {lead.email}
+                                              </a>
+                                            ) : (
+                                              <span style={{ color: '#94a3b8' }}>-</span>
+                                            )}
+                                          </td>
+                                          <td style={{ padding: '0.85rem 1rem', verticalAlign: 'top' }}>
+                                            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', alignItems: 'flex-start' }}>
+                                              <span style={{ background: '#ede9fe', color: '#6d28d9', border: '1px solid #ddd6fe', padding: '3px 8px', borderRadius: '6px', fontSize: '0.74rem', fontWeight: 700 }}>
+                                                {audit.startupStage}
+                                              </span>
+                                              <span style={{ background: '#dcfce7', color: '#15803d', padding: '2px 8px', borderRadius: '9999px', fontSize: '0.72rem', fontWeight: 700 }}>
+                                                🎯 {audit.qualificationScore}% Fit Técnico
+                                              </span>
+                                            </div>
+                                          </td>
+                                          <td style={{ padding: '0.85rem 1rem', verticalAlign: 'top', minWidth: '210px' }}>
+                                            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                                              <div style={{ fontSize: '0.78rem', fontWeight: 700, color: '#0f172a', background: '#f8fafc', borderLeft: '3px solid #3b82f6', padding: '4px 8px', borderRadius: '4px' }}>
+                                                🛠️ {audit.primaryTechnicalNeed}
+                                              </div>
+                                              <button
+                                                onClick={() => { setSelectedAuditLead(lead); setActiveScreenshotIdx(0); }}
+                                                style={{
+                                                  background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
+                                                  color: 'white',
+                                                  border: 'none',
+                                                  padding: '0.45rem 0.75rem',
+                                                  borderRadius: '6px',
+                                                  fontSize: '0.75rem',
+                                                  fontWeight: 600,
+                                                  cursor: 'pointer',
+                                                  display: 'flex',
+                                                  alignItems: 'center',
+                                                  justifyContent: 'center',
+                                                  gap: '5px'
+                                                }}
+                                              >
+                                                <Sparkles size={13} color="#38bdf8" /> Ver Ficha de Ideación & Pitch
+                                              </button>
+                                            </div>
+                                          </td>
+                                        </tr>
+                                      );
+                                    })}
+                                  </tbody>
+                                </table>
+                              ) : (
                               <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
                                 <thead>
                                   <tr style={{ background: '#f1f5f9', color: '#475569', textAlign: 'left' }}>
@@ -2315,6 +2482,7 @@ export default function AdminWorkflows() {
                                   )})}
                                 </tbody>
                               </table>
+                              )}
                             </div>
                           ) : (
                             <div style={{ background: backgroundPollingWfId === wf.id ? '#f0fdf4' : '#f8fafc', border: `1px solid ${backgroundPollingWfId === wf.id ? '#86efac' : '#e2e8f0'}`, padding: '1.25rem', borderRadius: '8px', color: '#334155', fontSize: '0.9rem' }}>
@@ -2463,6 +2631,37 @@ export default function AdminWorkflows() {
                         <td style={{ padding: '1.2rem 1rem', verticalAlign: 'top' }}>
                           {(() => {
                             const audit = parseLeadAudit(lead);
+                            if (audit.isStartupRadar) {
+                              return (
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', minWidth: '220px' }}>
+                                  <span style={{ display: 'inline-block', background: '#ede9fe', color: '#6d28d9', border: '1px solid #ddd6fe', padding: '4px 10px', borderRadius: '6px', fontSize: '0.78rem', fontWeight: 700 }}>
+                                    {audit.startupStage}
+                                  </span>
+                                  <span style={{ display: 'inline-block', background: '#f0fdf4', color: '#15803d', border: '1px solid #bbf7d0', padding: '4px 10px', borderRadius: '6px', fontSize: '0.78rem', fontWeight: 600 }}>
+                                    🛠️ {audit.primaryTechnicalNeed}
+                                  </span>
+                                  <button
+                                    onClick={() => { setSelectedAuditLead(lead); setActiveScreenshotIdx(0); }}
+                                    style={{
+                                      background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
+                                      color: 'white',
+                                      border: 'none',
+                                      padding: '0.5rem 0.85rem',
+                                      borderRadius: '6px',
+                                      fontSize: '0.8rem',
+                                      fontWeight: 600,
+                                      cursor: 'pointer',
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      justifyContent: 'center',
+                                      gap: '6px'
+                                    }}
+                                  >
+                                    <Sparkles size={14} color="#38bdf8" /> Ver Ficha de Ideación & Pitch
+                                  </button>
+                                </div>
+                              );
+                            }
                             if (!audit.hasAudit) {
                               return <span style={{ color: '#94a3b8', fontSize: '0.85rem' }}>Sin análisis</span>;
                             }
@@ -2532,10 +2731,167 @@ export default function AdminWorkflows() {
         </div>
       )}
 
-      {/* Modal de Auditoría Completa de Lead con IA & Galería de capturas */}
+      {/* Modal de Ficha de Startup en Ideación o Auditoría Web de Google Maps */}
       {selectedAuditLead && (() => {
         const lead = selectedAuditLead;
         const audit = parseLeadAudit(lead);
+
+        if (audit.isStartupRadar) {
+          const handleCopyStartupPitch = () => {
+            const fullPitch = `Asunto: ${audit.aiSubjectLine}\n\n${audit.aiCustomPitch}`;
+            navigator.clipboard.writeText(fullPitch);
+            alert('¡Pitch para el fundador copiado al portapapeles!');
+          };
+
+          return (
+            <div
+              style={{
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                background: 'rgba(9, 9, 11, 0.8)',
+                backdropFilter: 'blur(6px)',
+                zIndex: 10000,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '1.5rem'
+              }}
+              onClick={() => setSelectedAuditLead(null)}
+            >
+              <div
+                style={{
+                  background: '#ffffff',
+                  borderRadius: '16px',
+                  width: '100%',
+                  maxWidth: '940px',
+                  maxHeight: '90vh',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.35)',
+                  overflow: 'hidden'
+                }}
+                onClick={e => e.stopPropagation()}
+              >
+                {/* Header Oscuro estilo Venture Builder */}
+                <div style={{ background: 'linear-gradient(135deg, #09090b 0%, #1e293b 100%)', color: 'white', padding: '1.5rem 2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                  <div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', flexWrap: 'wrap', marginBottom: '0.5rem' }}>
+                      <span style={{ background: 'rgba(56, 189, 248, 0.2)', color: '#38bdf8', border: '1px solid rgba(56, 189, 248, 0.4)', padding: '3px 10px', borderRadius: '9999px', fontSize: '0.75rem', fontWeight: 700 }}>
+                        📡 {audit.sourcePlatform}
+                      </span>
+                      <span style={{ background: 'rgba(167, 139, 250, 0.2)', color: '#c4b5fd', border: '1px solid rgba(167, 139, 250, 0.4)', padding: '3px 10px', borderRadius: '9999px', fontSize: '0.75rem', fontWeight: 700 }}>
+                        {audit.startupStage}
+                      </span>
+                      <span style={{ background: 'rgba(16, 185, 129, 0.2)', color: '#34d399', padding: '3px 10px', borderRadius: '9999px', fontSize: '0.75rem', fontWeight: 700 }}>
+                        🎯 {audit.qualificationScore}% Fit Técnico
+                      </span>
+                    </div>
+                    <h2 style={{ margin: '0 0 0.35rem 0', fontSize: '1.45rem', fontWeight: 800, color: '#ffffff' }}>
+                      🚀 {lead.businessName || lead.name}
+                    </h2>
+                    <div style={{ display: 'flex', gap: '1.2rem', flexWrap: 'wrap', fontSize: '0.85rem', color: '#cbd5e1' }}>
+                      <span>👤 <strong>{audit.founderName}</strong> ({audit.founderHandleOrRole})</span>
+                      {lead.email && (
+                        <a href={`mailto:${lead.email}`} style={{ color: '#38bdf8', textDecoration: 'none', fontWeight: 600 }}>
+                          ✉️ {lead.email}
+                        </a>
+                      )}
+                      {audit.communityUrl && (
+                        <a href={audit.communityUrl} target="_blank" rel="noreferrer" style={{ color: '#a78bfa', textDecoration: 'none', fontWeight: 600 }}>
+                          🔗 Publicación / Señal Original
+                        </a>
+                      )}
+                      {lead.website && lead.website !== audit.communityUrl && (
+                        <a href={lead.website} target="_blank" rel="noreferrer" style={{ color: '#34d399', textDecoration: 'none', fontWeight: 600 }}>
+                          🌐 Landing / MVP
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', gap: '0.6rem' }}>
+                    <button
+                      onClick={handleCopyStartupPitch}
+                      style={{ background: '#10b981', color: 'white', border: 'none', padding: '0.6rem 1rem', borderRadius: '8px', fontSize: '0.82rem', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}
+                    >
+                      <Copy size={15} /> Copiar Pitch Fundador
+                    </button>
+                    <button
+                      onClick={() => setSelectedAuditLead(null)}
+                      style={{ background: 'rgba(255,255,255,0.12)', color: 'white', border: 'none', padding: '0.5rem', borderRadius: '8px', cursor: 'pointer' }}
+                    >
+                      <X size={20} />
+                    </button>
+                  </div>
+                </div>
+
+                {/* Cuerpo de la Ficha de Inteligencia */}
+                <div style={{ padding: '1.75rem 2rem', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                  {/* 1. Señal de Ideación / Post Original */}
+                  <div style={{ background: '#f8fafc', borderLeft: '4px solid #6366f1', padding: '1rem 1.25rem', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+                    <div style={{ fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', color: '#4f46e5', marginBottom: '0.4rem', letterSpacing: '0.5px' }}>
+                      📡 Señal de Ideación / Validación Detectada ({audit.sourceDetail})
+                    </div>
+                    <p style={{ margin: 0, fontSize: '0.92rem', color: '#1e293b', lineHeight: 1.6, fontStyle: 'italic' }}>
+                      {audit.signalSnippet || 'Proyecto emergente en etapa de validación y desarrollo inicial.'}
+                    </p>
+                  </div>
+
+                  {/* 2. Necesidad Técnica Primaria & Stack Recomendado */}
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1rem' }}>
+                    <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', padding: '1rem 1.25rem', borderRadius: '10px' }}>
+                      <div style={{ fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', color: '#166534', marginBottom: '0.35rem' }}>
+                        🛠️ Necesidad Técnica Primaria
+                      </div>
+                      <div style={{ fontSize: '1rem', fontWeight: 800, color: '#14532d' }}>
+                        {audit.primaryTechnicalNeed}
+                      </div>
+                    </div>
+                    <div style={{ background: '#eff6ff', border: '1px solid #bfdbfe', padding: '1rem 1.25rem', borderRadius: '10px' }}>
+                      <div style={{ fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', color: '#1e40af', marginBottom: '0.35rem' }}>
+                        ⚡ Arquitectura / Stack Sugerido para su MVP
+                      </div>
+                      <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#1e3a8a' }}>
+                        {audit.recommendedStack}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 3. Cuellos de Botella / Dolores Técnicos del Fundador */}
+                  <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', padding: '1.1rem 1.25rem', borderRadius: '10px' }}>
+                    <h4 style={{ margin: '0 0 0.65rem 0', fontSize: '0.9rem', color: '#0f172a' }}>
+                      🔥 Cuellos de Botella & Dolores Técnicos en su Etapa Actual
+                    </h4>
+                    <ul style={{ margin: 0, paddingLeft: '1.25rem', color: '#334155', fontSize: '0.88rem', lineHeight: 1.65 }}>
+                      {audit.painPoints.map((pt: string, idx: number) => (
+                        <li key={idx} style={{ marginBottom: '0.35rem' }}>{pt}</li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* 4. Pitch Personalizado Founder-to-Founder */}
+                  <div style={{ background: '#09090b', color: '#f1f5f9', padding: '1.25rem 1.5rem', borderRadius: '12px', border: '1px solid #27272a' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+                      <span style={{ fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', color: '#10b981', letterSpacing: '0.8px' }}>
+                        ✉️ Propuesta de Abordaje (Founder-to-Founder Pitch)
+                      </span>
+                      <span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>Listo para Auto-Outreach Startups</span>
+                    </div>
+                    <div style={{ fontSize: '0.88rem', fontWeight: 700, color: '#ffffff', marginBottom: '0.6rem', paddingBottom: '0.6rem', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+                      Asunto: <span style={{ color: '#38bdf8' }}>{audit.aiSubjectLine}</span>
+                    </div>
+                    <p style={{ margin: 0, fontSize: '0.88rem', color: '#cbd5e1', lineHeight: 1.7, whiteSpace: 'pre-line' }}>
+                      {audit.aiCustomPitch}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        }
+
         const screenshots = audit.screenshots;
         const currentShot = screenshots[activeScreenshotIdx] || screenshots[0];
         const currentLabel = currentShot ? getScreenshotLabel(currentShot.type) : { label: 'Captura', icon: '📸' };
