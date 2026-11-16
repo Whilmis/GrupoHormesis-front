@@ -378,18 +378,22 @@ export default function AdminWorkflows() {
     };
 
     const handleGenerateTemplates = async () => {
-    if (!businessContext || !servicesInput) return alert('Rellena el contexto y los servicios');
+    const effectiveContext = businessContext || newWfConfig.businessContext || '';
+    const effectiveServices = (servicesInput || newWfConfig.servicesInput || '').split(',').map((s: string) => s.trim()).filter(Boolean);
+    if (!effectiveContext || effectiveServices.length === 0) return alert('Rellena el contexto y los servicios');
     setIsGenerating(true);
     try {
+      const effectiveBrandVoice = brandVoice || newWfConfig.brandVoice || '';
+      const effectiveBusinessName = businessName || newWfConfig.businessName || '';
       const res = await apiClient('/workflows/generate-templates', {
         method: 'POST',
         data: { 
-          business_context: businessContext,
-          business_name: businessName,
-          businessName: businessName,
-          brand_voice: brandVoice,
-          brandVoice: brandVoice,
-          services: servicesInput.split(',').map(s => s.trim()),
+          business_context: effectiveContext,
+          business_name: effectiveBusinessName,
+          businessName: effectiveBusinessName,
+          brand_voice: effectiveBrandVoice,
+          brandVoice: effectiveBrandVoice,
+          services: effectiveServices,
           groqCredentialId: newWfCreds['groq_api_key'] || undefined
         }
       });
@@ -693,7 +697,7 @@ export default function AdminWorkflows() {
                     ) : (
                       <div>
                         <div style={{ fontSize: '1rem', marginBottom: '1rem', paddingBottom: '1rem', borderBottom: '1px solid #e2e8f0' }}><strong>Asunto:</strong> {template.subject}</div>
-                        <div dangerouslySetInnerHTML={{ __html: template.body }}></div>
+                        <div style={{ background: template.body?.includes('#09090b') ? '#020617' : 'transparent', padding: template.body?.includes('#09090b') ? '1rem' : '0', borderRadius: '8px' }} dangerouslySetInnerHTML={{ __html: template.body }}></div>
                       </div>
                     )}
                   </div>
@@ -1272,7 +1276,7 @@ export default function AdminWorkflows() {
                                   
                                   <label style={{ display: 'block', fontSize: '0.75rem', color: '#64748b', marginBottom: '0.35rem' }}>Vista Previa Visual del Correo</label>
                                   <div
-                                    style={{ border: '1px solid #cbd5e1', borderRadius: '8px', padding: '1rem', background: '#f8fafc', maxHeight: '380px', overflowY: 'auto', marginBottom: '0.75rem' }}
+                                    style={{ border: '1px solid #cbd5e1', borderRadius: '8px', padding: '1rem', background: template.body?.includes('#09090b') ? '#020617' : '#f8fafc', maxHeight: '480px', overflowY: 'auto', marginBottom: '0.75rem' }}
                                     dangerouslySetInnerHTML={{ __html: template.body }}
                                   />
 
@@ -1831,7 +1835,7 @@ export default function AdminWorkflows() {
                                       ) : (
                                         <div>
                                           <div style={{ fontSize: '0.85rem', marginBottom: '0.5rem' }}><strong>Asunto:</strong> {template.subject}</div>
-                                          <div style={{ border: '1px dashed #cbd5e1', padding: '1rem', borderRadius: '4px', background: '#fcfcfc' }} dangerouslySetInnerHTML={{ __html: template.body }}></div>
+                                          <div style={{ border: '1px dashed #cbd5e1', padding: '1rem', borderRadius: '4px', background: template.body?.includes('#09090b') ? '#020617' : '#fcfcfc' }} dangerouslySetInnerHTML={{ __html: template.body }}></div>
                                         </div>
                                       )}
                                     </div>
