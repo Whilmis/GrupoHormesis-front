@@ -2203,8 +2203,8 @@ export default function AdminWorkflows() {
                                 <thead>
                                   <tr style={{ background: '#f1f5f9', color: '#475569', textAlign: 'left' }}>
                                     <th style={{ padding: '0.75rem 1rem', borderBottom: '1px solid #e2e8f0' }}>Empresa</th>
-                                    <th style={{ padding: '0.75rem 1rem', borderBottom: '1px solid #e2e8f0' }}>Dirección</th>
-                                    <th style={{ padding: '0.75rem 1rem', borderBottom: '1px solid #e2e8f0' }}>Teléfono</th>
+                                    <th style={{ padding: '0.75rem 1rem', borderBottom: '1px solid #e2e8f0' }}>Dirección / Origen</th>
+                                    <th style={{ padding: '0.75rem 1rem', borderBottom: '1px solid #e2e8f0' }}>Contacto (Email / Tel)</th>
                                     <th style={{ padding: '0.75rem 1rem', borderBottom: '1px solid #e2e8f0' }}>Sitio web</th>
                                     <th style={{ padding: '0.75rem 1rem', borderBottom: '1px solid #e2e8f0' }}>Rating</th>
                                     <th style={{ padding: '0.75rem 1rem', borderBottom: '1px solid #e2e8f0' }}>Análisis web</th>
@@ -2228,11 +2228,17 @@ export default function AdminWorkflows() {
                                       <td style={{ padding: '0.75rem 1rem', fontWeight: 500, color: '#0f172a' }}>{lead.name}</td>
                                       <td style={{ padding: '0.75rem 1rem', color: '#64748b' }}>{lead.address || '-'}</td>
                                       <td style={{ padding: '0.75rem 1rem', color: '#64748b' }}>
-                                        {lead.phone && lead.phone !== 'No disponible' ? (
-                                          <a href={`tel:${lead.phone}`} style={{ color: '#10b981', textDecoration: 'none', fontWeight: 500 }}>📞 {lead.phone}</a>
-                                        ) : (
-                                          <span style={{ color: '#94a3b8' }}>{lead.phone || '-'}</span>
-                                        )}
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                                          {lead.email && lead.email !== 'No disponible' && lead.email.includes('@') && (
+                                            <a href={`mailto:${lead.email}`} style={{ color: '#2563eb', textDecoration: 'none', fontWeight: 600 }}>✉️ {lead.email}</a>
+                                          )}
+                                          {lead.phone && lead.phone !== 'No disponible' && lead.phone !== lead.email && !lead.phone.includes('@') && (
+                                            <a href={`tel:${lead.phone}`} style={{ color: '#10b981', textDecoration: 'none', fontWeight: 500 }}>📞 {lead.phone}</a>
+                                          )}
+                                          {(!lead.email || !lead.email.includes('@')) && (!lead.phone || lead.phone === 'No disponible') && (
+                                            <span style={{ color: '#94a3b8' }}>-</span>
+                                          )}
+                                        </div>
                                       </td>
                                       <td style={{ padding: '0.75rem 1rem', color: '#64748b' }}>
                                         {lead.website && lead.website !== 'No disponible' ? (
@@ -2441,10 +2447,11 @@ export default function AdminWorkflows() {
                         <td style={{ padding: '1.2rem 1rem', color: '#64748b', verticalAlign: 'top', maxWidth: '250px' }}>{lead.address || '-'}</td>
                         <td style={{ padding: '1.2rem 1rem', color: '#64748b', verticalAlign: 'top' }}>
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                            {lead.phone && lead.phone !== 'No disponible' ? (
+                            {lead.email && lead.email !== 'No disponible' && lead.email.includes('@') && (
+                              <a href={`mailto:${lead.email}`} style={{ color: '#2563eb', textDecoration: 'none', fontWeight: 600 }}>✉️ {lead.email}</a>
+                            )}
+                            {lead.phone && lead.phone !== 'No disponible' && lead.phone !== lead.email && !lead.phone.includes('@') && (
                               <a href={`tel:${lead.phone}`} style={{ color: '#10b981', textDecoration: 'none', fontWeight: 500 }}>📞 {lead.phone}</a>
-                            ) : (
-                              <span style={{ color: '#94a3b8' }}>{lead.phone || '-'}</span>
                             )}
                             {lead.website && lead.website !== 'No disponible' ? (
                               <a href={lead.website} target="_blank" rel="noreferrer" style={{ color: '#3b82f6', textDecoration: 'none', fontWeight: 500 }}>🌐 Visitar web</a>
