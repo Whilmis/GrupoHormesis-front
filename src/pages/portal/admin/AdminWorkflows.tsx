@@ -278,7 +278,8 @@ export default function AdminWorkflows() {
   };
 
   const handleRefineTemplates = async (wf: UserWorkflow, service?: string) => {
-    const prompt = (refinementPrompts[wf.id] || '').trim() || 'Transforma y enriquece el diseño HTML y el copywriting para que sea un correo ejecutivo completo de alta conversión, con cabecera corporativa #0f172a, bloques de beneficios con iconos, hoja de ruta de 3 pasos y botones de llamada a la acción.';
+    const defaultRefinePrompt = `Transforma y enriquece el copywriting y estructura para que sea un correo ejecutivo completo de alta conversión adaptado al tono e identidad de ${wf.config?.businessName || wf.name}, respetando su línea de color (${wf.config?.brandVoice || 'colores corporativos del negocio'}), bloques de beneficios con iconos, hoja de ruta de 3 pasos y llamadas a la acción claras.`;
+    const prompt = (refinementPrompts[wf.id] || '').trim() || defaultRefinePrompt;
     setIsRefining(service || wf.id);
     try {
       const res = await apiClient(`/workflows/${wf.id}/refine-templates`, {
@@ -383,7 +384,11 @@ export default function AdminWorkflows() {
       const res = await apiClient('/workflows/generate-templates', {
         method: 'POST',
         data: { 
-          business_context: businessContext, 
+          business_context: businessContext,
+          business_name: businessName,
+          businessName: businessName,
+          brand_voice: brandVoice,
+          brandVoice: brandVoice,
           services: servicesInput.split(',').map(s => s.trim()),
           groqCredentialId: newWfCreds['groq_api_key'] || undefined
         }
@@ -1070,6 +1075,8 @@ export default function AdminWorkflows() {
                       setNewWfConfig({});
                       setNewWfCreds({});
                       setBusinessContext('');
+                      setBusinessName('');
+                      setBrandVoice('');
                       setServicesInput('');
                       setGeneratedTemplates(null);
                     }
