@@ -1694,64 +1694,30 @@ export default function AdminWorkflows() {
                       {activeTemplate.typeIdentifier === 'startup_ideation_radar' && (
                         <div style={{ background: '#f8fafc', padding: '1.5rem', borderRadius: '8px', border: '1px dashed #cbd5e1', marginBottom: '1rem' }}>
                           <h4 style={{ margin: '0 0 0.5rem 0', color: '#0f172a', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                            🚀 Recolector de Startups en Ideación (Product Hunt + Reddit + LinkedIn)
+                            🚀 Recolector de Startups en Ideación (Reddit + Indie/MVP ES + Show HN)
                           </h4>
                           <p style={{ fontSize: '0.8rem', color: '#64748b', marginBottom: '1.25rem' }}>
-                            Extrae fundadores en etapa semilla o ideación que buscan socios técnicos o reportan necesidades de MVP, descartando activamente productos con desarrollo avanzado y guardando los prospectos calificados en el CRM.
+                            Extrae fundadores en etapa semilla o ideación con correo verificado desde Reddit, GitHub Indie/MVP (España & Latam) y Show HN, descartando empresas ya consolidadas y guardando la Ficha de Inteligencia en el CRM.
                           </p>
 
                           <div style={{ background: 'white', padding: '1rem', borderRadius: '8px', border: '1px solid #e2e8f0', marginBottom: '1rem' }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-                              <strong style={{ fontSize: '0.85rem', color: '#0f172a' }}>😺 1. Product Hunt (Etiquetas de Ideación & Filtro de Madurez)</strong>
-                              <button
-                                type="button"
-                                onClick={() => setCredModal({ isOpen: true, type: 'producthunt_token' })}
-                                style={{ background: 'none', border: 'none', color: '#10b981', cursor: 'pointer', fontSize: '0.75rem', fontWeight: 'bold' }}
-                              >
-                                + Token API GraphQL (Opcional)
-                              </button>
-                            </div>
-                            <div className="input-group" style={{ marginBottom: '0.75rem' }}>
-                              <label>Etiquetas / Topics de Ideación (separados por comas)</label>
-                              <input
-                                type="text"
-                                value={newWfConfig.productHuntTags ?? 'pre-launch, ideation, mvp, saas, artificial-intelligence, developer-tools'}
-                                onChange={e => setNewWfConfig({ ...newWfConfig, productHuntTags: e.target.value })}
-                                className="auth-input"
-                                placeholder="pre-launch, ideation, mvp, saas, artificial-intelligence"
-                              />
-                            </div>
-                            <div className="input-group">
-                              <label>Umbral máximo de Upvotes (Descartar productos consolidados con más de X votos)</label>
-                              <input
-                                type="number"
-                                min="10"
-                                max="1000"
-                                value={newWfConfig.maxUpvotesThreshold ?? 120}
-                                onChange={e => setNewWfConfig({ ...newWfConfig, maxUpvotesThreshold: parseInt(e.target.value, 10) })}
-                                className="auth-input"
-                              />
-                            </div>
-                          </div>
-
-                          <div style={{ background: 'white', padding: '1rem', borderRadius: '8px', border: '1px solid #e2e8f0', marginBottom: '1rem' }}>
                             <strong style={{ display: 'block', fontSize: '0.85rem', color: '#0f172a', marginBottom: '0.5rem' }}>
-                              💬 2. Reddit API (Subreddits de Startups & Palabras Clave de Validación)
+                              💬 1. Reddit API (Subreddits de Startups & Palabras Clave de Validación)
                             </strong>
                             <div className="input-group" style={{ marginBottom: '0.75rem' }}>
                               <label>Subreddits a monitorear (separados por comas)</label>
                               <input
                                 type="text"
-                                value={newWfConfig.redditSubreddits ?? 'cofounder, startups, SaaS, SideProject, Entrepreneur, indiehackers'}
+                                value={newWfConfig.redditSubreddits ?? 'cofounder, startups, SaaS, SideProject, Entrepreneur, indiehackers, emprendedores'}
                                 onChange={e => setNewWfConfig({ ...newWfConfig, redditSubreddits: e.target.value })}
                                 className="auth-input"
-                                placeholder="cofounder, startups, SaaS, SideProject"
+                                placeholder="cofounder, startups, SaaS, SideProject, emprendedores"
                               />
                             </div>
                             <div className="input-group">
                               <label>Palabras clave de validación y búsqueda de socio técnico</label>
                               <textarea
-                                value={newWfConfig.validationKeywords ?? 'looking for technical cofounder, need developer, validating idea, building MVP, non-technical founder, seeking CTO'}
+                                value={newWfConfig.validationKeywords ?? 'busco socio técnico, cofundador, looking for technical cofounder, need developer, validating idea, building MVP'}
                                 onChange={e => setNewWfConfig({ ...newWfConfig, validationKeywords: e.target.value })}
                                 className="auth-input"
                                 style={{ minHeight: '60px', resize: 'vertical' }}
@@ -1761,22 +1727,13 @@ export default function AdminWorkflows() {
 
                           <div style={{ background: 'white', padding: '1rem', borderRadius: '8px', border: '1px solid #e2e8f0', marginBottom: '1rem' }}>
                             <strong style={{ display: 'block', fontSize: '0.85rem', color: '#0f172a', marginBottom: '0.5rem' }}>
-                              💼 3. LinkedIn Búsqueda Avanzada (Perfiles Fundadores en Etapa Semilla)
+                              💻 2. Ecosistema Indie / MVP en Español & Show HN
                             </strong>
-                            <div className="input-group" style={{ marginBottom: '0.75rem' }}>
-                              <label>Keywords de perfil de fundador (Stealth / Pre-Seed / MVP)</label>
-                              <input
-                                type="text"
-                                value={newWfConfig.linkedinKeywords ?? 'Stealth Startup, Pre-Seed Founder, Looking for Technical Co-Founder, Building MVP'}
-                                onChange={e => setNewWfConfig({ ...newWfConfig, linkedinKeywords: e.target.value })}
-                                className="auth-input"
-                              />
-                            </div>
                             <div className="input-group">
-                              <label>Región / Idioma objetivo</label>
+                              <label>Región / Idioma prioritario</label>
                               <input
                                 type="text"
-                                value={newWfConfig.targetGeoOrLanguage ?? 'Spain OR Europe OR Remote OR Latam'}
+                                value={newWfConfig.targetGeoOrLanguage ?? 'Spain, Madrid, Barcelona, Mexico, Colombia, Argentina'}
                                 onChange={e => setNewWfConfig({ ...newWfConfig, targetGeoOrLanguage: e.target.value })}
                                 className="auth-input"
                               />
@@ -1785,7 +1742,7 @@ export default function AdminWorkflows() {
 
                           <div style={{ background: 'white', padding: '1rem', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
                             <strong style={{ display: 'block', fontSize: '0.85rem', color: '#0f172a', marginBottom: '0.75rem' }}>
-                              ⚙️ 4. Volumen por Ejecución y Programación
+                              ⚙️ 3. Volumen por Ejecución y Programación
                             </strong>
 
                             <div className="input-group" style={{ marginBottom: '0.75rem' }}>
@@ -2095,10 +2052,10 @@ export default function AdminWorkflows() {
                         {wf.template.typeIdentifier === 'startup_ideation_radar' && (
                           <div style={{ marginBottom: '1rem', padding: '0.6rem 0.85rem', background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem' }}>
                             <span style={{ fontSize: '0.75rem', fontWeight: 600, color: '#1e40af' }}>
-                              🚀 Fuentes: Product Hunt + Reddit + LinkedIn Seed
+                              🚀 Fuentes: Reddit + GitHub Indie/MVP ES + Show HN
                             </span>
                             <span style={{ fontSize: '0.7rem', fontWeight: 700, padding: '2px 8px', borderRadius: '12px', background: '#dcfce7', color: '#166534' }}>
-                              📥 Filtro IA & Captura al CRM
+                              📥 Filtro IA & Email Verificado
                             </span>
                           </div>
                         )}
